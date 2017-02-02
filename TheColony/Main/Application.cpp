@@ -115,13 +115,15 @@ void Application::Init(HWND& _window)
 	CreateDepthStencil();
 	CreateBlendState();
 	CreateRasterState();
+	gameObjectManager.Start();
 }
 
-void Application::Update()
+void Application::Update() const
 {
+	gameObjectManager.Update();
 }
 
-void Application::Render()
+void Application::Render() const
 {
 	context->OMSetRenderTargets(1, &screenTargetView, depthStencilView);
 	context->ClearRenderTargetView(screenTargetView, backBufferColor);
@@ -145,4 +147,6 @@ void Application::Shutdown()
 
 	// Shaders
 	SAFE_RELEASE(vsMesh);
+
+	gameObjectManager.OnDelete();
 }

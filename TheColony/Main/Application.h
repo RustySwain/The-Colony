@@ -1,5 +1,6 @@
 #pragma once
 #include "d3d11.h"
+#include "GameObject.h"
 
 #pragma comment(lib, "d3d11.lib")
 
@@ -26,6 +27,8 @@ class Application
 
 	float backBufferColor[4] = { 0, 1, 1, 1 };
 
+	GameObject gameObjectManager;
+
 	void CreateDevice();
 	void CreateRenderTarget();
 	void CreateLayout();
@@ -43,7 +46,7 @@ public:
 	RECT& GetWindowRect() { return windowRect; };
 
 	void Init(HWND& _window);
-	void Update();
-	void Render();
+	void Update() const;
+	void Render() const;
 	void Shutdown();
 };
