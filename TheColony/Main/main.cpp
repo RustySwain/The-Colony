@@ -3,6 +3,7 @@
 #include "crtdbg.h"
 #include <chrono>
 #include <string>
+#include "Application.h"
 
 using namespace std;
 
@@ -27,7 +28,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hInstancePrev, LPSTR _cmdLin
 	_CrtSetBreakAlloc(-1);
 #endif
 	// Start up the app singleton
-	//DXApp& app = *DXApp::GetInstance();
+	Application& app = *Application::GetInstance();
 
 	// Windows Stuff
 	HWND hWnd;
@@ -51,8 +52,8 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hInstancePrev, LPSTR _cmdLin
 	ShowWindow(hWnd, _showCmd);
 
 	// Initialize the Game
-	/*app.windowRect = monitorRect;
-	app.Init(hWnd);*/
+	app.GetWindowRect() = monitorRect;
+	app.Init(hWnd);
 	MSG msg;
 	ZMem(msg);
 
@@ -73,8 +74,8 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hInstancePrev, LPSTR _cmdLin
 			numFrames++;
 			//Time::SetDelta((float)elapsed);
 			//seconds += Time::Delta();
-			//app.Update();
-			//app.Render();
+			app.Update();
+			app.Render();
 			startTime = endTime;
 		}
 		// Output framerate
@@ -98,7 +99,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hInstancePrev, LPSTR _cmdLin
 	}
 
 	// Shutdown Program
-	//app.Shutdown();
-	//delete &app;
+	app.Shutdown();
+	delete &app;
 	return 0;
 }
