@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ColonyPrefabManager
 {
-    partial class Transform
+    class Transform
     {
         private float[] m_LocalPosition = new float[3];
         private float[] m_LocalRotation = new float[3];

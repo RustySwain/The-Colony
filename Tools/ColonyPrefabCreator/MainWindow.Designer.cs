@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.new_prefab = new System.Windows.Forms.Button();
             this.exit = new System.Windows.Forms.Button();
             this.load_prefab = new System.Windows.Forms.Button();
@@ -38,7 +39,7 @@
             // new_prefab
             // 
             this.new_prefab.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.new_prefab.Location = new System.Drawing.Point(285, 231);
+            this.new_prefab.Location = new System.Drawing.Point(291, 261);
             this.new_prefab.Name = "new_prefab";
             this.new_prefab.Size = new System.Drawing.Size(127, 28);
             this.new_prefab.TabIndex = 0;
@@ -49,7 +50,7 @@
             // exit
             // 
             this.exit.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.exit.Location = new System.Drawing.Point(285, 299);
+            this.exit.Location = new System.Drawing.Point(291, 329);
             this.exit.Name = "exit";
             this.exit.Size = new System.Drawing.Size(127, 28);
             this.exit.TabIndex = 2;
@@ -60,7 +61,7 @@
             // load_prefab
             // 
             this.load_prefab.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.load_prefab.Location = new System.Drawing.Point(285, 265);
+            this.load_prefab.Location = new System.Drawing.Point(291, 295);
             this.load_prefab.Name = "load_prefab";
             this.load_prefab.Size = new System.Drawing.Size(127, 28);
             this.load_prefab.TabIndex = 1;
@@ -100,8 +101,9 @@
             this.Controls.Add(this.exit);
             this.Controls.Add(this.load_prefab);
             this.Controls.Add(this.new_prefab);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainWindow";
-            this.Text = "The Colony - Prefab Manager";
+            this.Text = "Quick \'n\' Dirty Studios - Prefab Manager";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

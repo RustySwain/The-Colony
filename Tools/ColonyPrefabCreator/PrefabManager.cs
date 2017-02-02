@@ -16,6 +16,7 @@ namespace ColonyPrefabManager
         GameObject gameObject = new GameObject();
         Camera camera = new Camera();
         Lighting lighting = new Lighting();
+        AudioSource audioSource = new AudioSource();
 
         public PrefabManager()
         {
@@ -26,6 +27,7 @@ namespace ColonyPrefabManager
             ComponentList.Items.Add(transform);
             ComponentList.Items.Add(camera);
             ComponentList.Items.Add(lighting);
+            ComponentList.Items.Add(audioSource);
 
             ComponentList.SelectedItem = ComponentList.Items[0];
             RemoveComponent.Enabled = false;
@@ -35,6 +37,7 @@ namespace ColonyPrefabManager
             Transform_Group.Visible = false;
             Camera_Group.Visible = false;
             Lighting_Group.Visible = false;
+            AudioSource_Group.Visible = false;
         }
 
         private void ComponentList_SelectedIndexChanged(object sender, EventArgs e)
@@ -79,6 +82,14 @@ namespace ColonyPrefabManager
                 if (lighting.GetAdded()) AddComponent.Text = "Save Component";
             }
             else Lighting_Group.Visible = false;
+
+            // AudioSource settings
+            if (ComponentList.SelectedItem == audioSource)
+            {
+                AudioSource_Group.Visible = true;
+                if (audioSource.GetAdded()) AddComponent.Text = "Save Component";
+            }
+            else AudioSource_Group.Visible = false;
         }
 
         public void AddComponent_Click(object sender, EventArgs e)
@@ -118,6 +129,30 @@ namespace ColonyPrefabManager
                 camera.SetNearPlane(float.Parse(Camera_NearPlane_Input.Text));
                 camera.SetFOV(float.Parse(Camera_FOV_Input.Text));
             }
+
+            // Save Lighting
+            if (ComponentList.SelectedItem == lighting)
+            {
+                if (!lighting.GetAdded())
+                {
+                    lighting.SetAdded(true);
+                    AddComponent.Text = "Save Component";
+                }
+                lighting.SetColor(float.Parse(Lighting_Color_R_Input.Text), float.Parse(Lighting_Color_G_Input.Text), float.Parse(Lighting_Color_B_Input.Text), float.Parse(Lighting_Color_A_Input.Text));
+                lighting.SetExtra(float.Parse(Lighting_Extra_X_Input.Text), float.Parse(Lighting_Extra_Y_Input.Text), float.Parse(Lighting_Extra_Z_Input.Text), float.Parse(Lighting_Extra_W_Input.Text));
+                lighting.SetLightType(Lighting_LightType_Input.SelectedIndex);
+            }
+
+            // Save AudioSource
+            if (ComponentList.SelectedItem == audioSource)
+            {
+                if (!audioSource.GetAdded())
+                {
+                    audioSource.SetAdded(true);
+                    AddComponent.Text = "Save Component";
+                }
+                audioSource.SetSound(AudioSource_ClipPath.Text);
+            }
         }
 
         private void RemoveComponent_Click(object sender, EventArgs e)
@@ -139,6 +174,12 @@ namespace ColonyPrefabManager
                 lighting.SetAdded(false);
                 AddComponent.Text = "Add Component";
             }
+
+            if (ComponentList.SelectedItem == audioSource)
+            {
+                audioSource.SetAdded(false);
+                AddComponent.Text = "Add Component";
+            }
         }
 
         private void Lighting_PickColor_Click(object sender, EventArgs e)
@@ -148,6 +189,15 @@ namespace ColonyPrefabManager
             Lighting_Color_G_Input.Text = LightingColorDialog.Color.G.ToString();
             Lighting_Color_B_Input.Text = LightingColorDialog.Color.B.ToString();
             Lighting_Color_A_Input.Text = LightingColorDialog.Color.A.ToString();
+        }
+
+        private void AudioSource_Browse_Click(object sender, EventArgs e)
+        {
+            AudioSource_FileDialog.Filter = "WAVE (*.wav)|*.wav";
+            if (AudioSource_FileDialog.ShowDialog() == DialogResult.OK)
+            {
+                AudioSource_ClipPath.Text = AudioSource_FileDialog.FileName;
+            }
         }
     }
 }

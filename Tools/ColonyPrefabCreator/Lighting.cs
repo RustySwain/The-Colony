@@ -37,6 +37,6 @@ namespace ColonyPrefabManager
             m_Extra[2] = z;
             m_Extra[3] = w;
         }
-        public void GetLightType(int type) { m_LightType = type; }
+        public void SetLightType(int type) { m_LightType = type; }
     }
 }

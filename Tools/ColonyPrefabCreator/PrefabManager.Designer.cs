@@ -30,6 +30,7 @@ namespace ColonyPrefabManager
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PrefabManager));
             this.AddComponent = new System.Windows.Forms.Button();
             this.ComponentList = new System.Windows.Forms.ComboBox();
             this.GameObject_ID_Input = new System.Windows.Forms.NumericUpDown();
@@ -69,6 +70,8 @@ namespace ColonyPrefabManager
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fIleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Lighting_Group = new System.Windows.Forms.GroupBox();
+            this.Lighting_LightType_Input = new System.Windows.Forms.ComboBox();
+            this.Lighting_LightType = new System.Windows.Forms.Label();
             this.Lighting_Extra_W_Label = new System.Windows.Forms.Label();
             this.Lighting_Extra_W_Input = new System.Windows.Forms.NumericUpDown();
             this.Lighting_Extra_Z_Label = new System.Windows.Forms.Label();
@@ -89,8 +92,14 @@ namespace ColonyPrefabManager
             this.Lighting_Color_R_Input = new System.Windows.Forms.NumericUpDown();
             this.Lighting_Color = new System.Windows.Forms.Label();
             this.LightingColorDialog = new System.Windows.Forms.ColorDialog();
-            this.Lighting_LightType = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.AudioSource_Group = new System.Windows.Forms.GroupBox();
+            this.AudioSource_Clip = new System.Windows.Forms.Label();
+            this.AudioSource_FileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.AudioSource_ClipPath = new System.Windows.Forms.TextBox();
+            this.AudioSource_Browse = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.GameObject_ID_Input)).BeginInit();
             this.GameObject_Group.SuspendLayout();
             this.Transform_Group.SuspendLayout();
@@ -115,6 +124,7 @@ namespace ColonyPrefabManager
             ((System.ComponentModel.ISupportInitialize)(this.Lighting_Color_B_Input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Lighting_Color_G_Input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Lighting_Color_R_Input)).BeginInit();
+            this.AudioSource_Group.SuspendLayout();
             this.SuspendLayout();
             // 
             // AddComponent
@@ -593,15 +603,18 @@ namespace ColonyPrefabManager
             // 
             // fIleToolStripMenuItem
             // 
+            this.fIleToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveToolStripMenuItem,
+            this.saveAsToolStripMenuItem});
             this.fIleToolStripMenuItem.Name = "fIleToolStripMenuItem";
-            this.fIleToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
-            this.fIleToolStripMenuItem.Text = "Save";
+            this.fIleToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fIleToolStripMenuItem.Text = "File";
             // 
             // Lighting_Group
             // 
             this.Lighting_Group.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Lighting_Group.Controls.Add(this.comboBox1);
+            this.Lighting_Group.Controls.Add(this.Lighting_LightType_Input);
             this.Lighting_Group.Controls.Add(this.Lighting_LightType);
             this.Lighting_Group.Controls.Add(this.Lighting_Extra_W_Label);
             this.Lighting_Group.Controls.Add(this.Lighting_Extra_W_Input);
@@ -630,6 +643,30 @@ namespace ColonyPrefabManager
             this.Lighting_Group.TabStop = false;
             this.Lighting_Group.Text = "Lighting";
             this.Lighting_Group.Visible = false;
+            // 
+            // Lighting_LightType_Input
+            // 
+            this.Lighting_LightType_Input.FormattingEnabled = true;
+            this.Lighting_LightType_Input.Items.AddRange(new object[] {
+            "None",
+            "Ambient",
+            "Directional",
+            "Point",
+            "Spot"});
+            this.Lighting_LightType_Input.Location = new System.Drawing.Point(18, 203);
+            this.Lighting_LightType_Input.Name = "Lighting_LightType_Input";
+            this.Lighting_LightType_Input.Size = new System.Drawing.Size(329, 23);
+            this.Lighting_LightType_Input.TabIndex = 30;
+            this.Lighting_LightType_Input.Text = "-- Select Light Type --";
+            // 
+            // Lighting_LightType
+            // 
+            this.Lighting_LightType.AutoSize = true;
+            this.Lighting_LightType.Location = new System.Drawing.Point(15, 182);
+            this.Lighting_LightType.Name = "Lighting_LightType";
+            this.Lighting_LightType.Size = new System.Drawing.Size(63, 15);
+            this.Lighting_LightType.TabIndex = 41;
+            this.Lighting_LightType.Text = "Light Type";
             // 
             // Lighting_Extra_W_Label
             // 
@@ -861,29 +898,65 @@ namespace ColonyPrefabManager
             // 
             this.LightingColorDialog.Color = System.Drawing.Color.White;
             // 
-            // Lighting_LightType
+            // AudioSource_Group
             // 
-            this.Lighting_LightType.AutoSize = true;
-            this.Lighting_LightType.Location = new System.Drawing.Point(15, 182);
-            this.Lighting_LightType.Name = "Lighting_LightType";
-            this.Lighting_LightType.Size = new System.Drawing.Size(63, 15);
-            this.Lighting_LightType.TabIndex = 41;
-            this.Lighting_LightType.Text = "Light Type";
+            this.AudioSource_Group.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.AudioSource_Group.Controls.Add(this.AudioSource_Browse);
+            this.AudioSource_Group.Controls.Add(this.AudioSource_ClipPath);
+            this.AudioSource_Group.Controls.Add(this.AudioSource_Clip);
+            this.AudioSource_Group.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AudioSource_Group.Location = new System.Drawing.Point(12, 69);
+            this.AudioSource_Group.Name = "AudioSource_Group";
+            this.AudioSource_Group.Size = new System.Drawing.Size(378, 133);
+            this.AudioSource_Group.TabIndex = 33;
+            this.AudioSource_Group.TabStop = false;
+            this.AudioSource_Group.Text = "AudioSource";
+            this.AudioSource_Group.Visible = false;
             // 
-            // comboBox1
+            // AudioSource_Clip
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "None",
-            "Ambient",
-            "Directional",
-            "Point",
-            "Spot"});
-            this.comboBox1.Location = new System.Drawing.Point(18, 203);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(329, 23);
-            this.comboBox1.TabIndex = 30;
-            this.comboBox1.Text = "-- Select Light Type --";
+            this.AudioSource_Clip.AutoSize = true;
+            this.AudioSource_Clip.Location = new System.Drawing.Point(15, 28);
+            this.AudioSource_Clip.Name = "AudioSource_Clip";
+            this.AudioSource_Clip.Size = new System.Drawing.Size(31, 15);
+            this.AudioSource_Clip.TabIndex = 1;
+            this.AudioSource_Clip.Text = "Clip:";
+            // 
+            // AudioSource_ClipPath
+            // 
+            this.AudioSource_ClipPath.Location = new System.Drawing.Point(18, 49);
+            this.AudioSource_ClipPath.Name = "AudioSource_ClipPath";
+            this.AudioSource_ClipPath.Size = new System.Drawing.Size(249, 21);
+            this.AudioSource_ClipPath.TabIndex = 2;
+            // 
+            // AudioSource_Browse
+            // 
+            this.AudioSource_Browse.Location = new System.Drawing.Point(192, 76);
+            this.AudioSource_Browse.Name = "AudioSource_Browse";
+            this.AudioSource_Browse.Size = new System.Drawing.Size(75, 23);
+            this.AudioSource_Browse.TabIndex = 3;
+            this.AudioSource_Browse.Text = "Browse...";
+            this.AudioSource_Browse.UseVisualStyleBackColor = true;
+            this.AudioSource_Browse.Click += new System.EventHandler(this.AudioSource_Browse_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Image = global::ColonyPrefabManager.Properties.Resources.save;
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            // 
+            // saveAsToolStripMenuItem
+            // 
+            this.saveAsToolStripMenuItem.Image = global::ColonyPrefabManager.Properties.Resources.save_as;
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsToolStripMenuItem.Text = "Save As";
             // 
             // PrefabManager
             // 
@@ -892,13 +965,15 @@ namespace ColonyPrefabManager
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(402, 434);
             this.Controls.Add(this.Lighting_Group);
-            this.Controls.Add(this.Camera_Group);
-            this.Controls.Add(this.Transform_Group);
             this.Controls.Add(this.RemoveComponent);
-            this.Controls.Add(this.GameObject_Group);
             this.Controls.Add(this.ComponentList);
             this.Controls.Add(this.AddComponent);
             this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.GameObject_Group);
+            this.Controls.Add(this.AudioSource_Group);
+            this.Controls.Add(this.Transform_Group);
+            this.Controls.Add(this.Camera_Group);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "PrefabManager";
             this.Text = "Manage Prefab";
@@ -931,6 +1006,8 @@ namespace ColonyPrefabManager
             ((System.ComponentModel.ISupportInitialize)(this.Lighting_Color_B_Input)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Lighting_Color_G_Input)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Lighting_Color_R_Input)).EndInit();
+            this.AudioSource_Group.ResumeLayout(false);
+            this.AudioSource_Group.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -996,7 +1073,15 @@ namespace ColonyPrefabManager
         private System.Windows.Forms.NumericUpDown Lighting_Extra_Y_Input;
         private System.Windows.Forms.Label Lighting_Extra_X_Label;
         private System.Windows.Forms.NumericUpDown Lighting_Extra_X_Input;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox Lighting_LightType_Input;
         private System.Windows.Forms.Label Lighting_LightType;
+        private System.Windows.Forms.GroupBox AudioSource_Group;
+        private System.Windows.Forms.Button AudioSource_Browse;
+        private System.Windows.Forms.TextBox AudioSource_ClipPath;
+        private System.Windows.Forms.Label AudioSource_Clip;
+        private System.Windows.Forms.OpenFileDialog AudioSource_FileDialog;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
     }
 }
