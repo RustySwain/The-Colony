@@ -9,8 +9,8 @@ namespace ColonyPrefabManager
     class GameObject
     {
         private int m_Id;
-        private string m_Name;
-        private string m_Tag;
+        private string m_Name = "Unnamed";
+        private string m_Tag = "Untagged";
         private bool m_Transparent;
         private bool m_Dynamic;
 
@@ -19,7 +19,7 @@ namespace ColonyPrefabManager
         // Accessors
         public int GetId() { return m_Id; }
         public string GetName() { return m_Name; }
-        public string GetTagString() { return m_Tag; }
+        public string GetTag() { return m_Tag; }
         public bool GetTransparent() { return m_Transparent; }
         public bool GetDynamic() { return m_Dynamic; }
 

@@ -8,8 +8,8 @@ namespace ColonyPrefabManager
 {
     class Transform
     {
-        private float[] m_LocalPosition = new float[3];
-        private float[] m_LocalRotation = new float[3];
+        private float[] m_LocalPosition = {0, 0, 0, 0};
+        private float[] m_LocalRotation = {0, 0, 0, 0};
         private float m_Scale;
         private bool m_added;
 

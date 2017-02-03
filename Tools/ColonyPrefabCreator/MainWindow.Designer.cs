@@ -34,12 +34,13 @@
             this.load_prefab = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.LoadPrefabDialog = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // new_prefab
             // 
             this.new_prefab.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.new_prefab.Location = new System.Drawing.Point(291, 261);
+            this.new_prefab.Location = new System.Drawing.Point(280, 262);
             this.new_prefab.Name = "new_prefab";
             this.new_prefab.Size = new System.Drawing.Size(127, 28);
             this.new_prefab.TabIndex = 0;
@@ -50,7 +51,7 @@
             // exit
             // 
             this.exit.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.exit.Location = new System.Drawing.Point(291, 329);
+            this.exit.Location = new System.Drawing.Point(280, 330);
             this.exit.Name = "exit";
             this.exit.Size = new System.Drawing.Size(127, 28);
             this.exit.TabIndex = 2;
@@ -61,7 +62,7 @@
             // load_prefab
             // 
             this.load_prefab.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.load_prefab.Location = new System.Drawing.Point(291, 295);
+            this.load_prefab.Location = new System.Drawing.Point(280, 296);
             this.load_prefab.Name = "load_prefab";
             this.load_prefab.Size = new System.Drawing.Size(127, 28);
             this.load_prefab.TabIndex = 1;
@@ -91,6 +92,10 @@
             this.label2.TabIndex = 4;
             this.label2.Text = "Prefab Manager";
             // 
+            // LoadPrefabDialog
+            // 
+            this.LoadPrefabDialog.FileName = "openFileDialog1";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -104,7 +109,6 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainWindow";
             this.Text = "Quick \'n\' Dirty Studios - Prefab Manager";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -117,6 +121,7 @@
         private System.Windows.Forms.Button load_prefab;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.OpenFileDialog LoadPrefabDialog;
     }
 }
 

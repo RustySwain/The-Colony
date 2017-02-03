@@ -26,17 +26,17 @@ namespace ColonyPrefabCreator
 
         private void LoadPrefab_Click(object sender, EventArgs e)
         {
-            
+            LoadPrefabDialog.Filter = "*.prefab|*.prefab";
+            if (LoadPrefabDialog.ShowDialog() == DialogResult.OK)
+            {
+                PrefabManager newWindow = new PrefabManager(LoadPrefabDialog.FileName);
+                newWindow.Show();
+            }
         }
 
         private void Exit_Click(object sender, EventArgs e)
         {
             Application.Exit();
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

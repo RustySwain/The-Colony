@@ -8,8 +8,8 @@ namespace ColonyPrefabManager
 {
     class Lighting
     {
-        private float[] m_Color = new float[4];
-        private float[] m_Extra = new float[4];
+        private float[] m_Color = {255, 255, 255, 1};
+        private float[] m_Extra = {0, 0, 0, 0};
         private int m_LightType;
         private bool m_added;
 
