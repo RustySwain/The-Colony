@@ -13,6 +13,7 @@ namespace ColonyPrefabManager
         private string m_Tag = "Untagged";
         private bool m_Transparent;
         private bool m_Dynamic;
+        public List<int> m_Components = new List<int>();
 
         public override string ToString() { return "GameObject"; }
 

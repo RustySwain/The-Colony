@@ -8,6 +8,7 @@ namespace ColonyPrefabManager
 {
     class AudioSource
     {
+        private const int Id = 11;
         private string m_Clip = "";
         private bool m_added;
 
@@ -16,6 +17,7 @@ namespace ColonyPrefabManager
         // Accessors
         public bool GetAdded() { return m_added; }
         public string GetClip() { return m_Clip; }
+        public int GetId() { return Id; }
 
         // Mutators
         public void SetAdded(bool added) { m_added = added; }

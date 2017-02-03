@@ -3,10 +3,11 @@
 #include "Defines.h"
 #include <cmath>
 
-// Sahders
+// Shaders
 #include "VSMesh.csh"
 #include "PSMesh.csh"
 #include "PSSkybox.csh"
+#include "PrefabLoader.h"
 
 Application* Application::instance = nullptr;
 
@@ -138,6 +139,7 @@ void Application::Init(HWND& _window)
 	CreateBlendState();
 	CreateRasterState();
 	gameObjectManager.Start();
+	gameObjectManager.AddComponent<PrefabLoader>()->LoadPrefab("test.prefab");
 }
 
 void Application::Update() const

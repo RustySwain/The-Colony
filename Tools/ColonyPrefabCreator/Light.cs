@@ -6,20 +6,22 @@ using System.Threading.Tasks;
 
 namespace ColonyPrefabManager
 {
-    class Lighting
+    class Light
     {
+        private const int Id = 8;
         private float[] m_Color = {255, 255, 255, 1};
         private float[] m_Extra = {0, 0, 0, 0};
         private int m_LightType;
         private bool m_added;
 
-        public override string ToString() { return "Lighting"; }
+        public override string ToString() { return "Light"; }
 
         // Accessors
         public bool GetAdded() { return m_added; }
         public float[] GetColor() { return m_Color; }
         public float[] GetExtra() { return m_Extra; }
         public int GetLightType() { return m_LightType; }
+        public int GetId() { return Id; }
 
         // Mutators
         public void SetAdded(bool added) { m_added = added; }

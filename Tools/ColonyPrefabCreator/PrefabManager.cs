@@ -16,7 +16,7 @@ namespace ColonyPrefabManager
         Transform transform = new Transform();
         GameObject gameObject = new GameObject();
         Camera camera = new Camera();
-        Lighting lighting = new Lighting();
+        Light lighting = new Light();
         AudioSource audioSource = new AudioSource();
         RigidBody rigidBody = new RigidBody();
         Collider collider = new Collider();
@@ -121,19 +121,6 @@ namespace ColonyPrefabManager
 
         private void AddComponent_Click(object sender, EventArgs e)
         {
-            // Save Transform
-            if (ComponentList.SelectedItem == transform)
-            {
-                if (!transform.GetAdded())
-                {
-                    transform.SetAdded(true);
-                    AddComponent.Text = "Save Component";
-                }
-                transform.SetPosition(float.Parse(Transform_Position_X_Input.Text), float.Parse(Transform_Position_Y_Input.Text), float.Parse(Transform_Position_Z_Input.Text));
-                transform.SetRotation(float.Parse(Transform_Rotation_X_Input.Text), float.Parse(Transform_Rotation_Y_Input.Text), float.Parse(Transform_Rotation_Z_Input.Text));
-                transform.SetScale(float.Parse(Transform_Scale_Input.Text));
-            }
-
             // Save GameObject
             if (ComponentList.SelectedItem == gameObject)
             {
@@ -144,12 +131,27 @@ namespace ColonyPrefabManager
                 gameObject.SetDynamic(GameObject_Dynamic.Checked);
             }
 
+            // Save Transform
+            if (ComponentList.SelectedItem == transform)
+            {
+                if (!transform.GetAdded())
+                {
+                    transform.SetAdded(true);
+                    gameObject.m_Components.Add(transform.GetId());
+                    AddComponent.Text = "Save Component";
+                }
+                transform.SetPosition(float.Parse(Transform_Position_X_Input.Text), float.Parse(Transform_Position_Y_Input.Text), float.Parse(Transform_Position_Z_Input.Text));
+                transform.SetRotation(float.Parse(Transform_Rotation_X_Input.Text), float.Parse(Transform_Rotation_Y_Input.Text), float.Parse(Transform_Rotation_Z_Input.Text));
+                transform.SetScale(float.Parse(Transform_Scale_Input.Text));
+            }
+
             // Save Camera
             if (ComponentList.SelectedItem == camera)
             {
                 if (!camera.GetAdded())
                 {
                     camera.SetAdded(true);
+                    gameObject.m_Components.Add(camera.GetId());
                     AddComponent.Text = "Save Component";
                 }
                 camera.SetFarPlane(float.Parse(Camera_FarPlane_Input.Text));
@@ -163,6 +165,7 @@ namespace ColonyPrefabManager
                 if (!lighting.GetAdded())
                 {
                     lighting.SetAdded(true);
+                    gameObject.m_Components.Add(lighting.GetId());
                     AddComponent.Text = "Save Component";
                 }
                 lighting.SetColor(float.Parse(Lighting_Color_R_Input.Text), float.Parse(Lighting_Color_G_Input.Text), float.Parse(Lighting_Color_B_Input.Text), float.Parse(Lighting_Color_A_Input.Text));
@@ -176,6 +179,7 @@ namespace ColonyPrefabManager
                 if (!audioSource.GetAdded())
                 {
                     audioSource.SetAdded(true);
+                    gameObject.m_Components.Add(audioSource.GetId());
                     AddComponent.Text = "Save Component";
                 }
                 audioSource.SetClip(AudioSource_ClipPath.Text);
@@ -187,6 +191,7 @@ namespace ColonyPrefabManager
                 if (!rigidBody.GetAdded())
                 {
                     rigidBody.SetAdded(true);
+                    gameObject.m_Components.Add(rigidBody.GetId());
                     AddComponent.Text = "Save Component";
                 }
             }
@@ -197,6 +202,7 @@ namespace ColonyPrefabManager
                 if (!collider.GetAdded())
                 {
                     collider.SetAdded(true);
+                    gameObject.m_Components.Add(collider.GetId());
                     AddComponent.Text = "Save Component";
                 }
             }
@@ -207,36 +213,42 @@ namespace ColonyPrefabManager
             if (ComponentList.SelectedItem == transform)
             {
                 transform.SetAdded(false);
+                gameObject.m_Components.Remove(transform.GetId());
                 AddComponent.Text = "Add Component";
             }
 
             if (ComponentList.SelectedItem == camera)
             {
                 camera.SetAdded(false);
+                gameObject.m_Components.Remove(camera.GetId());
                 AddComponent.Text = "Add Component";
             }
 
             if (ComponentList.SelectedItem == lighting)
             {
                 lighting.SetAdded(false);
+                gameObject.m_Components.Remove(lighting.GetId());
                 AddComponent.Text = "Add Component";
             }
 
             if (ComponentList.SelectedItem == audioSource)
             {
                 audioSource.SetAdded(false);
+                gameObject.m_Components.Remove(audioSource.GetId());
                 AddComponent.Text = "Add Component";
             }
 
             if (ComponentList.SelectedItem == rigidBody)
             {
                 rigidBody.SetAdded(false);
+                gameObject.m_Components.Remove(rigidBody.GetId());
                 AddComponent.Text = "Add Component";
             }
 
             if (ComponentList.SelectedItem == collider)
             {
                 collider.SetAdded(false);
+                gameObject.m_Components.Remove(collider.GetId());
                 AddComponent.Text = "Add Component";
             }
         }
@@ -282,24 +294,31 @@ namespace ColonyPrefabManager
 
         private void WriteToBinary(string path)
         {
+            // Sort components ids
+            gameObject.m_Components.Sort();
+
             using (BinaryWriter writer = new BinaryWriter(File.Open(path, FileMode.Create)))
             {
                 byte delimiter = 1;
 
                 // Write GameObject
-                writer.Write("GameObject");
                 writer.Write(gameObject.GetId());
+                writer.Write(gameObject.GetName().Length);
                 writer.Write(gameObject.GetName());
+                writer.Write(gameObject.GetTag().Length);
                 writer.Write(gameObject.GetTag());
                 writer.Write(gameObject.GetTransparent());
                 writer.Write(gameObject.GetDynamic());
+                // Write all enabled components
+                writer.Write(gameObject.m_Components.Count);
+                for(int i = 0; i < gameObject.m_Components.Count; ++i)
+                    writer.Write(gameObject.m_Components[i]);
                 // Write delimiter
                 writer.Write(delimiter);
 
-                // Write Transform
+                // Write Transform -- id = 1
                 if (transform.GetAdded())
                 {
-                    writer.Write("Transform");
                     writer.Write(transform.GetPosition()[0]);
                     writer.Write(transform.GetPosition()[1]);
                     writer.Write(transform.GetPosition()[2]);
@@ -311,10 +330,23 @@ namespace ColonyPrefabManager
                     writer.Write(delimiter);
                 }
 
-                // Write Camera
+                // Write RigidBody -- id = 2
+                if (audioSource.GetAdded())
+                {
+                    // Write delimiter
+                    writer.Write(delimiter);
+                }
+
+                // Write Collider -- id = 3
+                if (collider.GetAdded())
+                {
+                    // Write delimiter
+                    writer.Write(delimiter);
+                }
+
+                // Write Camera -- id = 4
                 if (camera.GetAdded())
                 {
-                    writer.Write("Camera");
                     writer.Write(camera.GetFarPlane());
                     writer.Write(camera.GetNearPlane());
                     writer.Write(camera.GetFOV());
@@ -322,10 +354,9 @@ namespace ColonyPrefabManager
                     writer.Write(delimiter);
                 }
 
-                // Write Lighting
+                // Write Light -- id = 8
                 if (lighting.GetAdded())
                 {
-                    writer.Write("Lighting");
                     writer.Write(lighting.GetColor()[0]);
                     writer.Write(lighting.GetColor()[1]);
                     writer.Write(lighting.GetColor()[2]);
@@ -339,27 +370,10 @@ namespace ColonyPrefabManager
                     writer.Write(delimiter);
                 }
 
-                // Write AudioSource
+                // Write AudioSource -- id = 11
                 if (audioSource.GetAdded())
                 {
-                    writer.Write("AudioSource");
                     writer.Write(audioSource.GetClip());
-                    // Write delimiter
-                    writer.Write(delimiter);
-                }
-
-                // Write RigidBody
-                if (audioSource.GetAdded())
-                {
-                    writer.Write("RigidBody");
-                    // Write delimiter
-                    writer.Write(delimiter);
-                }
-
-                // Write Collider
-                if (collider.GetAdded())
-                {
-                    writer.Write("Collider");
                     // Write delimiter
                     writer.Write(delimiter);
                 }
@@ -384,74 +398,67 @@ namespace ColonyPrefabManager
                     this.Text = "Manage Prefab - " + fileName;
 
                     // Load GameObject
-                    reader.ReadString();
                     gameObject.SetId(reader.ReadInt32());
+                    reader.ReadInt32();
                     gameObject.SetName(reader.ReadString());
+                    reader.ReadInt32();
                     gameObject.SetTag(reader.ReadString());
                     gameObject.SetTransparent(reader.ReadBoolean());
                     gameObject.SetDynamic(reader.ReadBoolean());
+                    int numOfComponents = reader.ReadInt32();
+                    for(int i = 0; i < numOfComponents; ++i)
+                        gameObject.m_Components.Add(reader.ReadInt32());
                     reader.ReadByte();
 
-                    string buffer = reader.ReadString();
-
-                    // Load Transform
-                    if (buffer == "Transform")
+                    // Load Transform -- id = 1
+                    if (gameObject.m_Components.Contains(transform.GetId()))
                     {
                         transform.SetAdded(true);
                         transform.SetPosition(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                         transform.SetRotation(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                         transform.SetScale(reader.ReadSingle());
                         reader.ReadByte();
-
-                        if(reader.BaseStream.Position != reader.BaseStream.Length)
-                            buffer = reader.ReadString();
                     }
 
-                    // Load Camera
-                    if (buffer == "Camera")
+                    // Load RigidBody -- id = 2
+                    if (gameObject.m_Components.Contains(rigidBody.GetId()))
+                    {
+                        rigidBody.SetAdded(true);
+                        reader.ReadByte();
+                    }
+
+                    // Load Collider -- id = 3
+                    if (gameObject.m_Components.Contains(collider.GetId()))
+                    {
+                        collider.SetAdded(true);
+                        reader.ReadByte();
+                    }
+
+                    // Load Camera -- id = 4
+                    if (gameObject.m_Components.Contains(camera.GetId()))
                     {
                         camera.SetAdded(true);
                         camera.SetFarPlane(reader.ReadSingle());
                         camera.SetNearPlane(reader.ReadSingle());
                         camera.SetFOV(reader.ReadSingle());
                         reader.ReadByte();
-
-                        if (reader.BaseStream.Position != reader.BaseStream.Length)
-                            buffer = reader.ReadString();
                     }
                     
-                    // Load Lighting
-                    if (buffer == "Lighting")
+                    // Load Light -- id = 8
+                    if (gameObject.m_Components.Contains(lighting.GetId()))
                     {
                         lighting.SetAdded(true);
                         lighting.SetColor(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                         lighting.SetExtra(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                         lighting.SetLightType(reader.ReadInt32());
                         reader.ReadByte();
-
-                        if (reader.BaseStream.Position != reader.BaseStream.Length)
-                            buffer = reader.ReadString();
                     }
 
-                    // Load AudioSource
-                    if (buffer == "AudioSource")
+                    // Load AudioSource -- id = 11
+                    if (gameObject.m_Components.Contains(audioSource.GetId()))
                     {
                         audioSource.SetAdded(true);
                         audioSource.SetClip(reader.ReadString());
-                        reader.ReadByte();
-                    }
-
-                    // Load RigidBody
-                    if (buffer == "RigidBody")
-                    {
-                        rigidBody.SetAdded(true);
-                        reader.ReadByte();
-                    }
-
-                    // Load Collider
-                    if (buffer == "Collider")
-                    {
-                        collider.SetAdded(true);
                         reader.ReadByte();
                     }
 
