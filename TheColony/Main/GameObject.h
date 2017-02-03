@@ -129,4 +129,5 @@ public:
 	virtual void Update() = 0;
 	virtual void OnDelete() = 0;
 	virtual void LoadFromString(string _str) = 0;
+	virtual string WriteToString() const = 0;
 };

@@ -22,6 +22,7 @@ public:
 	virtual void Update() override;
 	virtual void OnDelete() override;
 	virtual void LoadFromString(string _str) override;
+	virtual string WriteToString() const override;
 
 	void RotateXPre(float _angle);
 	void RotateYPre(float _angle);

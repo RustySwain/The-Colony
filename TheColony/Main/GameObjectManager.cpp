@@ -31,3 +31,8 @@ void GameObjectManager::OnDelete()
 void GameObjectManager::LoadFromString(string _str)
 {
 }
+
+string GameObjectManager::WriteToString() const
+{
+	return "";
+}

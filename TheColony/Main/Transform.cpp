@@ -25,6 +25,11 @@ void Transform::LoadFromString(string _str)
 {
 }
 
+string Transform::WriteToString() const
+{
+	return "";
+}
+
 void Transform::RotateXPre(float _angle)
 {
 	_angle *= (float)DEG2RAD;

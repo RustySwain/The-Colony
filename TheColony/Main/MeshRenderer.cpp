@@ -83,6 +83,11 @@ void MeshRenderer::LoadFromString(string _str)
 {
 }
 
+string MeshRenderer::WriteToString() const
+{
+	return "";
+}
+
 bool MeshRenderer::LoadFromObj(const char* _path)
 {
 	if (mesh) delete mesh;
