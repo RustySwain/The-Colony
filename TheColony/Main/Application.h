@@ -1,6 +1,7 @@
 #pragma once
 #include "d3d11.h"
 #include "GameObject.h"
+#include "MeshRenderer.h"
 
 #pragma comment(lib, "d3d11.lib")
 
@@ -24,10 +25,13 @@ class Application
 	ID3D11RasterizerState* rasterState = nullptr;
 
 	ID3D11VertexShader* vsMesh = nullptr;
+	ID3D11PixelShader* psMesh = nullptr;
+	ID3D11PixelShader* psSkybox = nullptr;
 
 	float backBufferColor[4] = { 0, 1, 1, 1 };
 
 	GameObject gameObjectManager;
+	vector<const MeshRenderer*> renderers;
 
 	void CreateDevice();
 	void CreateRenderTarget();
@@ -44,6 +48,14 @@ public:
 	static Application* GetInstance() { if (!instance) instance = new Application(); return instance; };
 
 	RECT& GetWindowRect() { return windowRect; };
+	ID3D11Device* GetDevice() const { return device; };
+	ID3D11DeviceContext* GetContext() const { return context; };
+
+	ID3D11PixelShader* GetPSMesh() const { return psMesh; };
+	ID3D11PixelShader* GetPSSkybox() const { return psSkybox; };
+
+	void RegisterMeshRenderer(const MeshRenderer* _mr);
+	void UnRegisterMeshRenderer(const MeshRenderer* _mr);
 
 	void Init(HWND& _window);
 	void Update() const;

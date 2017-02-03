@@ -102,6 +102,8 @@ protected:
 	bool enabled = true;
 
 public:
+	GameObject* gameObject = nullptr;
+
 	Component() {};
 	virtual ~Component() {};
 

@@ -10,7 +10,7 @@ Mesh::~Mesh()
 {
 }
 
-bool Mesh::LoadFromFile(const char* _path)
+bool Mesh::LoadFromObj(const char* _path)
 {
 	// open file
 	ifstream reader;

@@ -33,7 +33,7 @@ public:
 	Mesh();
 	~Mesh();
 
-	bool LoadFromFile(const char* _path);
+	bool LoadFromObj(const char* _path);
 	void BuildMesh(const vector<Vertex> _vertices, const vector<unsigned int> _indices);
 
 	vector<Vertex>& GetVertexData();

@@ -1,10 +1,12 @@
 #include "Application.h"
 #include "Macros.h"
 #include "Defines.h"
+#include <cmath>
 
 // Sahders
 #include "VSMesh.csh"
-#include <cmath>
+#include "PSMesh.csh"
+#include "PSSkybox.csh"
 
 Application* Application::instance = nullptr;
 
@@ -54,6 +56,8 @@ void Application::CreateLayout()
 void Application::CreateShaders()
 {
 	device->CreateVertexShader(VSMesh, sizeof(VSMesh), 0, &vsMesh);
+	device->CreatePixelShader(PSMesh, sizeof(PSMesh), 0, &psMesh);
+	device->CreatePixelShader(PSSkybox, sizeof(PSSkybox), 0, &psSkybox);
 }
 
 void Application::CreateDepthStencil()
@@ -105,6 +109,24 @@ Application::~Application()
 {
 }
 
+void Application::RegisterMeshRenderer(const MeshRenderer* _mr)
+{
+	renderers.push_back(_mr);
+}
+
+void Application::UnRegisterMeshRenderer(const MeshRenderer* _mr)
+{
+	// this doesn't seem very efficient, but in practice, it works fine
+	for (unsigned int i = 0; i < renderers.size(); i++)
+	{
+		if (renderers[i] == _mr)
+		{
+			renderers.erase(renderers.begin() + i);
+			break;
+		}
+	}
+}
+
 void Application::Init(HWND& _window)
 {
 	window = &_window;
@@ -147,6 +169,8 @@ void Application::Shutdown()
 
 	// Shaders
 	SAFE_RELEASE(vsMesh);
+	SAFE_RELEASE(psMesh);
+	SAFE_RELEASE(psSkybox);
 
 	gameObjectManager.OnDelete();
 }
