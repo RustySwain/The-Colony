@@ -68,6 +68,7 @@ void MeshRenderer::Update()
 void MeshRenderer::OnDelete()
 {
 	if (mesh) delete mesh;
+	mesh = nullptr;
 	SAFE_RELEASE(vertBuffer);
 	SAFE_RELEASE(indexBuffer);
 	SAFE_RELEASE(constantBuffer);
@@ -82,8 +83,10 @@ void MeshRenderer::LoadFromString(string _str)
 {
 }
 
-bool MeshRenderer::LoadFromObj(const char* _path) const
+bool MeshRenderer::LoadFromObj(const char* _path)
 {
+	if (mesh) delete mesh;
+	mesh = new Mesh();
 	return mesh->LoadFromObj(_path);
 }
 
@@ -141,9 +144,15 @@ void MeshRenderer::Render() const
 	context->PSSetShaderResources(0, 4, textures);
 	context->PSSetSamplers(0, 1, &sampler);
 	if (type == MESH)
+	{
 		context->PSSetShader(Application::GetInstance()->GetPSMesh(), 0, 0);
-	else
+		context->VSSetShader(Application::GetInstance()->GetVSMesh(), 0, 0);
+	}
+	else if (type == SKYBOX)
+	{
 		context->PSSetShader(Application::GetInstance()->GetPSSkybox(), 0, 0);
+		context->VSSetShader(Application::GetInstance()->GetVSMesh(), 0, 0);
+	}
 
 	/*if (gameObject->GetComponent<Animator>())
 		gameObject->GetComponent<Animator>()->SetVSBuffer();*/

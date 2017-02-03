@@ -53,6 +53,7 @@ public:
 
 	ID3D11PixelShader* GetPSMesh() const { return psMesh; };
 	ID3D11PixelShader* GetPSSkybox() const { return psSkybox; };
+	ID3D11VertexShader* GetVSMesh() const { return vsMesh; };
 
 	void RegisterMeshRenderer(const MeshRenderer* _mr);
 	void UnRegisterMeshRenderer(const MeshRenderer* _mr);

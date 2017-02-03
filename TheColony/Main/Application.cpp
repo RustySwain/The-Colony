@@ -131,6 +131,7 @@ void Application::UnRegisterMeshRenderer(const MeshRenderer* _mr)
 void Application::Init(HWND& _window)
 {
 	window = &_window;
+	// Create D3D interfaces
 	CreateDevice();
 	CreateRenderTarget();
 	CreateLayout();
@@ -138,6 +139,12 @@ void Application::Init(HWND& _window)
 	CreateDepthStencil();
 	CreateBlendState();
 	CreateRasterState();
+
+	// Set Initial stuff
+	context->IASetInputLayout(layout);
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// Create GameObject
 	gameObjectManager.AddComponent<GameObjectManager>();
 	gameObjectManager.Start();
 }

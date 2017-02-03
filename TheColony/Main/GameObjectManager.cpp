@@ -14,6 +14,8 @@ void GameObjectManager::Start()
 {
 	go.Start();
 	go.AddComponent<Transform>();
+	go.AddComponent<MeshRenderer>()->LoadFromObj("../Assets/cube.obj");
+	go.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/crate.dds");
 }
 
 void GameObjectManager::Update()
