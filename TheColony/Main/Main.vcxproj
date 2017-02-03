@@ -132,20 +132,29 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
+    <ClCompile Include="Debug.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
+    <ClCompile Include="Time.cpp" />
+    <ClCompile Include="PrefabLoader.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="DDSTextureLoader.h" />
+    <ClInclude Include="Debug.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="Macros.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshRenderer.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="Time.h" />
+    <ClInclude Include="PrefabLoader.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>

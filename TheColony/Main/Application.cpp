@@ -7,6 +7,7 @@
 #include "VSMesh.csh"
 #include "PSMesh.csh"
 #include "PSSkybox.csh"
+#include "GameObjectManager.h"
 
 Application* Application::instance = nullptr;
 
@@ -130,6 +131,7 @@ void Application::UnRegisterMeshRenderer(const MeshRenderer* _mr)
 void Application::Init(HWND& _window)
 {
 	window = &_window;
+	// Create D3D interfaces
 	CreateDevice();
 	CreateRenderTarget();
 	CreateLayout();
@@ -137,6 +139,13 @@ void Application::Init(HWND& _window)
 	CreateDepthStencil();
 	CreateBlendState();
 	CreateRasterState();
+
+	// Set Initial stuff
+	context->IASetInputLayout(layout);
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// Create GameObject
+	gameObjectManager.AddComponent<GameObjectManager>();
 	gameObjectManager.Start();
 }
 
@@ -152,6 +161,10 @@ void Application::Render() const
 	context->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	float blendFactor[] = { 1, 1, 1, 1 };
 	context->OMSetBlendState(blendState, blendFactor, 0xffffffff);
+
+	for (unsigned int i = 0; i < renderers.size(); i++)
+		renderers[i]->Render();
+
 	swapChain->Present(0, 0);
 }
 

@@ -58,7 +58,7 @@ public:
 	Mesh* GetMesh() const { return mesh; }
 
 	// Mesh
-	bool LoadFromObj(const char* _path) const;
+	bool LoadFromObj(const char* _path);
 	void LoadDiffuseMap(const wchar_t* _path);
 	void LoadNormalMap(const wchar_t* _path);
 	void LoadSpecularMap(const wchar_t* _path);

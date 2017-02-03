@@ -8,6 +8,7 @@ namespace ColonyPrefabManager
 {
     class Transform
     {
+        private const int Id = 1;
         private float[] m_LocalPosition = {0, 0, 0, 0};
         private float[] m_LocalRotation = {0, 0, 0, 0};
         private float m_Scale;
@@ -20,6 +21,7 @@ namespace ColonyPrefabManager
         public float[] GetPosition() { return m_LocalPosition; }
         public float[] GetRotation() { return m_LocalRotation; }
         public float GetScale() { return m_Scale; }
+        public int GetId() { return Id; }
 
         // Mutators
         public void SetAdded(bool added) { m_added = added; }

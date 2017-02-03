@@ -4,6 +4,8 @@
 #include <chrono>
 #include <string>
 #include "Application.h"
+#include "Time.h"
+#include "Debug.h"
 
 using namespace std;
 
@@ -72,8 +74,8 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hInstancePrev, LPSTR _cmdLin
 		if (elapsed > invFPS)
 		{
 			numFrames++;
-			//Time::SetDelta((float)elapsed);
-			//seconds += Time::Delta();
+			Time::SetDelta((float)elapsed);
+			seconds += Time::Delta();
 			app.Update();
 			app.Render();
 			startTime = endTime;
@@ -84,7 +86,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hInstancePrev, LPSTR _cmdLin
 			string secondsStr = to_string(numFrames);
 			numFrames = 0;
 			seconds = 0;
-			//Debug::OutLog(("Frame Rate: " + secondsStr).c_str(), 0);
+			Debug::Log(("Frame Rate: " + secondsStr).c_str(), 0);
 		}
 		// Windows
 		if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))

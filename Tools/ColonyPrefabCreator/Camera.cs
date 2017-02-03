@@ -8,6 +8,7 @@ namespace ColonyPrefabManager
 {
     class Camera
     {
+        private const int Id = 4;
         private float m_FarPlane;
         private float m_NearPlane;
         float m_FOV;
@@ -20,6 +21,7 @@ namespace ColonyPrefabManager
         public float GetFarPlane() { return m_FarPlane; }
         public float GetNearPlane() { return m_NearPlane; }
         public float GetFOV() { return m_FOV; }
+        public int GetId() { return Id; }
 
         // Mutators
         public void SetAdded(bool added) { m_added = added; }

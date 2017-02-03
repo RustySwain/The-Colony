@@ -9,6 +9,10 @@ class Component;
 
 class GameObject
 {
+	unsigned int id;
+	string name;
+	string tag;
+
 	bool started = false;
 	map<unsigned int, vector<Component*>> components;
 
@@ -19,6 +23,16 @@ public:
 	void Start();
 	void Update() const;
 	void OnDelete();
+
+	// Accessors
+	const unsigned int GetId() const { return id; }
+	const string GetName() const { return name; }
+	const string GetTag() const { return tag; }
+
+	// Mutators
+	void SetId(unsigned int _id) { id = _id; }
+	void SetName(string _name) { name = _name; }
+	void SetTag(string _tag) { tag = _tag; }
 
 	template <typename T>
 	T* AddComponent();
