@@ -6,6 +6,9 @@
 
 void MeshRenderer::Init()
 {
+	if (initialized)
+		return;
+	initialized = true;
 	// create vertex buffer
 	D3D11_BUFFER_DESC bDesc;
 	ZMem(bDesc);
@@ -56,10 +59,23 @@ void MeshRenderer::Start()
 
 void MeshRenderer::Update()
 {
+	Init();
+	// update constant buffer
+	cBufferData.worldMatrix = gameObject->GetComponent<Transform>()->GetWorldMatrix();
+	Application::GetInstance()->GetContext()->UpdateSubresource(constantBuffer, 0, 0, &cBufferData, 0, 0);
 }
 
 void MeshRenderer::OnDelete()
 {
+	if (mesh) delete mesh;
+	SAFE_RELEASE(vertBuffer);
+	SAFE_RELEASE(indexBuffer);
+	SAFE_RELEASE(constantBuffer);
+	SAFE_RELEASE(diffuseMap);
+	SAFE_RELEASE(normalMap);
+	SAFE_RELEASE(specularMap);
+	SAFE_RELEASE(emissiveMap);
+	SAFE_RELEASE(sampler);
 }
 
 void MeshRenderer::LoadFromString(string _str)

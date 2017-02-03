@@ -3,11 +3,11 @@
 #include "Defines.h"
 #include <cmath>
 
-// Shaders
+// Sahders
 #include "VSMesh.csh"
 #include "PSMesh.csh"
 #include "PSSkybox.csh"
-#include "PrefabLoader.h"
+#include "GameObjectManager.h"
 
 Application* Application::instance = nullptr;
 
@@ -138,8 +138,8 @@ void Application::Init(HWND& _window)
 	CreateDepthStencil();
 	CreateBlendState();
 	CreateRasterState();
+	gameObjectManager.AddComponent<GameObjectManager>();
 	gameObjectManager.Start();
-	gameObjectManager.AddComponent<PrefabLoader>()->LoadPrefab("test.prefab");
 }
 
 void Application::Update() const
@@ -154,6 +154,10 @@ void Application::Render() const
 	context->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	float blendFactor[] = { 1, 1, 1, 1 };
 	context->OMSetBlendState(blendState, blendFactor, 0xffffffff);
+
+	for (unsigned int i = 0; i < renderers.size(); i++)
+		renderers[i]->Render();
+
 	swapChain->Present(0, 0);
 }
 
