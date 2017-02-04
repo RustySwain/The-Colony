@@ -2,6 +2,8 @@
 #include "d3d11.h"
 #include "GameObject.h"
 #include "MeshRenderer.h"
+#include "Camera.h"
+#include "Light.h"
 
 #pragma comment(lib, "d3d11.lib")
 
@@ -9,6 +11,7 @@ class Application
 {
 	static Application* instance;
 
+public:
 	// Windows
 	HWND* window = nullptr;
 	RECT windowRect;
@@ -23,6 +26,8 @@ class Application
 	ID3D11DepthStencilView* depthStencilView = nullptr;
 	ID3D11BlendState* blendState = nullptr;
 	ID3D11RasterizerState* rasterState = nullptr;
+	ID3D11Buffer* camPosBuffer = nullptr;
+	ID3D11Buffer* lightBuffer = nullptr;
 
 	ID3D11VertexShader* vsMesh = nullptr;
 	ID3D11PixelShader* psMesh = nullptr;
@@ -32,6 +37,8 @@ class Application
 
 	GameObject gameObjectManager;
 	vector<const MeshRenderer*> renderers;
+	vector<const Camera*> cameras;
+	vector<const Light*> lights;
 
 	void CreateDevice();
 	void CreateRenderTarget();
@@ -40,6 +47,9 @@ class Application
 	void CreateDepthStencil();
 	void CreateBlendState();
 	void CreateRasterState();
+	void CreateCameraAndLightBuffer();
+	void CreateBuffer(D3D11_BUFFER_DESC* _bData, D3D11_SUBRESOURCE_DATA* _subData, ID3D11Buffer** _buffer) const;
+
 
 public:
 	Application();
@@ -57,6 +67,12 @@ public:
 
 	void RegisterMeshRenderer(const MeshRenderer* _mr);
 	void UnRegisterMeshRenderer(const MeshRenderer* _mr);
+
+	void RegisterCamera(const Camera* _cam);
+	void UnregisterCamera(const Camera* _cam);
+
+	void RegisterLight(const Light* _light);
+	void UnregisterLight(const Light* _light);
 
 	void Init(HWND& _window);
 	void Update() const;

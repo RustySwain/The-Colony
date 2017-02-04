@@ -11,6 +11,7 @@ Transform::~Transform()
 
 void Transform::Start()
 {
+	localMatrix = XMMatrixIdentity();
 }
 
 void Transform::Update()
@@ -19,6 +20,7 @@ void Transform::Update()
 
 void Transform::OnDelete()
 {
+	
 }
 
 void Transform::LoadFromString(string _str)

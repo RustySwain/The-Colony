@@ -102,6 +102,17 @@ void Application::CreateRasterState()
 	device->CreateRasterizerState(&raDesc, &rasterState);
 	context->RSSetState(rasterState);
 }
+void Application::CreateCameraAndLightBuffer()
+{
+	// initialize the lightbuffer and camera position buffer
+	D3D11_BUFFER_DESC lightBufferDesc;
+	ZMem(lightBufferDesc);
+	lightBufferDesc.ByteWidth = sizeof(Light::LightBufferType) * 100;
+	lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	device->CreateBuffer(&lightBufferDesc, nullptr, &lightBuffer);
+	lightBufferDesc.ByteWidth = sizeof(XMFLOAT4);
+	device->CreateBuffer(&lightBufferDesc, nullptr, &camPosBuffer);
+}
 
 Application::Application()
 {
@@ -129,6 +140,45 @@ void Application::UnRegisterMeshRenderer(const MeshRenderer* _mr)
 	}
 }
 
+void Application::RegisterCamera(const Camera * _cam)
+{
+	cameras.push_back(_cam);
+}
+
+void Application::UnregisterCamera(const Camera * _cam)
+{
+	for (unsigned int i = 0; i < cameras.size(); i++)
+	{
+		if (cameras[i] == _cam)
+		{
+			cameras.erase(cameras.begin() + i);
+			break;
+		}
+	}
+}
+
+void Application::RegisterLight(const Light *_light)
+{
+	lights.push_back(_light);
+}
+
+void Application::UnregisterLight(const Light *_light)
+{
+	for (size_t i = 0; i < lights.size(); i++)
+	{
+		if (lights[i] == _light)
+		{
+			lights.erase(lights.begin() + i);
+			break;
+		}
+	}
+}
+
+void Application::CreateBuffer(D3D11_BUFFER_DESC* _bData, D3D11_SUBRESOURCE_DATA* _subData, ID3D11Buffer** _buffer) const
+{
+	device->CreateBuffer(_bData, _subData, _buffer);
+}
+
 void Application::Init(HWND& _window)
 {
 	window = &_window;
@@ -140,14 +190,14 @@ void Application::Init(HWND& _window)
 	CreateDepthStencil();
 	CreateBlendState();
 	CreateRasterState();
-
+	CreateCameraAndLightBuffer();
 	// Set Initial stuff
 	context->IASetInputLayout(layout);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Create GameObject
-	gameObjectManager.AddComponent<GameObjectManager>();
 	gameObjectManager.Start();
+	gameObjectManager.AddComponent<GameObjectManager>();
 }
 
 void Application::Update() const
@@ -157,11 +207,32 @@ void Application::Update() const
 
 void Application::Render() const
 {
+	//Update light and camera buffers
+	/*Light::LightBufferType lightBuff[100];
+
+	for (size_t i = 0; i < lights.size(); i++)
+	{
+		lightBuff[i] = lights[i]->GetLightBuffType();
+	}*/
+
+	//context->UpdateSubresource(lightBuffer, 0, 0, lightBuff, 0, 0);
+	//XMFLOAT3 camPos = Camera::mainCam->gameObject->GetComponent<Transform>()->GetWorldPosition();
+	//context->UpdateSubresource(camPosBuffer, 0, 0, &camPos, 0, 0);
+
 	context->OMSetRenderTargets(1, &screenTargetView, depthStencilView);
 	context->ClearRenderTargetView(screenTargetView, backBufferColor);
 	context->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	float blendFactor[] = { 1, 1, 1, 1 };
 	context->OMSetBlendState(blendState, blendFactor, 0xffffffff);
+
+	//Camera* mainCam = Camera::mainCam;
+	//context->RSSetViewports(1, &mainCam->GetViewport());
+
+	//ID3D11Buffer* camBuf = mainCam->GetConstantBuffer();
+	//context->VSSetConstantBuffers(1, 1, &camBuf);
+
+	ID3D11Buffer* pixBufs[2] = { lightBuffer, camPosBuffer };
+	context->PSSetConstantBuffers(0, 2, pixBufs);
 
 	for (unsigned int i = 0; i < renderers.size(); i++)
 		renderers[i]->Render();
@@ -180,6 +251,8 @@ void Application::Shutdown()
 	SAFE_RELEASE(depthStencilView);
 	SAFE_RELEASE(blendState);
 	SAFE_RELEASE(rasterState);
+	SAFE_RELEASE(camPosBuffer);
+	SAFE_RELEASE(lightBuffer);
 
 	// Shaders
 	SAFE_RELEASE(vsMesh);
