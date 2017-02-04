@@ -31,6 +31,12 @@ class MeshRenderer : public Component
 	ID3D11ShaderResourceView* emissiveMap = nullptr;
 	ID3D11SamplerState* sampler = nullptr;
 
+	char meshPath[256];
+	char diffusePath[256];
+	char normalPath[256];
+	char specularPath[256];
+	char emissivePath[256];
+
 	void Init();
 
 public:
@@ -60,7 +66,7 @@ public:
 	Mesh* GetMesh() const { return mesh; }
 
 	// Mesh
-	bool LoadFromObj(const char* _path);
+	bool LoadFromObj(char* _path);
 	void LoadDiffuseMap(const wchar_t* _path);
 	void LoadNormalMap(const wchar_t* _path);
 	void LoadSpecularMap(const wchar_t* _path);

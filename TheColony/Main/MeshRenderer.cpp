@@ -81,17 +81,92 @@ void MeshRenderer::OnDelete()
 
 void MeshRenderer::LoadFromString(string _str)
 {
+	unsigned int offset = 0;
+	// mesh
+	unsigned int length = *(unsigned int*)&_str[offset];
+	offset += sizeof(unsigned int);
+	memcpy_s(meshPath, 256, &_str[offset], length);
+	offset += length;
+
+	// diffuse
+	length = *(unsigned int*)&_str[offset];
+	offset += sizeof(unsigned int);
+	memcpy_s(diffusePath, 256, &_str[offset], length);
+	offset += length;
+
+	// normal
+	length = *(unsigned int*)&_str[offset];
+	offset += sizeof(unsigned int);
+	memcpy_s(normalPath, 256, &_str[offset], length);
+	offset += length;
+
+	// specular
+	length = *(unsigned int*)&_str[offset];
+	offset += sizeof(unsigned int);
+	memcpy_s(specularPath, 256, &_str[offset], length);
+	offset += length;
+
+	// emissive
+	length = *(unsigned int*)&_str[offset];
+	offset += sizeof(unsigned int);
+	memcpy_s(emissivePath, 256, &_str[offset], length);
+	offset += length;
+
+	// other members
+	cBufferData = *(PerModelVertexData*)&_str[offset];
+	offset += sizeof(PerModelVertexData);
+	transparent = *(bool*)&_str[offset];
+	offset += sizeof(bool);
+	dynamicVerts = *(bool*)&_str[offset];
+	offset += sizeof(bool);
+	type = *(Type*)&_str[offset];
 }
 
 string MeshRenderer::WriteToString() const
 {
-	return "";
+	string ret = "";
+	if (meshPath)
+	{
+		size_t length = strlen(meshPath);
+		ret += (char*)&length;
+		ret += meshPath;
+	}
+	if (diffusePath)
+	{
+		size_t length = strlen(diffusePath);
+		ret += (char*)&length;
+		ret += diffusePath;
+	}
+	if (normalPath)
+	{
+		size_t length = strlen(normalPath);
+		ret += (char*)&length;
+		ret += normalPath;
+	}
+	if (specularPath)
+	{
+		size_t length = strlen(specularPath);
+		ret += (char*)&length;
+		ret += specularPath;
+	}
+	if (emissivePath)
+	{
+		size_t length = strlen(emissivePath);
+		ret += (char*)&length;
+		ret += emissivePath;
+	}
+	ret += (char*)&cBufferData;
+	ret += (char*)&transparent;
+	ret += (char*)&dynamicVerts;
+	ret += (char*)&type;
+	return ret;
 }
 
-bool MeshRenderer::LoadFromObj(const char* _path)
+bool MeshRenderer::LoadFromObj(char* _path)
 {
 	if (mesh) delete mesh;
 	mesh = new Mesh();
+	memcpy_s(&diffusePath[0], 256, _path, strlen(_path));
 	return mesh->LoadFromObj(_path);
 }
 
@@ -107,21 +182,37 @@ void MeshRenderer::LoadDiffuseMap(const wchar_t* _path)
 	sDesc.MaxLOD = 100;
 	sDesc.Filter = D3D11_FILTER_ANISOTROPIC;
 	Application::GetInstance()->GetDevice()->CreateSamplerState(&sDesc, &sampler);
+	char tmp[256];
+	size_t len = wcslen(_path);
+	wcstombs_s(&len, tmp, _path, INT_MAX);
+	memcpy_s(&diffusePath[0], 256, tmp, len);
 }
 
 void MeshRenderer::LoadNormalMap(const wchar_t* _path)
 {
 	CreateDDSTextureFromFile(Application::GetInstance()->GetDevice(), _path, 0, &normalMap);
+	char tmp[256];
+	size_t len = wcslen(_path);
+	wcstombs_s(&len, tmp, _path, INT_MAX);
+	memcpy_s(&diffusePath[0], 256, tmp, len);
 }
 
 void MeshRenderer::LoadSpecularMap(const wchar_t* _path)
 {
 	CreateDDSTextureFromFile(Application::GetInstance()->GetDevice(), _path, 0, &specularMap);
+	char tmp[256];
+	size_t len = wcslen(_path);
+	wcstombs_s(&len, tmp, _path, INT_MAX);
+	memcpy_s(&diffusePath[0], 256, tmp, len);
 }
 
 void MeshRenderer::LoadEmissiveMap(const wchar_t* _path)
 {
 	CreateDDSTextureFromFile(Application::GetInstance()->GetDevice(), _path, 0, &emissiveMap);
+	char tmp[256];
+	size_t len = wcslen(_path);
+	wcstombs_s(&len, tmp, _path, INT_MAX);
+	memcpy_s(&diffusePath[0], 256, tmp, len);
 }
 
 void MeshRenderer::SetMeshColor(XMFLOAT4 _rgba) const
