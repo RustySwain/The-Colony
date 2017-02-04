@@ -5,7 +5,8 @@ Camera* Camera::mainCam = nullptr;
 
 void Camera::UpdateProjMat()
 {
-	projectionMatrix = XMMatrixPerspectiveFovRH(fov, (float)Application::GetInstance()->windowRect.right / Application::GetInstance()->windowRect.bottom, nearPlane, farPlane);
+	RECT winRect = Application::GetInstance()->GetWindowRect();
+	projectionMatrix = XMMatrixPerspectiveFovRH(fov, (float)winRect.right / winRect.bottom, nearPlane, farPlane);
 }
 
 Camera::Camera()
@@ -22,13 +23,13 @@ void Camera::Start()
 	if (mainCam == nullptr)
 		mainCam = this;
 	// create viewport to be the full window size
-	viewport.Height = (float)Application::GetInstance()->windowRect.bottom;
-	viewport.Width = (float)Application::GetInstance()->windowRect.right;
+	RECT winRect = Application::GetInstance()->GetWindowRect();
+	viewport.Height = winRect.bottom;
+	viewport.Width = winRect.right;
 	viewport.MinDepth = 0;
 	viewport.MaxDepth = 1;
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
-	Application::GetInstance()->RegisterCamera(this);
 
 	// create view and projection matrices and the constant buffer
 	D3D11_BUFFER_DESC bDesc;
@@ -45,7 +46,7 @@ void Camera::Start()
 
 	subData.pSysMem = mats;
 
-	Application::GetInstance()->CreateBuffer(&bDesc, &subData, &constantBuffer);
+	Application::GetInstance()->GetDevice()->CreateBuffer(&bDesc, &subData, &constantBuffer);
 }
 
 void Camera::Update()
@@ -61,7 +62,6 @@ void Camera::Update()
 
 void Camera::OnDelete()
 {
-	Application::GetInstance()->UnregisterCamera(this);
 	constantBuffer->Release();
 }
 

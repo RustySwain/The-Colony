@@ -11,7 +11,6 @@ class Application
 {
 	static Application* instance;
 
-public:
 	// Windows
 	HWND* window = nullptr;
 	RECT windowRect;
@@ -39,7 +38,6 @@ public:
 
 	GameObject gameObjectManager;
 	vector<const MeshRenderer*> renderers;
-	vector<const Camera*> cameras;
 	vector<const Light*> lights;
 
 	void CreateDevice();
@@ -51,7 +49,6 @@ public:
 	void CreateRasterState();
 	void CreateCameraAndLightBuffer();
 	void CreateBuffer(D3D11_BUFFER_DESC* _bData, D3D11_SUBRESOURCE_DATA* _subData, ID3D11Buffer** _buffer) const;
-
 
 public:
 	Application();
@@ -69,9 +66,6 @@ public:
 
 	void RegisterMeshRenderer(const MeshRenderer* _mr);
 	void UnRegisterMeshRenderer(const MeshRenderer* _mr);
-
-	void RegisterCamera(const Camera* _cam);
-	void UnregisterCamera(const Camera* _cam);
 
 	void RegisterLight(const Light* _light);
 	void UnregisterLight(const Light* _light);

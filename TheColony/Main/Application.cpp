@@ -140,23 +140,6 @@ void Application::UnRegisterMeshRenderer(const MeshRenderer* _mr)
 	}
 }
 
-void Application::RegisterCamera(const Camera * _cam)
-{
-	cameras.push_back(_cam);
-}
-
-void Application::UnregisterCamera(const Camera * _cam)
-{
-	for (unsigned int i = 0; i < cameras.size(); i++)
-	{
-		if (cameras[i] == _cam)
-		{
-			cameras.erase(cameras.begin() + i);
-			break;
-		}
-	}
-}
-
 void Application::RegisterLight(const Light *_light)
 {
 	lights.push_back(_light);

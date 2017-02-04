@@ -14,8 +14,9 @@ CameraController::~CameraController()
 void CameraController::Start()
 {
 	// get middle of the screen
-	screenMiddle.x = Application::GetInstance()->windowRect.right * 0.5f;
-	screenMiddle.y = Application::GetInstance()->windowRect.bottom * 0.5f;
+	RECT winRect = Application::GetInstance()->GetWindowRect();
+	screenMiddle.x = winRect.right * 0.5f;
+	screenMiddle.y = winRect.bottom * 0.5f;
 	// invisible cursor
 	ShowCursor(false);
 	// put cursor in the middle of the screen
