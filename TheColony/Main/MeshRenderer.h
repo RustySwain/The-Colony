@@ -14,11 +14,10 @@ struct PerModelVertexData
 // Dependencies: Transform
 class MeshRenderer : public Component
 {
+	enum Flags { INIT = 1, TRANSPRENT = 2, DYNAMIC = 4, HAS_MESH = 8, DIFFUSE = 16, NORMAL = 32, SPECULAR = 64, EMISSIVE = 128 };
 	const unsigned int id = 6;
 
-	bool initialized = false;
-	bool transparent = false;
-	bool dynamicVerts = false;
+	char flags = 0;
 
 	PerModelVertexData cBufferData;
 	Mesh* mesh = nullptr;
@@ -40,7 +39,7 @@ class MeshRenderer : public Component
 	void Init();
 
 public:
-	enum Type { MESH = 0, SKYBOX = 1 };
+	enum Type { MESH = 10, SKYBOX = 11 };
 
 	MeshRenderer();
 	~MeshRenderer();
@@ -57,11 +56,11 @@ public:
 	Type GetType() const { return type; };
 	void SetType(const Type& _type) { type = _type; };
 
-	bool GetTransparent() const { return transparent; };
-	void SetTransparent(const bool& _transparent) { transparent = _transparent; };
+	bool GetTransparent() const { return (flags & TRANSPRENT) == 1; };
+	void SetTransparent(const bool& _transparent) { flags ^= (-TRANSPRENT ^ flags) & (1 << (unsigned int)log((unsigned int)TRANSPRENT)); };
 
-	bool GetDynamic() const { return dynamicVerts; };
-	void SetDynamic(const bool& _dyanamic) { dynamicVerts = _dyanamic; };
+	bool GetDynamic() const { return (flags & DYNAMIC) == 1; };
+	void SetDynamic(const bool& _dyanamic) { flags ^= (-DYNAMIC ^ flags) & (1 << (unsigned int)log((unsigned int)DYNAMIC)); };
 
 	Mesh* GetMesh() const { return mesh; }
 
