@@ -1,5 +1,7 @@
 #pragma once
 #include "GameObject.h"
+
+// Dependencies: None
 class GameObjectManager : public Component
 {
 	const unsigned int id = 5;

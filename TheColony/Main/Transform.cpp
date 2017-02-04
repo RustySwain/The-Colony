@@ -23,11 +23,24 @@ void Transform::OnDelete()
 
 void Transform::LoadFromString(string _str)
 {
+	string copy = _str;
+	memcpy_s(&localMatrix, sizeof(localMatrix), &copy[0], copy.size());
+	unsigned int offset = 64; // sizeof(float) * 16 (number of floats in XMMATRIX)
+	unsigned int id = *(unsigned int*)&_str[offset];
+	offset += sizeof(unsigned int);
+	scale = *(float*)&_str[offset];
+	if (id)
+		parent = GameObject::FindFromId(id)->GetComponent<Transform>();
 }
 
 string Transform::WriteToString() const
 {
-	return "";
+	string ret = "";
+	ret += (char*)&localMatrix;
+	unsigned int id = gameObject->GetId();
+	ret += (char*)&id;
+	ret += (char*)&scale;
+	return ret;
 }
 
 void Transform::RotateXPre(float _angle)

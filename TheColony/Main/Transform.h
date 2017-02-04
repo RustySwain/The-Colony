@@ -4,6 +4,7 @@
 
 using namespace DirectX;
 
+// Dependencies: None
 class Transform : public Component
 {
 	const unsigned int id = 1;

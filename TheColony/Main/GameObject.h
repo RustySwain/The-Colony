@@ -42,6 +42,8 @@ public:
 	vector<T*>& GetComponents();
 	template <typename T>
 	bool RemoveComponent();
+
+	static GameObject* FindFromId(unsigned int _id);
 };
 
 template <typename T>

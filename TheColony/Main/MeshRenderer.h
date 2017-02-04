@@ -11,6 +11,7 @@ struct PerModelVertexData
 	XMMATRIX worldMatrix;
 };
 
+// Dependencies: Transform
 class MeshRenderer : public Component
 {
 	const unsigned int id = 6;
