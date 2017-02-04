@@ -62,7 +62,7 @@ void CameraController::Update()
 	// put camera back to saved position
 	transform->SetLocalPosition(pos.x, pos.y, pos.z);
 	// put cursor back in the middle of the screen
-	//SetCursorPos((int)screenMiddle.x, (int)screenMiddle.y);
+	SetCursorPos((int)screenMiddle.x, (int)screenMiddle.y);
 }
 
 void CameraController::OnDelete()
@@ -81,5 +81,4 @@ string CameraController::WriteToString() const
 
 void CameraController::ThirdPerson(GameObject obj, float speed)
 {
-	
 }

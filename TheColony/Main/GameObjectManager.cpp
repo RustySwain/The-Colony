@@ -3,6 +3,7 @@
 #include "MeshRenderer.h"
 #include "CameraController.h"
 #include "Camera.h"
+#include "Time.h"
 
 GameObjectManager::GameObjectManager()
 {
@@ -24,12 +25,12 @@ void GameObjectManager::Start()
 	cam.AddComponent<Transform>();
 	cam.GetComponent<Camera>()->SetFarPlane(500);
 	cam.AddComponent<CameraController>();
-	cam.GetComponent<Transform>()->SetLocalPosition(4, 4, 20);
-
+	cam.GetComponent<Transform>()->SetLocalPosition(0, 0, 5);
 }
 
 void GameObjectManager::Update()
 {
+	go.GetComponent<Transform>()->RotateYPost(Time::Delta() * 90);
 	go.Update();
 	cam.Update();
 }
