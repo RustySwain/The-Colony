@@ -6,9 +6,9 @@
 
 void MeshRenderer::Init()
 {
-	if (initialized)
+	if (flags & INIT)
 		return;
-	initialized = true;
+	flags |= INIT;
 	// create vertex buffer
 	D3D11_BUFFER_DESC bDesc;
 	ZMem(bDesc);
@@ -81,17 +81,121 @@ void MeshRenderer::OnDelete()
 
 void MeshRenderer::LoadFromString(string _str)
 {
+	unsigned int offset = 0;
+
+	// other members
+	flags = _str[offset];
+	offset += sizeof(bool);
+	char t = *(char*)&_str[offset];
+	type = (Type)t;
+	offset += sizeof(char);
+
+	unsigned int length = 0;
+
+	if (flags & MESH)
+	{
+		length = *(char*)&_str[offset];
+		offset += sizeof(char);
+		memcpy_s(meshPath, 256, &_str[offset], length);
+		offset += length;
+	}
+	if (flags & DIFFUSE)
+	{
+		length = *(char*)&_str[offset];
+		offset += sizeof(char);
+		memcpy_s(diffusePath, 256, &_str[offset], length);
+		offset += length;
+	}
+
+	if (flags & NORMAL)
+	{
+		length = *(char*)&_str[offset];
+		offset += sizeof(char);
+		memcpy_s(normalPath, 256, &_str[offset], length);
+		offset += length;
+	}
+
+	if (flags & SPECULAR)
+	{
+		length = *(char*)&_str[offset];
+		offset += sizeof(char);
+		memcpy_s(specularPath, 256, &_str[offset], length);
+		offset += length;
+	}
+
+	if (flags & EMISSIVE)
+	{
+		length = *(char*)&_str[offset];
+		offset += sizeof(char);
+		memcpy_s(emissivePath, 256, &_str[offset], length);
+	}
+
+	if (strlen(meshPath))
+		LoadFromObj(meshPath);
+	if (strlen(diffusePath))
+		LoadDiffuseMap((wchar_t*)diffusePath);
+	if (strlen(normalPath))
+		LoadNormalMap((wchar_t*)normalPath);
+	if (strlen(specularPath))
+		LoadSpecularMap((wchar_t*)specularPath);
+	if (strlen(emissivePath))
+		LoadEmissiveMap((wchar_t*)emissivePath);
 }
 
-bool MeshRenderer::LoadFromObj(const char* _path)
+string MeshRenderer::WriteToString() const
+{
+	string ret = "";
+
+	ret.append(&flags, 0, 1);
+	char* t = (char*)&type;
+	ret.append(t, 0, sizeof(type));
+
+	if (flags & HAS_MESH)
+	{
+		size_t length = strlen(meshPath);
+		ret.append((char*)&length);
+		ret.append(meshPath);
+	}
+	if (flags & DIFFUSE)
+	{
+		size_t length = strlen(diffusePath);
+		ret.append((char*)&length);
+		ret.append(diffusePath);
+	}
+	if (flags & NORMAL)
+	{
+		size_t length = strlen(normalPath);
+		ret.append((char*)&length);
+		ret.append(normalPath);
+	}
+	if (flags & SPECULAR)
+	{
+		size_t length = strlen(specularPath);
+		ret.append((char*)&length);
+		ret.append(specularPath);
+	}
+	if (flags & EMISSIVE)
+	{
+		size_t length = strlen(emissivePath);
+		ret.append((char*)&length);
+		ret.append(emissivePath);
+	}
+	return ret;
+}
+
+bool MeshRenderer::LoadFromObj(char* _path)
 {
 	if (mesh) delete mesh;
 	mesh = new Mesh();
+	memcpy_s(&meshPath[0], 256, _path, strlen(_path));
+	flags |= HAS_MESH;
 	return mesh->LoadFromObj(_path);
 }
 
 void MeshRenderer::LoadDiffuseMap(const wchar_t* _path)
 {
+	SAFE_RELEASE(diffuseMap);
+	SAFE_RELEASE(sampler);
 	CreateDDSTextureFromFile(Application::GetInstance()->GetDevice(), _path, 0, &diffuseMap);
 	D3D11_SAMPLER_DESC sDesc;
 	ZMem(sDesc);
@@ -102,21 +206,44 @@ void MeshRenderer::LoadDiffuseMap(const wchar_t* _path)
 	sDesc.MaxLOD = 100;
 	sDesc.Filter = D3D11_FILTER_ANISOTROPIC;
 	Application::GetInstance()->GetDevice()->CreateSamplerState(&sDesc, &sampler);
+	char tmp[256];
+	size_t len = wcslen(_path);
+	wcstombs_s(&len, tmp, _path, INT_MAX);
+	memcpy_s(&diffusePath[0], 256, tmp, len);
+	flags |= DIFFUSE;
 }
 
 void MeshRenderer::LoadNormalMap(const wchar_t* _path)
 {
+	SAFE_RELEASE(normalMap);
 	CreateDDSTextureFromFile(Application::GetInstance()->GetDevice(), _path, 0, &normalMap);
+	char tmp[256];
+	size_t len = wcslen(_path);
+	wcstombs_s(&len, tmp, _path, INT_MAX);
+	memcpy_s(&diffusePath[0], 256, tmp, len);
+	flags |= NORMAL;
 }
 
 void MeshRenderer::LoadSpecularMap(const wchar_t* _path)
 {
+	SAFE_RELEASE(specularMap);
 	CreateDDSTextureFromFile(Application::GetInstance()->GetDevice(), _path, 0, &specularMap);
+	char tmp[256];
+	size_t len = wcslen(_path);
+	wcstombs_s(&len, tmp, _path, INT_MAX);
+	memcpy_s(&diffusePath[0], 256, tmp, len);
+	flags |= SPECULAR;
 }
 
 void MeshRenderer::LoadEmissiveMap(const wchar_t* _path)
 {
+	SAFE_RELEASE(emissiveMap);
 	CreateDDSTextureFromFile(Application::GetInstance()->GetDevice(), _path, 0, &emissiveMap);
+	char tmp[256];
+	size_t len = wcslen(_path);
+	wcstombs_s(&len, tmp, _path, INT_MAX);
+	memcpy_s(&diffusePath[0], 256, tmp, len);
+	flags |= EMISSIVE;
 }
 
 void MeshRenderer::SetMeshColor(XMFLOAT4 _rgba) const
@@ -131,7 +258,7 @@ void MeshRenderer::Render() const
 {
 	auto context = Application::GetInstance()->GetContext();
 	// only update vertex buffer if the mesh can be changed
-	if (dynamicVerts)
+	if (flags & DYNAMIC)
 		context->UpdateSubresource(vertBuffer, 0, 0, mesh->GetVertexData().data(), 0, 0);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	unsigned int offset = 0, stride = sizeof(Vertex);

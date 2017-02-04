@@ -47,3 +47,8 @@ void GameObject::OnDelete()
 	}
 	components.clear();
 }
+
+GameObject* GameObject::FindFromId(unsigned _id)
+{
+	return nullptr;
+}

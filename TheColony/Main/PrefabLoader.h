@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 
+// Dependencies: None
 class PrefabLoader : public Component
 {
 	const unsigned int id = 12;

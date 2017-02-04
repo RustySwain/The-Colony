@@ -1,5 +1,7 @@
 #pragma once
 #include "GameObject.h"
+
+// Dependencies: None
 class GameObjectManager : public Component
 {
 	const unsigned int id = 5;
@@ -16,4 +18,5 @@ public:
 	virtual void Update() override;
 	virtual void OnDelete() override;
 	virtual void LoadFromString(string _str) override;
+	virtual string WriteToString() const override;
 };

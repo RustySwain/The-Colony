@@ -18,6 +18,7 @@ void GameObjectManager::Start()
 	go.AddComponent<Transform>();
 	go.AddComponent<MeshRenderer>()->LoadFromObj("../Assets/cube.obj");
 	go.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/crate.dds");
+<<<<<<< HEAD
 
 	cam.Start();
 	cam.AddComponent<Camera>();
@@ -25,6 +26,11 @@ void GameObjectManager::Start()
 	cam.GetComponent<Camera>()->SetFarPlane(500);
 	cam.AddComponent<CameraController>();
 	//cam.GetComponent<Transform>()->SetLocalPosition(4, 4, 20);
+=======
+	go.Update();
+	string test = go.GetComponent<MeshRenderer>()->WriteToString();
+	go.GetComponent<MeshRenderer>()->LoadFromString(test);
+>>>>>>> origin/master
 }
 
 void GameObjectManager::Update()
@@ -41,4 +47,9 @@ void GameObjectManager::OnDelete()
 
 void GameObjectManager::LoadFromString(string _str)
 {
+}
+
+string GameObjectManager::WriteToString() const
+{
+	return "";
 }

@@ -21,8 +21,8 @@ void Application::CreateDevice()
 	swapDesc.BufferDesc.Height = windowRect.bottom;
 	swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapDesc.OutputWindow = *window;
-	swapDesc.SampleDesc.Count = MS_COUNT;
-	swapDesc.SampleDesc.Quality = MS_QUALITY;
+	swapDesc.SampleDesc.Count = msCount;
+	swapDesc.SampleDesc.Quality = msQuality;
 	swapDesc.Windowed = true;
 	swapDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	swapDesc.SwapEffect = DXGI_SWAP_EFFECT_SEQUENTIAL;
@@ -42,7 +42,7 @@ void Application::CreateRenderTarget()
 
 void Application::CreateLayout()
 {
-	D3D11_INPUT_ELEMENT_DESC layoutDesc[] = 
+	D3D11_INPUT_ELEMENT_DESC layoutDesc[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -64,7 +64,7 @@ void Application::CreateShaders()
 
 void Application::CreateDepthStencil()
 {
-	CD3D11_TEXTURE2D_DESC depthStencilDesc(DXGI_FORMAT_D24_UNORM_S8_UINT, lround(windowRect.right), lround(windowRect.bottom), 1, 1, D3D11_BIND_DEPTH_STENCIL, D3D11_USAGE_DEFAULT, 0, MS_COUNT, MS_QUALITY);
+	CD3D11_TEXTURE2D_DESC depthStencilDesc(DXGI_FORMAT_D24_UNORM_S8_UINT, lround(windowRect.right), lround(windowRect.bottom), 1, 1, D3D11_BIND_DEPTH_STENCIL, D3D11_USAGE_DEFAULT, 0, msCount, msQuality);
 
 	ID3D11Texture2D* depthStencil;
 	device->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencil);

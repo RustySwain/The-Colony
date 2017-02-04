@@ -34,6 +34,8 @@ public:
 	ID3D11PixelShader* psSkybox = nullptr;
 
 	float backBufferColor[4] = { 0, 1, 1, 1 };
+	unsigned int msCount = 8;
+	unsigned int msQuality = D3D11_STANDARD_MULTISAMPLE_PATTERN;
 
 	GameObject gameObjectManager;
 	vector<const MeshRenderer*> renderers;
