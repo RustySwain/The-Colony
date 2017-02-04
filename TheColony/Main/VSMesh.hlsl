@@ -23,6 +23,7 @@ struct Input
 	float4 jointIndex : JOINT_INDEX;
 	float4 jointWeight : JOINT_WEIGHT;
 	float4 flags : FLAGS;
+	matrix instance : INSTANCE;
 };
 
 struct Output
@@ -60,6 +61,7 @@ Output main(Input _in)
 		pos = float4(_in.pos.xyz, 1.0f);
 	}
 	pos = mul(worldMat, pos);
+	pos = mul(_in.instance, pos);
 	ret.worldPos = pos;
 	pos = mul(view, pos);
 	pos = mul(proj, pos);

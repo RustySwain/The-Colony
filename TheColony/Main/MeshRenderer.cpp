@@ -4,6 +4,8 @@
 #include "Application.h"
 #include "Transform.h"
 
+#define INSTANCE_MAX 1000
+
 void MeshRenderer::Init()
 {
 	if (flags & INIT)
@@ -41,6 +43,21 @@ void MeshRenderer::Init()
 
 	Application::GetInstance()->GetDevice()->CreateBuffer(&bDesc, &subData, &constantBuffer);
 
+	instances.reserve(INSTANCE_MAX);
+	instanceIndices.reserve(INSTANCE_MAX);
+	PerInstanceVertexData pivd;
+	pivd.instanceMatrix = XMMatrixIdentity();
+	instances.push_back(pivd);
+	instanceIndices.push_back(-1);
+	bDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bDesc.ByteWidth = sizeof(PerInstanceVertexData) * INSTANCE_MAX;
+	bDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	bDesc.Usage = D3D11_USAGE_DYNAMIC;
+
+	subData.pSysMem = instances.data();
+
+	Application::GetInstance()->GetDevice()->CreateBuffer(&bDesc, &subData, &instanceBuffer);
+
 	// sign me up to be rendered every frame
 	Application::GetInstance()->RegisterMeshRenderer(this);
 }
@@ -63,6 +80,12 @@ void MeshRenderer::Update()
 	// update constant buffer
 	cBufferData.worldMatrix = gameObject->GetComponent<Transform>()->GetWorldMatrix();
 	Application::GetInstance()->GetContext()->UpdateSubresource(constantBuffer, 0, 0, &cBufferData, 0, 0);
+
+	D3D11_MAPPED_SUBRESOURCE data;
+	ZMem(data);
+	Application::GetInstance()->GetContext()->Map(instanceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+	memcpy(data.pData, instances.data(), sizeof(PerInstanceVertexData) * instances.size());
+	Application::GetInstance()->GetContext()->Unmap(instanceBuffer, 0);
 }
 
 void MeshRenderer::OnDelete()
@@ -72,6 +95,7 @@ void MeshRenderer::OnDelete()
 	SAFE_RELEASE(vertBuffer);
 	SAFE_RELEASE(indexBuffer);
 	SAFE_RELEASE(constantBuffer);
+	SAFE_RELEASE(instanceBuffer);
 	SAFE_RELEASE(diffuseMap);
 	SAFE_RELEASE(normalMap);
 	SAFE_RELEASE(specularMap);
@@ -183,6 +207,31 @@ string MeshRenderer::WriteToString() const
 	return ret;
 }
 
+void MeshRenderer::AddInstance(XMMATRIX _mat, int _key)
+{
+	PerInstanceVertexData pivd;
+	pivd.instanceMatrix = _mat;
+	instances.push_back(pivd);
+	instanceIndices.push_back(_key);
+}
+
+void MeshRenderer::UpdateInstance(XMMATRIX _mat, int _key)
+{
+	auto iter = find(instanceIndices.begin(), instanceIndices.end(), _key);
+	if (iter != instanceIndices.end())
+		instances[*iter._Ptr].instanceMatrix = _mat;
+}
+
+void MeshRenderer::RemoveInstance(int _key)
+{
+	auto iter = find(instanceIndices.begin(), instanceIndices.end(), _key);
+	if (iter != instanceIndices.end())
+	{
+		instances.erase(instances.begin() + (iter - instanceIndices.begin()));
+		instanceIndices.erase(iter);
+	}
+}
+
 bool MeshRenderer::LoadFromObj(char* _path)
 {
 	if (mesh) delete mesh;
@@ -261,9 +310,10 @@ void MeshRenderer::Render() const
 	if (flags & DYNAMIC)
 		context->UpdateSubresource(vertBuffer, 0, 0, mesh->GetVertexData().data(), 0, 0);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	unsigned int offset = 0, stride = sizeof(Vertex);
+	unsigned int offset[] = { 0, 0 }, stride[] = { sizeof(Vertex), sizeof(PerInstanceVertexData) };
 	// set buffers
-	context->IASetVertexBuffers(0, 1, &vertBuffer, &stride, &offset);
+	ID3D11Buffer* vertBuffers[] = { vertBuffer, instanceBuffer };
+	context->IASetVertexBuffers(0, 2, vertBuffers, stride, offset);
 	context->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	context->VSSetConstantBuffers(0, 1, &constantBuffer);
 	// set textures for the pixel shader
@@ -284,5 +334,5 @@ void MeshRenderer::Render() const
 	/*if (gameObject->GetComponent<Animator>())
 		gameObject->GetComponent<Animator>()->SetVSBuffer();*/
 
-	context->DrawIndexed((UINT)mesh->GetTris().size(), 0, 0);
+	context->DrawIndexedInstanced((UINT)mesh->GetTris().size(), instances.size(), 0, 0, 0);
 }

@@ -4,6 +4,7 @@
 #include "CameraController.h"
 #include "Camera.h"
 #include "Time.h"
+#include "Debug.h"
 
 GameObjectManager::GameObjectManager()
 {
@@ -30,7 +31,21 @@ void GameObjectManager::Start()
 
 void GameObjectManager::Update()
 {
+	// Testing instancing stuff, feel free to remove, but it works
+	/*static unsigned int instanceInd = 0;
 	go.GetComponent<Transform>()->RotateYPost(Time::Delta() * 90);
+	if (GetAsyncKeyState('O') & 0x1)
+	{
+		XMMATRIX mat = XMMatrixIdentity();
+		float y = (float)(rand() % 100) / 10.0f;
+		mat *= XMMatrixTranslation(0, y, 0);
+		go.GetComponent<MeshRenderer>()->AddInstance(mat, instanceInd++);
+	}
+	if (GetAsyncKeyState('I'))
+	{
+		unsigned int id = rand() % instanceInd;
+		go.GetComponent<MeshRenderer>()->RemoveInstance(id);
+	}*/
 	go.Update();
 	cam.Update();
 }

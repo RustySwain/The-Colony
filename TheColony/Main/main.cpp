@@ -29,6 +29,9 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hInstancePrev, LPSTR _cmdLin
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	_CrtSetBreakAlloc(-1);
 #endif
+	// Seed random number generator
+	srand((unsigned int)time(0));
+
 	// Start up the app singleton
 	Application& app = *Application::GetInstance();
 

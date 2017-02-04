@@ -11,6 +11,11 @@ struct PerModelVertexData
 	XMMATRIX worldMatrix;
 };
 
+struct PerInstanceVertexData
+{
+	XMMATRIX instanceMatrix;
+};
+
 // Dependencies: Transform
 class MeshRenderer : public Component
 {
@@ -24,12 +29,18 @@ class MeshRenderer : public Component
 	ID3D11Buffer* vertBuffer = nullptr;
 	ID3D11Buffer* indexBuffer = nullptr;
 	ID3D11Buffer* constantBuffer = nullptr;
+	ID3D11Buffer* instanceBuffer = nullptr;
 	ID3D11ShaderResourceView* diffuseMap = nullptr;
 	ID3D11ShaderResourceView* normalMap = nullptr;
 	ID3D11ShaderResourceView* specularMap = nullptr;
 	ID3D11ShaderResourceView* emissiveMap = nullptr;
 	ID3D11SamplerState* sampler = nullptr;
 
+	// Instancing
+	vector<PerInstanceVertexData> instances;
+	vector<int> instanceIndices;
+
+	// Read/Write Paths
 	char meshPath[256];
 	char diffusePath[256];
 	char normalPath[256];
@@ -63,6 +74,11 @@ public:
 	void SetDynamic(const bool& _dyanamic) { flags ^= (-DYNAMIC ^ flags) & (1 << (unsigned int)log((unsigned int)DYNAMIC)); };
 
 	Mesh* GetMesh() const { return mesh; }
+
+	// Instances
+	void AddInstance(XMMATRIX _mat, int _key);
+	void UpdateInstance(XMMATRIX _mat, int _key);
+	void RemoveInstance(int _key);
 
 	// Mesh
 	bool LoadFromObj(char* _path);
