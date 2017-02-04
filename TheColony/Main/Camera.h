@@ -34,7 +34,7 @@ public:
 	virtual void Update() override;
 	virtual void OnDelete() override;
 	virtual void LoadFromString(string _str);
-
+	virtual string WriteToString() const override;
 
 	ID3D11Buffer* GetConstantBuffer() const { return constantBuffer; }
 

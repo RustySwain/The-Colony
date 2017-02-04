@@ -26,5 +26,6 @@ public:
 	virtual void OnDelete() override;
 	virtual const unsigned int GetId() const override { return id; }
 	virtual void LoadFromString(string _str);
+	virtual string WriteToString() const override;
 
 };

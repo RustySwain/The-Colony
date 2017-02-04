@@ -68,3 +68,8 @@ void Camera::OnDelete()
 void Camera::LoadFromString(string _str)
 {
 }
+
+string Camera::WriteToString() const
+{
+	return string();
+}

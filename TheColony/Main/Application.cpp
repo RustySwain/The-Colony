@@ -208,16 +208,16 @@ void Application::Update() const
 void Application::Render() const
 {
 	//Update light and camera buffers
-	/*Light::LightBufferType lightBuff[100];
+	Light::LightBufferType lightBuff[100];
 
 	for (size_t i = 0; i < lights.size(); i++)
 	{
 		lightBuff[i] = lights[i]->GetLightBuffType();
-	}*/
+	}
 
-	//context->UpdateSubresource(lightBuffer, 0, 0, lightBuff, 0, 0);
-	//XMFLOAT3 camPos = Camera::mainCam->gameObject->GetComponent<Transform>()->GetWorldPosition();
-	//context->UpdateSubresource(camPosBuffer, 0, 0, &camPos, 0, 0);
+	context->UpdateSubresource(lightBuffer, 0, 0, lightBuff, 0, 0);
+	XMFLOAT3 camPos = Camera::mainCam->gameObject->GetComponent<Transform>()->GetWorldPosition();
+	context->UpdateSubresource(camPosBuffer, 0, 0, &camPos, 0, 0);
 
 	context->OMSetRenderTargets(1, &screenTargetView, depthStencilView);
 	context->ClearRenderTargetView(screenTargetView, backBufferColor);
@@ -225,11 +225,11 @@ void Application::Render() const
 	float blendFactor[] = { 1, 1, 1, 1 };
 	context->OMSetBlendState(blendState, blendFactor, 0xffffffff);
 
-	//Camera* mainCam = Camera::mainCam;
-	//context->RSSetViewports(1, &mainCam->GetViewport());
+	Camera* mainCam = Camera::mainCam;
+	context->RSSetViewports(1, &mainCam->GetViewport());
 
-	//ID3D11Buffer* camBuf = mainCam->GetConstantBuffer();
-	//context->VSSetConstantBuffers(1, 1, &camBuf);
+	ID3D11Buffer* camBuf = mainCam->GetConstantBuffer();
+	context->VSSetConstantBuffers(1, 1, &camBuf);
 
 	ID3D11Buffer* pixBufs[2] = { lightBuffer, camPosBuffer };
 	context->PSSetConstantBuffers(0, 2, pixBufs);

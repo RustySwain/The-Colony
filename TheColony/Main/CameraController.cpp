@@ -74,6 +74,11 @@ void CameraController::LoadFromString(string _str)
 {
 }
 
+string CameraController::WriteToString() const
+{
+	return string();
+}
+
 void CameraController::ThirdPerson(GameObject obj, float speed)
 {
 	
