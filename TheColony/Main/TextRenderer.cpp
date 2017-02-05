@@ -1,4 +1,5 @@
 #include "TextRenderer.h"
+#include "MeshRenderer.h"
 
 TextRenderer::TextRenderer()
 {
@@ -10,6 +11,7 @@ TextRenderer::~TextRenderer()
 
 void TextRenderer::Start()
 {
+	gameObject->GetComponent<MeshRenderer>()->SetType(MeshRenderer::TEXT);
 }
 
 void TextRenderer::Update()
@@ -30,9 +32,5 @@ string TextRenderer::WriteToString() const
 }
 
 void TextRenderer::SetText(string _text)
-{
-}
-
-void TextRenderer::Render()
 {
 }

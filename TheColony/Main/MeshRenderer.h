@@ -50,7 +50,7 @@ class MeshRenderer : public Component
 	void Init();
 
 public:
-	enum Type { MESH = 10, SKYBOX = 11 };
+	enum Type { MESH = 10, SKYBOX = 11, TEXT };
 
 	MeshRenderer();
 	~MeshRenderer();

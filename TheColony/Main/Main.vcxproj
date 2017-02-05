@@ -142,7 +142,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
-    <ClCompile Include="RendereredCharacter.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="PrefabLoader.cpp" />
@@ -162,7 +161,6 @@
     <ClInclude Include="Macros.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshRenderer.h" />
-    <ClInclude Include="RendereredCharacter.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="TextRenderer.h" />
     <ClInclude Include="Time.h" />

@@ -1,11 +1,13 @@
 #pragma once
 #include "GameObject.h"
-#include "RendereredCharacter.h"
+#include "Font.h"
 
+// Dependencies
+// MeshRenderer
 class TextRenderer : public Component
 {
 	const unsigned int id = 13;
-	vector<RendereredCharacter> text;
+	Font* font;
 
 public:
 	TextRenderer();
@@ -20,6 +22,4 @@ public:
 	virtual string WriteToString() const override;
 
 	void SetText(string _text);
-
-	void Render();
 };
