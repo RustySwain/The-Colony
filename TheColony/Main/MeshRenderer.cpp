@@ -334,5 +334,5 @@ void MeshRenderer::Render() const
 	/*if (gameObject->GetComponent<Animator>())
 		gameObject->GetComponent<Animator>()->SetVSBuffer();*/
 
-	context->DrawIndexedInstanced((UINT)mesh->GetTris().size(), instances.size(), 0, 0, 0);
+	context->DrawIndexedInstanced((UINT)mesh->GetTris().size(), (UINT)instances.size(), 0, 0, 0);
 }

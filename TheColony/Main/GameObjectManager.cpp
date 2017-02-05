@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "Time.h"
 #include "Debug.h"
+#include "PrefabLoader.h"
 
 GameObjectManager::GameObjectManager()
 {
@@ -27,6 +28,9 @@ void GameObjectManager::Start()
 	cam.GetComponent<Camera>()->SetFarPlane(500);
 	cam.AddComponent<CameraController>();
 	cam.GetComponent<Transform>()->SetLocalPosition(0, 0, 5);
+
+	GameObject test;
+	test.AddComponent<PrefabLoader>()->Load("test.prefab");
 }
 
 void GameObjectManager::Update()

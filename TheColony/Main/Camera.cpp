@@ -25,8 +25,8 @@ void Camera::Start()
 		mainCam = this;
 	// create viewport to be the full window size
 	RECT winRect = Application::GetInstance()->GetWindowRect();
-	viewport.Height = winRect.bottom;
-	viewport.Width = winRect.right;
+	viewport.Height = (float)winRect.bottom;
+	viewport.Width = (float)winRect.right;
 	viewport.MinDepth = 0;
 	viewport.MaxDepth = 1;
 	viewport.TopLeftX = 0;

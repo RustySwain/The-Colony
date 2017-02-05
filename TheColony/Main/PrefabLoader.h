@@ -17,5 +17,5 @@ public:
 	virtual void OnDelete() override;
 	virtual void LoadFromString(string _str) override;
 
-	void LoadPrefab(string);
+	void Load(string _path);
 };
