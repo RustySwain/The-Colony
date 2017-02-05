@@ -32,7 +32,7 @@ void GameObjectManager::Start()
 void GameObjectManager::Update()
 {
 	// Testing instancing stuff, feel free to remove, but it works
-	/*static unsigned int instanceInd = 0;
+	static unsigned int instanceInd = 0;
 	go.GetComponent<Transform>()->RotateYPost(Time::Delta() * 90);
 	if (GetAsyncKeyState('O') & 0x1)
 	{
@@ -45,7 +45,7 @@ void GameObjectManager::Update()
 	{
 		unsigned int id = rand() % instanceInd;
 		go.GetComponent<MeshRenderer>()->RemoveInstance(id);
-	}*/
+	}
 	go.Update();
 	cam.Update();
 }
