@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "Application.h"
+#include "Macros.h"
 
 Camera* Camera::mainCam = nullptr;
 
@@ -62,7 +63,7 @@ void Camera::Update()
 
 void Camera::OnDelete()
 {
-	constantBuffer->Release();
+	SAFE_RELEASE(constantBuffer);
 }
 
 void Camera::LoadFromString(string _str)

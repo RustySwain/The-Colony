@@ -4,7 +4,7 @@
 #include "Application.h"
 #include "Transform.h"
 
-#define INSTANCE_MAX 1000
+#define INSTANCE_MAX 100000
 
 void MeshRenderer::Init()
 {
@@ -219,7 +219,7 @@ void MeshRenderer::UpdateInstance(XMMATRIX _mat, int _key)
 {
 	auto iter = find(instanceIndices.begin(), instanceIndices.end(), _key);
 	if (iter != instanceIndices.end())
-		instances[*iter._Ptr].instanceMatrix = _mat;
+		instances[iter - instanceIndices.begin()].instanceMatrix = _mat;
 }
 
 void MeshRenderer::RemoveInstance(int _key)

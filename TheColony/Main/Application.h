@@ -29,6 +29,7 @@ class Application
 	ID3D11Buffer* lightBuffer = nullptr;
 
 	ID3D11VertexShader* vsMesh = nullptr;
+	ID3D11VertexShader* vsUI = nullptr;
 	ID3D11PixelShader* psMesh = nullptr;
 	ID3D11PixelShader* psSkybox = nullptr;
 
@@ -63,6 +64,7 @@ public:
 	ID3D11PixelShader* GetPSMesh() const { return psMesh; };
 	ID3D11PixelShader* GetPSSkybox() const { return psSkybox; };
 	ID3D11VertexShader* GetVSMesh() const { return vsMesh; };
+	ID3D11VertexShader* GetVSUI() const { return vsUI; };
 
 	void RegisterMeshRenderer(const MeshRenderer* _mr);
 	void UnRegisterMeshRenderer(const MeshRenderer* _mr);

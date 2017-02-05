@@ -2,12 +2,13 @@
 #include "Macros.h"
 #include "Defines.h"
 #include <cmath>
+#include "GameObjectManager.h"
 
-// Sahders
+// Shaders
 #include "VSMesh.csh"
+#include "VSUI.csh"
 #include "PSMesh.csh"
 #include "PSSkybox.csh"
-#include "GameObjectManager.h"
 
 Application* Application::instance = nullptr;
 
@@ -62,6 +63,7 @@ void Application::CreateLayout()
 void Application::CreateShaders()
 {
 	device->CreateVertexShader(VSMesh, sizeof(VSMesh), 0, &vsMesh);
+	device->CreateVertexShader(VSUI, sizeof(VSUI), 0, &vsUI);
 	device->CreatePixelShader(PSMesh, sizeof(PSMesh), 0, &psMesh);
 	device->CreatePixelShader(PSSkybox, sizeof(PSSkybox), 0, &psSkybox);
 }
@@ -243,6 +245,7 @@ void Application::Shutdown()
 
 	// Shaders
 	SAFE_RELEASE(vsMesh);
+	SAFE_RELEASE(vsUI);
 	SAFE_RELEASE(psMesh);
 	SAFE_RELEASE(psSkybox);
 
