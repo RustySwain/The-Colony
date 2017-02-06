@@ -29,8 +29,7 @@ void GameObjectManager::Start()
 	cam.AddComponent<CameraController>();
 	cam.GetComponent<Transform>()->SetLocalPosition(0, 0, 5);
 
-	GameObject test;
-	test.AddComponent<PrefabLoader>()->Load("test.prefab");
+	prefabTest.AddComponent<PrefabLoader>()->Load("test.prefab");
 }
 
 void GameObjectManager::Update()
@@ -52,12 +51,14 @@ void GameObjectManager::Update()
 	}
 	go.Update();
 	cam.Update();
+	prefabTest.Update();
 }
 
 void GameObjectManager::OnDelete()
 {
 	go.OnDelete();
 	cam.OnDelete();
+	prefabTest.OnDelete();
 }
 
 void GameObjectManager::LoadFromFile(fstream & _file)
