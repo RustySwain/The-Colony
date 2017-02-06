@@ -1,4 +1,4 @@
-#include "FBXExporter.h"
+#include "FBXExporterTool.h"
 #include "Utilities.h"
 #include <fstream>
 #include <sstream>
@@ -6,7 +6,7 @@
 
 using namespace DirectX;
 
-FBXExporter::FBXExporter()
+FBXExporterTool::FBXExporterTool()
 {
 	mFBXManager = nullptr;
 	mFBXScene = nullptr;
@@ -15,7 +15,7 @@ FBXExporter::FBXExporter()
 	QueryPerformanceFrequency(&mCPUFreq);
 }
 
-bool FBXExporter::Initialize()
+bool FBXExporterTool::Initialize()
 {
 	mFBXManager = FbxManager::Create();
 	if (!mFBXManager)
@@ -31,12 +31,15 @@ bool FBXExporter::Initialize()
 	return true;
 }
 
-bool FBXExporter::LoadScene(const char* inFileName, const char* inOutputPath)
+bool FBXExporterTool::LoadScene(const char* inFileName, const char* inOutputPath, bool exportMesh, bool exportAnim, bool exportBinary)
 {
 	LARGE_INTEGER start;
 	LARGE_INTEGER end;
 	mInputFilePath = inFileName;
 	mOutputFilePath = inOutputPath;
+	mExportMesh = exportMesh;
+	mExportAnim = exportAnim;
+	mExportBinary = exportBinary;
 
 	QueryPerformanceCounter(&start);
 	FbxImporter* fbxImporter = FbxImporter::Create(mFBXManager, "myImporter");
@@ -57,12 +60,13 @@ bool FBXExporter::LoadScene(const char* inFileName, const char* inOutputPath)
 	}
 	fbxImporter->Destroy();
 	QueryPerformanceCounter(&end);
+	
 	std::cout << "Loading FBX File: " << ((end.QuadPart - start.QuadPart) / static_cast<float>(mCPUFreq.QuadPart)) << "s\n";
 
 	return true;
 }
 
-void FBXExporter::ExportFBX()
+void FBXExporterTool::ExportFBX()
 {
 	LARGE_INTEGER start;
 	LARGE_INTEGER end;
@@ -94,23 +98,42 @@ void FBXExporter::ExportFBX()
 	//PrintMaterial();
 	std::cout << "\n\n";
 
-	
-
-	std::string outputMeshName = mOutputFilePath + genericFileName + ".itpmesh";
-	std::ofstream meshOutput(outputMeshName);
-	WriteMeshToStream(meshOutput);
-
-	if(mHasAnimation)
+	if(mExportMesh)
 	{
-		std::string outputNnimName = mOutputFilePath + genericFileName + ".itpanim";
-		std::ofstream animOutput(outputNnimName);
-		WriteAnimationToStream(animOutput);
+		std::string outputMeshName = mOutputFilePath + genericFileName + ".mesh";
+
+		if (mExportBinary)
+		{
+			std::ofstream meshOutput(outputMeshName, std::ios_base::binary);
+			WriteMeshToBinary(meshOutput);
+		}
+		else
+		{
+			std::ofstream meshOutput(outputMeshName);
+			WriteMeshToStream(meshOutput);
+		}
+	}
+
+	if(mHasAnimation && mExportAnim)
+	{
+		std::string outputNnimName = mOutputFilePath + genericFileName + ".anim";
+
+		if(mExportBinary)
+		{
+			std::ofstream animOutput(outputNnimName, std::ios_base::binary);
+			WriteAnimationToBinary(animOutput);
+		}
+		else
+		{
+			std::ofstream animOutput(outputNnimName);
+			WriteAnimationToStream(animOutput);
+		}
 	}
 	CleanupFbxManager();
 	std::cout << "\n\nExport Done!\n";
 }
 
-void FBXExporter::ProcessGeometry(FbxNode* inNode)
+void FBXExporterTool::ProcessGeometry(FbxNode* inNode)
 {
 	if (inNode->GetNodeAttribute())
 	{
@@ -135,7 +158,7 @@ void FBXExporter::ProcessGeometry(FbxNode* inNode)
 	}
 }
 
-void FBXExporter::ProcessSkeletonHierarchy(FbxNode* inRootNode)
+void FBXExporterTool::ProcessSkeletonHierarchy(FbxNode* inRootNode)
 {
 
 	for (int childIndex = 0; childIndex < inRootNode->GetChildCount(); ++childIndex)
@@ -145,7 +168,7 @@ void FBXExporter::ProcessSkeletonHierarchy(FbxNode* inRootNode)
 	}
 }
 
-void FBXExporter::ProcessSkeletonHierarchyRecursively(FbxNode* inNode, int inDepth, int myIndex, int inParentIndex)
+void FBXExporterTool::ProcessSkeletonHierarchyRecursively(FbxNode* inNode, int inDepth, int myIndex, int inParentIndex)
 {
 	if(inNode->GetNodeAttribute() && inNode->GetNodeAttribute()->GetAttributeType() && inNode->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eSkeleton)
 	{
@@ -160,7 +183,7 @@ void FBXExporter::ProcessSkeletonHierarchyRecursively(FbxNode* inNode, int inDep
 	}
 }
 
-void FBXExporter::ProcessControlPoints(FbxNode* inNode)
+void FBXExporterTool::ProcessControlPoints(FbxNode* inNode)
 {
 	FbxMesh* currMesh = inNode->GetMesh();
 	unsigned int ctrlPointCount = currMesh->GetControlPointsCount();
@@ -176,7 +199,7 @@ void FBXExporter::ProcessControlPoints(FbxNode* inNode)
 	}
 }
 
-void FBXExporter::ProcessJointsAndAnimations(FbxNode* inNode)
+void FBXExporterTool::ProcessJointsAndAnimations(FbxNode* inNode)
 {
 	FbxMesh* currMesh = inNode->GetMesh();
 	unsigned int numOfDeformers = currMesh->GetDeformerCount();
@@ -268,7 +291,7 @@ void FBXExporter::ProcessJointsAndAnimations(FbxNode* inNode)
 	}
 }
 
-unsigned int FBXExporter::FindJointIndexUsingName(const std::string& inJointName)
+unsigned int FBXExporterTool::FindJointIndexUsingName(const std::string& inJointName)
 {
 	for(unsigned int i = 0; i < mSkeleton.mJoints.size(); ++i)
 	{
@@ -282,7 +305,7 @@ unsigned int FBXExporter::FindJointIndexUsingName(const std::string& inJointName
 }
 
 
-void FBXExporter::ProcessMesh(FbxNode* inNode)
+void FBXExporterTool::ProcessMesh(FbxNode* inNode)
 {
 	FbxMesh* currMesh = inNode->GetMesh();
 
@@ -344,7 +367,7 @@ void FBXExporter::ProcessMesh(FbxNode* inNode)
 	mControlPoints.clear();
 }
 
-void FBXExporter::ReadUV(FbxMesh* inMesh, int inCtrlPointIndex, int inTextureUVIndex, int inUVLayer, XMFLOAT2& outUV)
+void FBXExporterTool::ReadUV(FbxMesh* inMesh, int inCtrlPointIndex, int inTextureUVIndex, int inUVLayer, XMFLOAT2& outUV)
 {
 	if(inUVLayer >= 2 || inMesh->GetElementUVCount() <= inUVLayer)
 	{
@@ -395,7 +418,7 @@ void FBXExporter::ReadUV(FbxMesh* inMesh, int inCtrlPointIndex, int inTextureUVI
 	}
 }
 
-void FBXExporter::ReadNormal(FbxMesh* inMesh, int inCtrlPointIndex, int inVertexCounter, XMFLOAT3& outNormal)
+void FBXExporterTool::ReadNormal(FbxMesh* inMesh, int inCtrlPointIndex, int inVertexCounter, XMFLOAT3& outNormal)
 {
 	if(inMesh->GetElementNormalCount() < 1)
 	{
@@ -457,7 +480,7 @@ void FBXExporter::ReadNormal(FbxMesh* inMesh, int inCtrlPointIndex, int inVertex
 	}
 }
 
-void FBXExporter::ReadBinormal(FbxMesh* inMesh, int inCtrlPointIndex, int inVertexCounter, XMFLOAT3& outBinormal)
+void FBXExporterTool::ReadBinormal(FbxMesh* inMesh, int inCtrlPointIndex, int inVertexCounter, XMFLOAT3& outBinormal)
 {
 	if(inMesh->GetElementBinormalCount() < 1)
 	{
@@ -519,7 +542,7 @@ void FBXExporter::ReadBinormal(FbxMesh* inMesh, int inCtrlPointIndex, int inVert
 	}
 }
 
-void FBXExporter::ReadTangent(FbxMesh* inMesh, int inCtrlPointIndex, int inVertexCounter, XMFLOAT3& outTangent)
+void FBXExporterTool::ReadTangent(FbxMesh* inMesh, int inCtrlPointIndex, int inVertexCounter, XMFLOAT3& outTangent)
 {
 	if(inMesh->GetElementTangentCount() < 1)
 	{
@@ -584,7 +607,7 @@ void FBXExporter::ReadTangent(FbxMesh* inMesh, int inCtrlPointIndex, int inVerte
 // This function removes the duplicated vertices and
 // adjust the index buffer properly
 // This function should take a while, though........
-void FBXExporter::Optimize()
+void FBXExporterTool::Optimize()
 {
 	// First get a list of unique vertices
 	std::vector<PNTIWVertex> uniqueVertices;
@@ -619,7 +642,7 @@ void FBXExporter::Optimize()
 	std::sort(mTriangles.begin(), mTriangles.end());
 }
 
-int FBXExporter::FindVertex(const PNTIWVertex& inTargetVertex, const std::vector<PNTIWVertex>& uniqueVertices)
+int FBXExporterTool::FindVertex(const PNTIWVertex& inTargetVertex, const std::vector<PNTIWVertex>& uniqueVertices)
 {
 	for(unsigned int i = 0; i < uniqueVertices.size(); ++i)
 	{
@@ -633,7 +656,7 @@ int FBXExporter::FindVertex(const PNTIWVertex& inTargetVertex, const std::vector
 }
 
 /*
-void FBXExporter::ReduceVertices()
+void FBXExporterTool::ReduceVertices()
 {
 	CleanupFbxManager();
 	std::vector<Vertex::PNTVertex> newVertices;
@@ -657,7 +680,7 @@ void FBXExporter::ReduceVertices()
 
 /*
 
-int FBXExporter::FindVertex(const Vertex::PNTVertex& inTarget, const std::vector<Vertex::PNTVertex>& inVertices)
+int FBXExporterTool::FindVertex(const Vertex::PNTVertex& inTarget, const std::vector<Vertex::PNTVertex>& inVertices)
 {
 	int index = -1;
 	for (unsigned int i = 0; i < inVertices.size(); ++i)
@@ -672,7 +695,7 @@ int FBXExporter::FindVertex(const Vertex::PNTVertex& inTarget, const std::vector
 }
 */
 
-void FBXExporter::AssociateMaterialToMesh(FbxNode* inNode)
+void FBXExporterTool::AssociateMaterialToMesh(FbxNode* inNode)
 {
 	FbxLayerElementArrayTemplate<int>* materialIndices;
 	FbxGeometryElement::EMappingMode materialMappingMode = FbxGeometryElement::eNone;
@@ -717,7 +740,7 @@ void FBXExporter::AssociateMaterialToMesh(FbxNode* inNode)
 	}
 }
 
-void FBXExporter::ProcessMaterials(FbxNode* inNode)
+void FBXExporterTool::ProcessMaterials(FbxNode* inNode)
 {
 	unsigned int materialCount = inNode->GetMaterialCount();
 
@@ -729,7 +752,7 @@ void FBXExporter::ProcessMaterials(FbxNode* inNode)
 	}
 }
 
-void FBXExporter::ProcessMaterialAttribute(FbxSurfaceMaterial* inMaterial, unsigned int inMaterialIndex)
+void FBXExporterTool::ProcessMaterialAttribute(FbxSurfaceMaterial* inMaterial, unsigned int inMaterialIndex)
 {
 	FbxDouble3 double3;
 	FbxDouble double1;
@@ -816,7 +839,7 @@ void FBXExporter::ProcessMaterialAttribute(FbxSurfaceMaterial* inMaterial, unsig
 	}
 }
 
-void FBXExporter::ProcessMaterialTexture(FbxSurfaceMaterial* inMaterial, Material* ioMaterial)
+void FBXExporterTool::ProcessMaterialTexture(FbxSurfaceMaterial* inMaterial, Material* ioMaterial)
 {
 	unsigned int textureIndex = 0;
 	FbxProperty property;
@@ -864,7 +887,7 @@ void FBXExporter::ProcessMaterialTexture(FbxSurfaceMaterial* inMaterial, Materia
 	}
 }
 
-void FBXExporter::PrintMaterial()
+void FBXExporterTool::PrintMaterial()
 {
 	for(auto itr = mMaterialLookUp.begin(); itr != mMaterialLookUp.end(); ++itr)
 	{
@@ -873,7 +896,7 @@ void FBXExporter::PrintMaterial()
 	}
 }
 
-void FBXExporter::PrintTriangles()
+void FBXExporterTool::PrintTriangles()
 {
 	for(unsigned int i = 0; i < mTriangles.size(); ++i)
 	{
@@ -881,7 +904,7 @@ void FBXExporter::PrintTriangles()
 	}
 }
 
-void FBXExporter::CleanupFbxManager()
+void FBXExporterTool::CleanupFbxManager()
 {
 	mFBXScene->Destroy();
 	mFBXManager->Destroy();
@@ -899,7 +922,7 @@ void FBXExporter::CleanupFbxManager()
 	mMaterialLookUp.clear();
 }
 
-void FBXExporter::WriteMeshToStream(std::ostream& inStream)
+void FBXExporterTool::WriteMeshToStream(std::ostream& inStream)
 {
 	
 	inStream << "<?xml version='1.0' encoding='UTF-8' ?>" << std::endl;
@@ -943,7 +966,7 @@ void FBXExporter::WriteMeshToStream(std::ostream& inStream)
 	inStream << "</itpmesh>" << std::endl;
 }
 
-void FBXExporter::WriteAnimationToStream(std::ostream& inStream)
+void FBXExporterTool::WriteAnimationToStream(std::ostream& inStream)
 {
 	inStream << "<?xml version='1.0' encoding='UTF-8' ?>" << std::endl;
 	inStream << "<itpanim>" << std::endl;
@@ -990,4 +1013,12 @@ void FBXExporter::WriteAnimationToStream(std::ostream& inStream)
 	inStream << "\t\t</animation>\n";
 	inStream << "</animations>\n";
 	inStream << "</itpanim>";
+}
+
+void FBXExporterTool::WriteMeshToBinary(std::ostream & inStream)
+{
+}
+
+void FBXExporterTool::WriteAnimationToBinary(std::ostream & inStream)
+{
 }

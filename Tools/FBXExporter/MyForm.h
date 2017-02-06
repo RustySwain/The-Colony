@@ -1,4 +1,5 @@
 #pragma once
+#include "FBXExporterTool.h"
 
 namespace FBXExporter {
 
@@ -42,6 +43,13 @@ namespace FBXExporter {
 	private: System::Windows::Forms::CheckBox^  ExportMesh;
 	private: System::Windows::Forms::CheckBox^  ExportAnim;
 	private: System::Windows::Forms::OpenFileDialog^  FBXDialog;
+	public: System::Windows::Forms::RichTextBox^  ResultBox;
+	private: System::Windows::Forms::CheckBox^  ExportAsBinary;
+	public:
+	private:
+
+
+
 
 	private:
 		/// <summary>
@@ -63,6 +71,8 @@ namespace FBXExporter {
 			this->ExportMesh = (gcnew System::Windows::Forms::CheckBox());
 			this->ExportAnim = (gcnew System::Windows::Forms::CheckBox());
 			this->FBXDialog = (gcnew System::Windows::Forms::OpenFileDialog());
+			this->ResultBox = (gcnew System::Windows::Forms::RichTextBox());
+			this->ExportAsBinary = (gcnew System::Windows::Forms::CheckBox());
 			this->SuspendLayout();
 			// 
 			// FBXFile_Label
@@ -113,6 +123,8 @@ namespace FBXExporter {
 			// ExportMesh
 			// 
 			this->ExportMesh->AutoSize = true;
+			this->ExportMesh->Checked = true;
+			this->ExportMesh->CheckState = System::Windows::Forms::CheckState::Checked;
 			this->ExportMesh->Location = System::Drawing::Point(12, 59);
 			this->ExportMesh->Name = L"ExportMesh";
 			this->ExportMesh->Size = System::Drawing::Size(85, 17);
@@ -123,6 +135,8 @@ namespace FBXExporter {
 			// ExportAnim
 			// 
 			this->ExportAnim->AutoSize = true;
+			this->ExportAnim->Checked = true;
+			this->ExportAnim->CheckState = System::Windows::Forms::CheckState::Checked;
 			this->ExportAnim->Location = System::Drawing::Point(12, 82);
 			this->ExportAnim->Name = L"ExportAnim";
 			this->ExportAnim->Size = System::Drawing::Size(105, 17);
@@ -134,11 +148,32 @@ namespace FBXExporter {
 			// 
 			this->FBXDialog->FileName = L"FBXDialog";
 			// 
+			// ResultBox
+			// 
+			this->ResultBox->Location = System::Drawing::Point(12, 134);
+			this->ResultBox->Name = L"ResultBox";
+			this->ResultBox->ReadOnly = true;
+			this->ResultBox->Size = System::Drawing::Size(401, 160);
+			this->ResultBox->TabIndex = 6;
+			this->ResultBox->Text = L"Waiting for user...";
+			// 
+			// ExportAsBinary
+			// 
+			this->ExportAsBinary->AutoSize = true;
+			this->ExportAsBinary->Location = System::Drawing::Point(12, 105);
+			this->ExportAsBinary->Name = L"ExportAsBinary";
+			this->ExportAsBinary->Size = System::Drawing::Size(101, 17);
+			this->ExportAsBinary->TabIndex = 7;
+			this->ExportAsBinary->Text = L"Export as binary";
+			this->ExportAsBinary->UseVisualStyleBackColor = true;
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(425, 342);
+			this->Controls->Add(this->ExportAsBinary);
+			this->Controls->Add(this->ResultBox);
 			this->Controls->Add(this->ExportAnim);
 			this->Controls->Add(this->ExportMesh);
 			this->Controls->Add(this->Export);
@@ -161,7 +196,22 @@ namespace FBXExporter {
 
 	private: System::Void Export_Click(System::Object^ sender, System::EventArgs^ e)
 	{
+		const char* path = (const char*)(Runtime::InteropServices::Marshal::StringToHGlobalAnsi(FBXDialog->FileName)).ToPointer();
+		FBXExporterTool fbxexport;
 
+		if (FBXPath->Text == "")
+		{
+			ResultBox->AppendText("\nWhy are you trying to break my program?\n");
+			ResultBox->AppendText("Select a .fbx file first!");
+		}
+		else
+		{
+			ResultBox->AppendText("\nExporting " + FBXDialog->FileName + "... ");
+			fbxexport.Initialize();
+			fbxexport.LoadScene(path, "exported\\", ExportMesh->Checked, ExportAnim->Checked, ExportAsBinary->Checked);
+			fbxexport.ExportFBX();
+			ResultBox->AppendText("Done!");
+		}
 	}
 };
 }

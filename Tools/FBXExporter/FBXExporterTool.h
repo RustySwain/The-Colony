@@ -3,13 +3,13 @@
 #include <unordered_map>
 #include "Material.h"
 
-class FBXExporter
+class FBXExporterTool
 {
 public:
-	FBXExporter();
-	~FBXExporter();
+	FBXExporterTool();
+	~FBXExporterTool(){}
 	bool Initialize();
-	bool LoadScene(const char* inFileName, const char* inOutputPath);
+	bool LoadScene(const char* inFileName, const char* inOutputPath, bool exportMesh, bool exportAnim, bool exportBinary);
 	
 	void ExportFBX();
 
@@ -18,6 +18,9 @@ private:
 	FbxScene* mFBXScene;
 	std::string mInputFilePath;
 	std::string mOutputFilePath;
+	bool mExportMesh;
+	bool mExportAnim;
+	bool mExportBinary;
 	bool mHasAnimation;
 	std::unordered_map<unsigned int, CtrlPoint*> mControlPoints; 
 	unsigned int mTriangleCount;
@@ -28,7 +31,6 @@ private:
 	FbxLongLong mAnimationLength;
 	std::string mAnimationName;
 	LARGE_INTEGER mCPUFreq;
-	
 
 private:
 	void ProcessGeometry(FbxNode* inNode);
@@ -55,4 +57,6 @@ private:
 	void CleanupFbxManager();
 	void WriteMeshToStream(std::ostream& inStream);
 	void WriteAnimationToStream(std::ostream& inStream);
+	void WriteMeshToBinary(std::ostream& inStream);
+	void WriteAnimationToBinary(std::ostream& inStream);
 };
