@@ -103,6 +103,10 @@ void MeshRenderer::OnDelete()
 	SAFE_RELEASE(sampler);
 }
 
+void MeshRenderer::LoadFromFile(fstream & _file)
+{
+}
+
 void MeshRenderer::LoadFromString(string _str)
 {
 	unsigned int offset = 0;

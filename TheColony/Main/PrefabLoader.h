@@ -6,6 +6,9 @@ class PrefabLoader : public Component
 {
 	const unsigned int id = 12;
 
+	enum COMPONENTS { none = 0, _Transform, _RigidBody, _Collider, _Camera, _GameObjectManager, _MeshRenderer, _CameraController, _Light, _Skybox, _Animator, _AudioSource };
+	vector<int> m_Components;
+
 public:
 	PrefabLoader();
 	~PrefabLoader();
@@ -15,7 +18,9 @@ public:
 	virtual void Start() override;
 	virtual void Update() override;
 	virtual void OnDelete() override;
+	virtual void LoadFromFile(fstream &_file) override;
 	virtual void LoadFromString(string _str) override;
+	virtual string WriteToString() const override;
 
 	void Load(string _path);
 };

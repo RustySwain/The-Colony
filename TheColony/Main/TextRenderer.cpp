@@ -20,6 +20,10 @@ void TextRenderer::OnDelete()
 {
 }
 
+void TextRenderer::LoadFromFile(fstream & _file)
+{
+}
+
 void TextRenderer::LoadFromString(string _str)
 {
 }

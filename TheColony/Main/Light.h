@@ -28,6 +28,7 @@ public:
 	virtual void Update() override;
 	virtual void OnDelete() override;
 	//int GetId() const override { return id; }
+	virtual void LoadFromFile(fstream &_file) override;
 	virtual const unsigned int GetId() const override { return id; }
 
 	void SetColor(XMFLOAT4 _color);

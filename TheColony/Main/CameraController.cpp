@@ -71,6 +71,10 @@ void CameraController::OnDelete()
 	return;
 }
 
+void CameraController::LoadFromFile(fstream & _file)
+{
+}
+
 void CameraController::LoadFromString(string _str)
 {
 }

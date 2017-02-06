@@ -1,5 +1,6 @@
 #include "Light.h"
 #include "Application.h"
+#include <fstream>
 
 Light::Light() : type(LightType::NONE)
 {
@@ -29,6 +30,46 @@ void Light::Update()
 void Light::OnDelete()
 {
 	Application::GetInstance()->UnregisterLight(this);
+}
+
+void Light::LoadFromFile(fstream & _file)
+{
+	XMFLOAT4 color;
+	_file.read((char*)&color.x, sizeof(float));
+	_file.read((char*)&color.y, sizeof(float));
+	_file.read((char*)&color.z, sizeof(float));
+	_file.read((char*)&color.w, sizeof(float));
+	SetColor(color);
+
+	XMFLOAT4 extra;
+	_file.read((char*)&extra.x, sizeof(float));
+	_file.read((char*)&extra.y, sizeof(float));
+	_file.read((char*)&extra.z, sizeof(float));
+	_file.read((char*)&extra.w, sizeof(float));
+	SetExtra(extra);
+
+	int lightType;
+	_file.read((char*)&lightType, sizeof(int));
+	LightType lType;
+	switch (lightType)
+	{
+	case AMBIENT:
+		lType = AMBIENT;
+		break;
+	case DIRECTIONAL:
+		lType = DIRECTIONAL;
+		break;
+	case POINT:
+		lType = POINT;
+		break;
+	case SPOT:
+		lType = SPOT;
+		break;
+	default:
+		lType = NONE;
+		break;
+	}
+	type = lType;
 }
 
 void Light::SetColor(XMFLOAT4 _color)
