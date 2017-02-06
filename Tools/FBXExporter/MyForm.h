@@ -34,16 +34,14 @@ namespace FBXExporter {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::Label^  label1;
+	private: System::Windows::Forms::Label^  FBXFile_Label;
 	protected:
 	private: System::Windows::Forms::TextBox^  FBXPath;
 	private: System::Windows::Forms::Button^  FileBrowser;
 	private: System::Windows::Forms::Button^  Export;
-
 	private: System::Windows::Forms::CheckBox^  ExportMesh;
 	private: System::Windows::Forms::CheckBox^  ExportAnim;
-	private: System::Windows::Forms::OpenFileDialog^  openFBXFile;
-
+	private: System::Windows::Forms::OpenFileDialog^  FBXDialog;
 
 	private:
 		/// <summary>
@@ -58,44 +56,42 @@ namespace FBXExporter {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->FBXFile_Label = (gcnew System::Windows::Forms::Label());
 			this->FBXPath = (gcnew System::Windows::Forms::TextBox());
 			this->FileBrowser = (gcnew System::Windows::Forms::Button());
 			this->Export = (gcnew System::Windows::Forms::Button());
 			this->ExportMesh = (gcnew System::Windows::Forms::CheckBox());
 			this->ExportAnim = (gcnew System::Windows::Forms::CheckBox());
-			this->openFBXFile = (gcnew System::Windows::Forms::OpenFileDialog());
+			this->FBXDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->SuspendLayout();
 			// 
-			// label1
+			// FBXFile_Label
 			// 
-			this->label1->AutoSize = true;
-			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->FBXFile_Label->AutoSize = true;
+			this->FBXFile_Label->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label1->Location = System::Drawing::Point(9, 9);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(56, 15);
-			this->label1->TabIndex = 0;
-			this->label1->Text = L"FBX File:";
+			this->FBXFile_Label->Location = System::Drawing::Point(9, 9);
+			this->FBXFile_Label->Name = L"FBXFile_Label";
+			this->FBXFile_Label->Size = System::Drawing::Size(84, 15);
+			this->FBXFile_Label->TabIndex = 0;
+			this->FBXFile_Label->Text = L"FBX File Path:";
 			// 
 			// FBXPath
 			// 
-			this->FBXPath->Anchor = System::Windows::Forms::AnchorStyles::Top;
 			this->FBXPath->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->FBXPath->Location = System::Drawing::Point(12, 32);
+			this->FBXPath->Location = System::Drawing::Point(12, 30);
 			this->FBXPath->Name = L"FBXPath";
-			this->FBXPath->Size = System::Drawing::Size(313, 21);
+			this->FBXPath->Size = System::Drawing::Size(363, 21);
 			this->FBXPath->TabIndex = 1;
 			// 
 			// FileBrowser
 			// 
-			this->FileBrowser->Anchor = System::Windows::Forms::AnchorStyles::Top;
 			this->FileBrowser->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->FileBrowser->Location = System::Drawing::Point(325, 31);
+			this->FileBrowser->Location = System::Drawing::Point(374, 29);
 			this->FileBrowser->Name = L"FileBrowser";
-			this->FileBrowser->Size = System::Drawing::Size(31, 23);
+			this->FileBrowser->Size = System::Drawing::Size(39, 23);
 			this->FileBrowser->TabIndex = 2;
 			this->FileBrowser->Text = L"...";
 			this->FileBrowser->UseVisualStyleBackColor = true;
@@ -103,21 +99,21 @@ namespace FBXExporter {
 			// 
 			// Export
 			// 
+			this->Export->Anchor = System::Windows::Forms::AnchorStyles::Top;
 			this->Export->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->Export->Location = System::Drawing::Point(255, 281);
+			this->Export->Location = System::Drawing::Point(319, 300);
 			this->Export->Name = L"Export";
-			this->Export->Size = System::Drawing::Size(101, 26);
+			this->Export->Size = System::Drawing::Size(94, 30);
 			this->Export->TabIndex = 3;
 			this->Export->Text = L"Export";
 			this->Export->UseVisualStyleBackColor = true;
+			this->Export->Click += gcnew System::EventHandler(this, &MyForm::Export_Click);
 			// 
 			// ExportMesh
 			// 
 			this->ExportMesh->AutoSize = true;
-			this->ExportMesh->Checked = true;
-			this->ExportMesh->CheckState = System::Windows::Forms::CheckState::Checked;
-			this->ExportMesh->Location = System::Drawing::Point(12, 61);
+			this->ExportMesh->Location = System::Drawing::Point(12, 59);
 			this->ExportMesh->Name = L"ExportMesh";
 			this->ExportMesh->Size = System::Drawing::Size(85, 17);
 			this->ExportMesh->TabIndex = 4;
@@ -127,30 +123,28 @@ namespace FBXExporter {
 			// ExportAnim
 			// 
 			this->ExportAnim->AutoSize = true;
-			this->ExportAnim->Checked = true;
-			this->ExportAnim->CheckState = System::Windows::Forms::CheckState::Checked;
-			this->ExportAnim->Location = System::Drawing::Point(12, 84);
+			this->ExportAnim->Location = System::Drawing::Point(12, 82);
 			this->ExportAnim->Name = L"ExportAnim";
 			this->ExportAnim->Size = System::Drawing::Size(105, 17);
 			this->ExportAnim->TabIndex = 5;
 			this->ExportAnim->Text = L"Export Animation";
 			this->ExportAnim->UseVisualStyleBackColor = true;
 			// 
-			// openFBXFile
+			// FBXDialog
 			// 
-			this->openFBXFile->FileName = L"openFBXFile";
+			this->FBXDialog->FileName = L"FBXDialog";
 			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(368, 319);
+			this->ClientSize = System::Drawing::Size(425, 342);
 			this->Controls->Add(this->ExportAnim);
 			this->Controls->Add(this->ExportMesh);
 			this->Controls->Add(this->Export);
 			this->Controls->Add(this->FileBrowser);
 			this->Controls->Add(this->FBXPath);
-			this->Controls->Add(this->label1);
+			this->Controls->Add(this->FBXFile_Label);
 			this->Name = L"MyForm";
 			this->Text = L"MyForm";
 			this->ResumeLayout(false);
@@ -158,12 +152,16 @@ namespace FBXExporter {
 
 		}
 #pragma endregion
-	private: System::Void FileBrowser_Click(System::Object^  sender, System::EventArgs^  e)
+	private: System::Void FileBrowser_Click(System::Object^ sender, System::EventArgs^ e)
 	{
-		openFBXFile->Filter = "FBX File|*.fbx";
-		openFBXFile->ShowDialog();
-		FBXPath->Text = openFBXFile->FileName;
-		
+		FBXDialog->Filter = "FBX File|*.fbx";
+		FBXDialog->ShowDialog();
+		FBXPath->Text = FBXDialog->FileName;
 	}
-	};
+
+	private: System::Void Export_Click(System::Object^ sender, System::EventArgs^ e)
+	{
+
+	}
+};
 }
