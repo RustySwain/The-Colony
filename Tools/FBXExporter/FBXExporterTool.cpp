@@ -1071,7 +1071,8 @@ void FBXExporterTool::WriteMeshToBinary(std::ostream & inStream)
 
 void FBXExporterTool::WriteAnimationToBinary(std::ostream & inStream)
 {
-	inStream.write((char*)mSkeleton.mJoints.size(), sizeof(int));
+	int totalJoints = (int)mSkeleton.mJoints.size();
+	inStream.write((char*)&totalJoints, sizeof(int));
 	for (unsigned int i = 0; i < mSkeleton.mJoints.size(); ++i)
 	{
 		// joint id

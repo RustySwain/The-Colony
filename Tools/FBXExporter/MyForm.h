@@ -19,9 +19,7 @@ namespace FBXExporter {
 		MyForm(void)
 		{
 			InitializeComponent();
-			//
-			//TODO: Add the constructor code here
-			//
+			FileOutputPath->Text = "C:\\";
 		}
 
 	protected:
@@ -45,6 +43,10 @@ namespace FBXExporter {
 	private: System::Windows::Forms::OpenFileDialog^  FBXDialog;
 	public: System::Windows::Forms::RichTextBox^  ResultBox;
 	private: System::Windows::Forms::CheckBox^  ExportAsBinary;
+	private: System::Windows::Forms::Button^  OutputPathBrowser;
+	private: System::Windows::Forms::TextBox^  FileOutputPath;
+	private: System::Windows::Forms::Label^  FileOutput_Label;
+	private: System::Windows::Forms::FolderBrowserDialog^  OutputFolderDialog;
 	public:
 	private:
 
@@ -73,6 +75,10 @@ namespace FBXExporter {
 			this->FBXDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->ResultBox = (gcnew System::Windows::Forms::RichTextBox());
 			this->ExportAsBinary = (gcnew System::Windows::Forms::CheckBox());
+			this->OutputPathBrowser = (gcnew System::Windows::Forms::Button());
+			this->FileOutputPath = (gcnew System::Windows::Forms::TextBox());
+			this->FileOutput_Label = (gcnew System::Windows::Forms::Label());
+			this->OutputFolderDialog = (gcnew System::Windows::Forms::FolderBrowserDialog());
 			this->SuspendLayout();
 			// 
 			// FBXFile_Label
@@ -125,7 +131,7 @@ namespace FBXExporter {
 			this->ExportMesh->AutoSize = true;
 			this->ExportMesh->Checked = true;
 			this->ExportMesh->CheckState = System::Windows::Forms::CheckState::Checked;
-			this->ExportMesh->Location = System::Drawing::Point(12, 59);
+			this->ExportMesh->Location = System::Drawing::Point(12, 109);
 			this->ExportMesh->Name = L"ExportMesh";
 			this->ExportMesh->Size = System::Drawing::Size(85, 17);
 			this->ExportMesh->TabIndex = 4;
@@ -137,7 +143,7 @@ namespace FBXExporter {
 			this->ExportAnim->AutoSize = true;
 			this->ExportAnim->Checked = true;
 			this->ExportAnim->CheckState = System::Windows::Forms::CheckState::Checked;
-			this->ExportAnim->Location = System::Drawing::Point(12, 82);
+			this->ExportAnim->Location = System::Drawing::Point(12, 132);
 			this->ExportAnim->Name = L"ExportAnim";
 			this->ExportAnim->Size = System::Drawing::Size(105, 17);
 			this->ExportAnim->TabIndex = 5;
@@ -150,28 +156,63 @@ namespace FBXExporter {
 			// 
 			// ResultBox
 			// 
-			this->ResultBox->Location = System::Drawing::Point(12, 134);
+			this->ResultBox->Location = System::Drawing::Point(12, 180);
 			this->ResultBox->Name = L"ResultBox";
 			this->ResultBox->ReadOnly = true;
-			this->ResultBox->Size = System::Drawing::Size(401, 160);
+			this->ResultBox->Size = System::Drawing::Size(401, 114);
 			this->ResultBox->TabIndex = 6;
 			this->ResultBox->Text = L"Waiting for user...";
 			// 
 			// ExportAsBinary
 			// 
 			this->ExportAsBinary->AutoSize = true;
-			this->ExportAsBinary->Location = System::Drawing::Point(12, 105);
+			this->ExportAsBinary->Location = System::Drawing::Point(12, 155);
 			this->ExportAsBinary->Name = L"ExportAsBinary";
 			this->ExportAsBinary->Size = System::Drawing::Size(101, 17);
 			this->ExportAsBinary->TabIndex = 7;
 			this->ExportAsBinary->Text = L"Export as binary";
 			this->ExportAsBinary->UseVisualStyleBackColor = true;
 			// 
+			// OutputPathBrowser
+			// 
+			this->OutputPathBrowser->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->OutputPathBrowser->Location = System::Drawing::Point(374, 75);
+			this->OutputPathBrowser->Name = L"OutputPathBrowser";
+			this->OutputPathBrowser->Size = System::Drawing::Size(39, 23);
+			this->OutputPathBrowser->TabIndex = 9;
+			this->OutputPathBrowser->Text = L"...";
+			this->OutputPathBrowser->UseVisualStyleBackColor = true;
+			this->OutputPathBrowser->Click += gcnew System::EventHandler(this, &MyForm::OutputPathBrowser_Click);
+			// 
+			// FileOutputPath
+			// 
+			this->FileOutputPath->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->FileOutputPath->Location = System::Drawing::Point(12, 76);
+			this->FileOutputPath->Name = L"FileOutputPath";
+			this->FileOutputPath->Size = System::Drawing::Size(363, 21);
+			this->FileOutputPath->TabIndex = 8;
+			// 
+			// FileOutput_Label
+			// 
+			this->FileOutput_Label->AutoSize = true;
+			this->FileOutput_Label->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->FileOutput_Label->Location = System::Drawing::Point(9, 57);
+			this->FileOutput_Label->Name = L"FileOutput_Label";
+			this->FileOutput_Label->Size = System::Drawing::Size(66, 15);
+			this->FileOutput_Label->TabIndex = 10;
+			this->FileOutput_Label->Text = L"File Output";
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(425, 342);
+			this->Controls->Add(this->FileOutput_Label);
+			this->Controls->Add(this->OutputPathBrowser);
+			this->Controls->Add(this->FileOutputPath);
 			this->Controls->Add(this->ExportAsBinary);
 			this->Controls->Add(this->ResultBox);
 			this->Controls->Add(this->ExportAnim);
@@ -194,9 +235,17 @@ namespace FBXExporter {
 		FBXPath->Text = FBXDialog->FileName;
 	}
 
+	private: System::Void OutputPathBrowser_Click(System::Object^  sender, System::EventArgs^  e)
+	{
+		OutputFolderDialog->ShowDialog();
+		FileOutputPath->Text = OutputFolderDialog->SelectedPath;
+		FileOutputPath->AppendText("\\");
+	}
+
 	private: System::Void Export_Click(System::Object^ sender, System::EventArgs^ e)
 	{
 		const char* path = (const char*)(Runtime::InteropServices::Marshal::StringToHGlobalAnsi(FBXDialog->FileName)).ToPointer();
+		const char* output = (const char*)(Runtime::InteropServices::Marshal::StringToHGlobalAnsi(FileOutputPath->Text)).ToPointer();
 		FBXExporterTool fbxexport;
 
 		if (FBXPath->Text == "")
@@ -208,7 +257,7 @@ namespace FBXExporter {
 		{
 			ResultBox->AppendText("\nExporting " + FBXDialog->FileName + "... ");
 			fbxexport.Initialize();
-			fbxexport.LoadScene(path, "exported\\", ExportMesh->Checked, ExportAnim->Checked, ExportAsBinary->Checked);
+			fbxexport.LoadScene(path, output, ExportMesh->Checked, ExportAnim->Checked, ExportAsBinary->Checked);
 			fbxexport.ExportFBX();
 			ResultBox->AppendText("Done!");
 		}
