@@ -104,7 +104,7 @@ vector<Vertex>& Mesh::GetVertexData()
 	return vertices;
 }
 
-const vector<unsigned int> Mesh::GetTris() const
+vector<unsigned int>& Mesh::GetTris()
 {
 	return tris;
 }

@@ -57,6 +57,7 @@ public:
 
 	static Application* GetInstance() { if (!instance) instance = new Application(); return instance; };
 
+	HWND GetWindow() const { return *window; };
 	RECT& GetWindowRect() { return windowRect; };
 	ID3D11Device* GetDevice() const { return device; };
 	ID3D11DeviceContext* GetContext() const { return context; };

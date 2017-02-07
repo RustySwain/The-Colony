@@ -5,12 +5,13 @@
 class GameObjectManager : public Component
 {
 	const unsigned int id = 5;
-	GameObject go;
+	GameObject cube;
 	GameObject cam;
 	GameObject spotLight;
 	GameObject dirLight;
 	GameObject pointLight;
 	GameObject prefabTest;
+	GameObject text;
 
 public:
 	GameObjectManager();

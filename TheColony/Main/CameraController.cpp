@@ -63,12 +63,12 @@ void CameraController::Update()
 	// put camera back to saved position
 	transform->SetLocalPosition(pos.x, pos.y, pos.z);
 	// put cursor back in the middle of the screen
+	//if (GetAsyncKeyState(VK_NUMPAD4))
 	SetCursorPos((int)screenMiddle.x, (int)screenMiddle.y);
 }
 
 void CameraController::OnDelete()
 {
-	return;
 }
 
 void CameraController::LoadFromFile(fstream & _file)
