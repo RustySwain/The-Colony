@@ -5,6 +5,8 @@
 
 using namespace DirectX;
 
+// Dependencies
+// Camera
 class CameraController : public Component
 {
 	const unsigned int id = 7;

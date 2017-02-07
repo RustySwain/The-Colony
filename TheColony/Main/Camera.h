@@ -6,6 +6,8 @@
 
 using namespace DirectX;
 
+// Dependencies
+// Transform
 class Camera : public Component
 {
 	const unsigned int id = 4;
