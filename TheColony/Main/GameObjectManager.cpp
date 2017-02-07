@@ -31,15 +31,25 @@ void GameObjectManager::Start()
 	cam.GetComponent<Transform>()->SetLocalPosition(0, 0, 5);
 
 	//Lighting
-	lights.Start();
-	lights.AddComponent<Light>()->SetColor(XMFLOAT4(1, 1, 1, 1));
-	lights.AddComponent<Transform>();
-	lights.GetComponent<Transform>()->RotateYPre(180);
-	lights.GetComponent<Transform>()->RotateXPre(-50);
-	lights.GetComponent<Transform>()->RotateZPre(-15);
-	lights.GetComponent<Transform>()->SetLocalPosition(0, 3, -2);
-	lights.GetComponent<Light>()->type = Light::SPOT;
-	lights.GetComponent<Light>()->SetExtra(XMFLOAT4(100, 0.97, 0, 1));
+	spotLight.Start();
+	spotLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, 1, 1, 1));
+	spotLight.AddComponent<Transform>();
+	spotLight.GetComponent<Transform>()->RotateYPre(180);
+	spotLight.GetComponent<Transform>()->RotateXPre(0);
+	spotLight.GetComponent<Transform>()->RotateZPre(0);
+	spotLight.GetComponent<Transform>()->SetLocalPosition(0, 2, -2);
+	spotLight.GetComponent<Light>()->type = Light::SPOT;
+	spotLight.GetComponent<Light>()->SetExtra(XMFLOAT4(100, 0.97, 0, 1));
+
+	dirLight.Start();
+	dirLight.AddComponent<Light>()->SetColor(XMFLOAT4(0, 0, 1, 1));
+	dirLight.AddComponent<Transform>();
+	dirLight.GetComponent<Transform>()->RotateXPre(50);
+	dirLight.GetComponent<Transform>()->RotateZPre(-15);
+	dirLight.GetComponent<Transform>()->SetLocalPosition(4, 3, -2);
+	dirLight.GetComponent<Light>()->type = Light::DIRECTIONAL;
+	dirLight.GetComponent<Light>()->SetExtra(XMFLOAT4(100, 0.97, 0, 1));
+
 
 	prefabTest.AddComponent<PrefabLoader>()->Load("test.prefab");
 }
@@ -47,7 +57,7 @@ void GameObjectManager::Start()
 void GameObjectManager::Update()
 {
 	//Rotate light
-	lights.GetComponent<Transform>()->RotateYPost(Time::Delta() * 100);
+	spotLight.GetComponent<Transform>()->RotateYPost(Time::Delta() * 100);
 
 	// Testing instancing stuff, feel free to remove, but it works
 	static unsigned int instanceInd = 0;
@@ -67,7 +77,8 @@ void GameObjectManager::Update()
 	go.Update();
 	cam.Update();
 	prefabTest.Update();
-	lights.Update();
+	spotLight.Update();
+	dirLight.Update();
 }
 
 void GameObjectManager::OnDelete()
@@ -75,7 +86,8 @@ void GameObjectManager::OnDelete()
 	go.OnDelete();
 	cam.OnDelete();
 	prefabTest.OnDelete();
-	lights.OnDelete();
+	spotLight.OnDelete();
+	dirLight.OnDelete();
 }
 
 void GameObjectManager::LoadFromFile(fstream & _file)
