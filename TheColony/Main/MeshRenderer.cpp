@@ -351,12 +351,6 @@ void MeshRenderer::Render() const
 	{
 		context->PSSetShader(Application::GetInstance()->GetPSMesh(), 0, 0);
 		context->VSSetShader(Application::GetInstance()->GetVSUI(), 0, 0);
-		TextRenderer* tr = gameObject->GetComponent<TextRenderer>();
-		if (tr)
-		{
-			ID3D11ShaderResourceView* texTex = tr->GetTexture();
-			context->PSSetShaderResources(0, 1, &texTex);
-		}
 	}
 
 	/*if (gameObject->GetComponent<Animator>())

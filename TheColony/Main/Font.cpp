@@ -41,26 +41,18 @@ bool Font::LoadFontSheet(const char* _fontName)
 	return false;
 }
 
-bool Font::LoadFontTexture(const wchar_t* _fontName)
-{
-	CreateDDSTextureFromFile(Application::GetInstance()->GetDevice(), _fontName, 0, &fontTexture);
-	return fontTexture != nullptr;
-}
-
 Font::Font()
 {
 }
 
 Font::~Font()
 {
-	SAFE_RELEASE(fontTexture);
 }
 
-bool Font::LoadFromFile(const char* _fontsheetPath, const wchar_t* _texPath)
+bool Font::LoadFromFile(const char* _fontsheetPath)
 {
 	if (!LoadFontSheet(_fontsheetPath))
 		return false;
-	LoadFontTexture(_texPath);
 	return true;
 }
 
