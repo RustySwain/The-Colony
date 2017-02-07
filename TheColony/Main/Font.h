@@ -28,4 +28,7 @@ public:
 	~Font();
 
 	bool LoadFromFile(const char* _fontsheetPath, const wchar_t* _texPath);
+	const RendereredCharacter GetChar(char _char);
+
+	ID3D11ShaderResourceView* GetTexture() const { return fontTexture; };
 };

@@ -3,14 +3,25 @@
 #include "DDSTextureLoader.h"
 #include "Application.h"
 #include "Transform.h"
+#include "TextRenderer.h"
 
 #define INSTANCE_MAX 100000
+#define VERTEX_MAX 256
+#define INDEX_MAX 256
 
 void MeshRenderer::Init()
 {
 	if (flags & INIT)
 		return;
 	flags |= INIT;
+
+	// Cleanup past memory
+	SAFE_RELEASE(vertBuffer);
+	SAFE_RELEASE(indexBuffer);
+	SAFE_RELEASE(constantBuffer);
+	SAFE_RELEASE(instanceBuffer);
+	SAFE_RELEASE(sampler);
+
 	// create vertex buffer
 	D3D11_BUFFER_DESC bDesc;
 	ZMem(bDesc);
@@ -43,6 +54,7 @@ void MeshRenderer::Init()
 
 	Application::GetInstance()->GetDevice()->CreateBuffer(&bDesc, &subData, &constantBuffer);
 
+	// Instances
 	instances.reserve(INSTANCE_MAX);
 	instanceIndices.reserve(INSTANCE_MAX);
 	PerInstanceVertexData pivd;
@@ -57,6 +69,17 @@ void MeshRenderer::Init()
 	subData.pSysMem = instances.data();
 
 	Application::GetInstance()->GetDevice()->CreateBuffer(&bDesc, &subData, &instanceBuffer);
+
+	// Sampler
+	D3D11_SAMPLER_DESC sDesc;
+	ZMem(sDesc);
+	sDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	sDesc.MaxAnisotropy = 4;
+	sDesc.MaxLOD = 100;
+	sDesc.Filter = D3D11_FILTER_ANISOTROPIC;
+	Application::GetInstance()->GetDevice()->CreateSamplerState(&sDesc, &sampler);
 
 	// sign me up to be rendered every frame
 	Application::GetInstance()->RegisterMeshRenderer(this);
@@ -244,17 +267,7 @@ bool MeshRenderer::LoadFromObj(char* _path)
 void MeshRenderer::LoadDiffuseMap(const wchar_t* _path)
 {
 	SAFE_RELEASE(diffuseMap);
-	SAFE_RELEASE(sampler);
 	CreateDDSTextureFromFile(Application::GetInstance()->GetDevice(), _path, 0, &diffuseMap);
-	D3D11_SAMPLER_DESC sDesc;
-	ZMem(sDesc);
-	sDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	sDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	sDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	sDesc.MaxAnisotropy = 4;
-	sDesc.MaxLOD = 100;
-	sDesc.Filter = D3D11_FILTER_ANISOTROPIC;
-	Application::GetInstance()->GetDevice()->CreateSamplerState(&sDesc, &sampler);
 	char tmp[256];
 	size_t len = wcslen(_path);
 	wcstombs_s(&len, tmp, _path, INT_MAX);
@@ -330,9 +343,20 @@ void MeshRenderer::Render() const
 		context->PSSetShader(Application::GetInstance()->GetPSSkybox(), 0, 0);
 		context->VSSetShader(Application::GetInstance()->GetVSMesh(), 0, 0);
 	}
+	else if (type == UI)
+	{
+		context->PSSetShader(Application::GetInstance()->GetPSMesh(), 0, 0);
+		context->VSSetShader(Application::GetInstance()->GetVSUI(), 0, 0);
+		TextRenderer* tr = gameObject->GetComponent<TextRenderer>();
+		if (tr)
+		{
+			ID3D11ShaderResourceView* texTex = tr->GetTexture();
+			context->PSSetShaderResources(0, 1, &texTex);
+		}
+	}
 
 	/*if (gameObject->GetComponent<Animator>())
 		gameObject->GetComponent<Animator>()->SetVSBuffer();*/
 
-	context->DrawIndexedInstanced((UINT)mesh->GetTris().size(), instances.size(), 0, 0, 0);
+	context->DrawIndexedInstanced((UINT)mesh->GetTris().size(), (UINT)instances.size(), 0, 0, 0);
 }

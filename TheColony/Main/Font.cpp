@@ -2,7 +2,8 @@
 #include "DDSTextureLoader.h"
 #include "Application.h"
 #include "fstream"
-#include "sstream";
+#include "sstream"
+#include "Macros.h"
 
 bool Font::LoadFontSheet(const char* _fontName)
 {
@@ -12,7 +13,10 @@ bool Font::LoadFontSheet(const char* _fontName)
 	{
 		char buffer[256];
 		reader.getline(buffer, 256);
-		stringstream lineStream(buffer);
+		string str = buffer;
+		while (str[0] < 0)
+			str.erase(str.begin());
+		stringstream lineStream(str.c_str());
 		lineStream >> textureWidth >> textureHeight >> charTop >> charBottom;
 		while (!reader.eof())
 		{
@@ -24,10 +28,10 @@ bool Font::LoadFontSheet(const char* _fontName)
 			unsigned int right = left + nuPair.second.pixelWidth;
 			nuPair.second.pixelHeight = charBottom - charTop;
 
-			nuPair.second.top = charTop / textureHeight;
-			nuPair.second.bottom = charBottom / textureHeight;
-			nuPair.second.left = left / textureWidth;
-			nuPair.second.right = right / textureWidth;
+			nuPair.second.top = (float)charTop / textureHeight;
+			nuPair.second.bottom = (float)(charBottom + charTop) / textureHeight;
+			nuPair.second.left = (float)left / textureWidth;
+			nuPair.second.right = (float)right / textureWidth;
 			nuPair.second.key = nuPair.first;
 
 			characters.insert(nuPair);
@@ -40,7 +44,7 @@ bool Font::LoadFontSheet(const char* _fontName)
 bool Font::LoadFontTexture(const wchar_t* _fontName)
 {
 	CreateDDSTextureFromFile(Application::GetInstance()->GetDevice(), _fontName, 0, &fontTexture);
-	return fontTexture;
+	return fontTexture != nullptr;
 }
 
 Font::Font()
@@ -49,6 +53,7 @@ Font::Font()
 
 Font::~Font()
 {
+	SAFE_RELEASE(fontTexture);
 }
 
 bool Font::LoadFromFile(const char* _fontsheetPath, const wchar_t* _texPath)
@@ -57,4 +62,9 @@ bool Font::LoadFromFile(const char* _fontsheetPath, const wchar_t* _texPath)
 		return false;
 	LoadFontTexture(_texPath);
 	return true;
+}
+
+const RendereredCharacter Font::GetChar(char _char)
+{
+	return characters[_char];
 }

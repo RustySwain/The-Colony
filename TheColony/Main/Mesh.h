@@ -7,9 +7,9 @@ using namespace DirectX;
 
 struct Vertex
 {
-	XMFLOAT4 position;
-	XMFLOAT4 normal;
-	XMFLOAT4 uv;
+	XMFLOAT4 position = XMFLOAT4(0, 0, 0, 1);
+	XMFLOAT4 normal = XMFLOAT4(0, 0, 1, 1);
+	XMFLOAT4 uv = XMFLOAT4(0, 0, 0, 1);
 	XMFLOAT4 color = XMFLOAT4(1, 1, 1, 1);
 	float jointIndex[4];
 	float jointWeight[4];
@@ -37,5 +37,5 @@ public:
 	void BuildMesh(const vector<Vertex> _vertices, const vector<unsigned int> _indices);
 
 	vector<Vertex>& GetVertexData();
-	const vector<unsigned int> GetTris() const;
+	vector<unsigned int>& GetTris();
 };

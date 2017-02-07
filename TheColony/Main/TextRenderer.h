@@ -7,7 +7,8 @@
 class TextRenderer : public Component
 {
 	const unsigned int id = 13;
-	Font* font;
+	Font* font = nullptr;
+	unsigned int textLength = 0;
 
 public:
 	TextRenderer();
@@ -21,5 +22,7 @@ public:
 	virtual void LoadFromString(string _str) override;
 	virtual string WriteToString() const override;
 
+	bool SetFont(const char* _sheetPath, const wchar_t* _texPath);
 	void SetText(string _text);
+	ID3D11ShaderResourceView* GetTexture() const { return font->GetTexture(); };
 };

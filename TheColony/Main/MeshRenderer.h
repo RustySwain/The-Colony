@@ -50,7 +50,7 @@ class MeshRenderer : public Component
 	void Init();
 
 public:
-	enum Type { MESH = 10, SKYBOX = 11, TEXT };
+	enum Type { MESH = 10, SKYBOX = 11, UI = 13 };
 
 	MeshRenderer();
 	~MeshRenderer();
@@ -68,12 +68,15 @@ public:
 	void SetType(const Type& _type) { type = _type; };
 
 	bool GetTransparent() const { return (flags & TRANSPRENT) == 1; };
-	void SetTransparent(const bool& _transparent) { flags ^= (-TRANSPRENT ^ flags) & (1 << (unsigned int)log((unsigned int)TRANSPRENT)); };
+	void SetTransparent(const bool& _transparent) { flags ^= (-(_transparent ? 1 : 0) ^ flags) & TRANSPRENT; };
 
 	bool GetDynamic() const { return (flags & DYNAMIC) == 1; };
-	void SetDynamic(const bool& _dyanamic) { flags ^= (-DYNAMIC ^ flags) & (1 << (unsigned int)log((unsigned int)DYNAMIC)); };
+	void SetDynamic(const bool& _dyanamic) { flags ^= (-(_dyanamic ? 1 : 0) ^ flags) & DYNAMIC; };
 
-	Mesh* GetMesh() const { return mesh; }
+	bool GetInitialized() const { return (flags & INIT) == 1; };
+	void SetInitialized(const bool& _init) { flags ^= (-(_init ? 1 : 0) ^ flags) & INIT; };
+
+	Mesh*& GetMesh() { return mesh; }
 
 	// Instances
 	void AddInstance(XMMATRIX _mat, int _key);

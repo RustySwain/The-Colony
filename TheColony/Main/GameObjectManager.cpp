@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "Time.h"
 #include "Debug.h"
+#include "TextRenderer.h"
 
 GameObjectManager::GameObjectManager()
 {
@@ -18,8 +19,12 @@ void GameObjectManager::Start()
 {
 	go.Start();
 	go.AddComponent<Transform>();
-	go.AddComponent<MeshRenderer>()->LoadFromObj("../Assets/cube.obj");
-	go.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/crate.dds");
+	go.AddComponent<MeshRenderer>();//->LoadFromObj("../Assets/cube.obj");
+	//go.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/crate.dds");
+	go.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
+	go.GetComponent<Transform>()->ScalePost(0.0005f);
+	go.GetComponent<Transform>()->TranslatePost(XMFLOAT3(-1, 0, 0));
+	//go.GetComponent<MeshRenderer>()->SetMeshColor(XMFLOAT4(1, 0, 0, 1));
 
 	cam.Start();
 	cam.AddComponent<Camera>();
@@ -27,6 +32,7 @@ void GameObjectManager::Start()
 	cam.GetComponent<Camera>()->SetFarPlane(500);
 	cam.AddComponent<CameraController>();
 	cam.GetComponent<Transform>()->SetLocalPosition(0, 0, 5);
+	go.GetComponent<TextRenderer>()->SetText("AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz");
 }
 
 void GameObjectManager::Update()
