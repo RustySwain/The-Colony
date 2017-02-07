@@ -69,8 +69,6 @@ namespace ColonyPrefabManager
             this.Camera_FarPlane_Label = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fIleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SaveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Lighting_Group = new System.Windows.Forms.GroupBox();
             this.Lighting_LightType_Input = new System.Windows.Forms.ComboBox();
             this.Lighting_LightType = new System.Windows.Forms.Label();
@@ -103,6 +101,13 @@ namespace ColonyPrefabManager
             this.RigidBody_Label = new System.Windows.Forms.Label();
             this.Collider_Group = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.Animator_Group = new System.Windows.Forms.GroupBox();
+            this.Animator_Animations = new System.Windows.Forms.ListBox();
+            this.Animator_Remove = new System.Windows.Forms.Button();
+            this.Animator_Add = new System.Windows.Forms.Button();
+            this.SaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SaveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Animator_Label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.GameObject_ID_Input)).BeginInit();
             this.GameObject_Group.SuspendLayout();
             this.Transform_Group.SuspendLayout();
@@ -130,6 +135,7 @@ namespace ColonyPrefabManager
             this.AudioSource_Group.SuspendLayout();
             this.RigidBody_Group.SuspendLayout();
             this.Collider_Group.SuspendLayout();
+            this.Animator_Group.SuspendLayout();
             this.SuspendLayout();
             // 
             // AddComponent
@@ -617,22 +623,6 @@ namespace ColonyPrefabManager
             this.fIleToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fIleToolStripMenuItem.Text = "File";
             // 
-            // SaveToolStripMenuItem
-            // 
-            this.SaveToolStripMenuItem.Image = global::ColonyPrefabManager.Properties.Resources.save;
-            this.SaveToolStripMenuItem.Name = "SaveToolStripMenuItem";
-            this.SaveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.SaveToolStripMenuItem.Text = "Save";
-            this.SaveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
-            // 
-            // SaveAsToolStripMenuItem
-            // 
-            this.SaveAsToolStripMenuItem.Image = global::ColonyPrefabManager.Properties.Resources.save_as;
-            this.SaveAsToolStripMenuItem.Name = "SaveAsToolStripMenuItem";
-            this.SaveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.SaveAsToolStripMenuItem.Text = "Save As";
-            this.SaveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsToolStripMenuItem_Click);
-            // 
             // Lighting_Group
             // 
             this.Lighting_Group.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1009,23 +999,95 @@ namespace ColonyPrefabManager
             this.label4.TabIndex = 0;
             this.label4.Text = "No content.";
             // 
+            // Animator_Group
+            // 
+            this.Animator_Group.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.Animator_Group.Controls.Add(this.Animator_Label1);
+            this.Animator_Group.Controls.Add(this.Animator_Remove);
+            this.Animator_Group.Controls.Add(this.Animator_Add);
+            this.Animator_Group.Controls.Add(this.Animator_Animations);
+            this.Animator_Group.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Animator_Group.Location = new System.Drawing.Point(12, 69);
+            this.Animator_Group.Name = "Animator_Group";
+            this.Animator_Group.Size = new System.Drawing.Size(378, 210);
+            this.Animator_Group.TabIndex = 29;
+            this.Animator_Group.TabStop = false;
+            this.Animator_Group.Text = "Animator";
+            this.Animator_Group.Visible = false;
+            // 
+            // Animator_Animations
+            // 
+            this.Animator_Animations.FormattingEnabled = true;
+            this.Animator_Animations.ItemHeight = 15;
+            this.Animator_Animations.Location = new System.Drawing.Point(6, 44);
+            this.Animator_Animations.Name = "Animator_Animations";
+            this.Animator_Animations.Size = new System.Drawing.Size(363, 94);
+            this.Animator_Animations.TabIndex = 0;
+            // 
+            // Animator_Remove
+            // 
+            this.Animator_Remove.Image = global::ColonyPrefabManager.Properties.Resources.remove;
+            this.Animator_Remove.Location = new System.Drawing.Point(344, 16);
+            this.Animator_Remove.Name = "Animator_Remove";
+            this.Animator_Remove.Size = new System.Drawing.Size(25, 25);
+            this.Animator_Remove.TabIndex = 2;
+            this.Animator_Remove.UseVisualStyleBackColor = true;
+            this.Animator_Remove.Click += new System.EventHandler(this.Animator_Remove_Click);
+            // 
+            // Animator_Add
+            // 
+            this.Animator_Add.Image = global::ColonyPrefabManager.Properties.Resources.add;
+            this.Animator_Add.Location = new System.Drawing.Point(313, 16);
+            this.Animator_Add.Name = "Animator_Add";
+            this.Animator_Add.Size = new System.Drawing.Size(25, 25);
+            this.Animator_Add.TabIndex = 1;
+            this.Animator_Add.UseVisualStyleBackColor = true;
+            this.Animator_Add.Click += new System.EventHandler(this.Animator_Add_Click);
+            // 
+            // SaveToolStripMenuItem
+            // 
+            this.SaveToolStripMenuItem.Image = global::ColonyPrefabManager.Properties.Resources.save;
+            this.SaveToolStripMenuItem.Name = "SaveToolStripMenuItem";
+            this.SaveToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.SaveToolStripMenuItem.Text = "Save";
+            this.SaveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
+            // 
+            // SaveAsToolStripMenuItem
+            // 
+            this.SaveAsToolStripMenuItem.Image = global::ColonyPrefabManager.Properties.Resources.save_as;
+            this.SaveAsToolStripMenuItem.Name = "SaveAsToolStripMenuItem";
+            this.SaveAsToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.SaveAsToolStripMenuItem.Text = "Save As";
+            this.SaveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsToolStripMenuItem_Click);
+            // 
+            // Animator_Label1
+            // 
+            this.Animator_Label1.AutoSize = true;
+            this.Animator_Label1.Location = new System.Drawing.Point(3, 26);
+            this.Animator_Label1.Name = "Animator_Label1";
+            this.Animator_Label1.Size = new System.Drawing.Size(71, 15);
+            this.Animator_Label1.TabIndex = 3;
+            this.Animator_Label1.Text = "Animations:";
+            // 
             // PrefabManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(402, 434);
-            this.Controls.Add(this.Collider_Group);
+            this.Controls.Add(this.Animator_Group);
             this.Controls.Add(this.RemoveComponent);
             this.Controls.Add(this.ComponentList);
             this.Controls.Add(this.AddComponent);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.RigidBody_Group);
-            this.Controls.Add(this.GameObject_Group);
-            this.Controls.Add(this.AudioSource_Group);
             this.Controls.Add(this.Transform_Group);
             this.Controls.Add(this.Camera_Group);
             this.Controls.Add(this.Lighting_Group);
+            this.Controls.Add(this.Collider_Group);
+            this.Controls.Add(this.RigidBody_Group);
+            this.Controls.Add(this.GameObject_Group);
+            this.Controls.Add(this.AudioSource_Group);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "PrefabManager";
@@ -1065,6 +1127,8 @@ namespace ColonyPrefabManager
             this.RigidBody_Group.PerformLayout();
             this.Collider_Group.ResumeLayout(false);
             this.Collider_Group.PerformLayout();
+            this.Animator_Group.ResumeLayout(false);
+            this.Animator_Group.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1143,5 +1207,10 @@ namespace ColonyPrefabManager
         private System.Windows.Forms.Label RigidBody_Label;
         private System.Windows.Forms.GroupBox Collider_Group;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.GroupBox Animator_Group;
+        private System.Windows.Forms.ListBox Animator_Animations;
+        private System.Windows.Forms.Button Animator_Remove;
+        private System.Windows.Forms.Button Animator_Add;
+        private System.Windows.Forms.Label Animator_Label1;
     }
 }

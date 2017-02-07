@@ -20,6 +20,7 @@ namespace ColonyPrefabManager
         AudioSource audioSource = new AudioSource();
         RigidBody rigidBody = new RigidBody();
         Collider collider = new Collider();
+        Animator animator = new Animator();
         public string m_filePath = "0";
 
         public PrefabManager(string filePath = "0")
@@ -37,6 +38,7 @@ namespace ColonyPrefabManager
             ComponentList.Items.Add(audioSource);
             ComponentList.Items.Add(rigidBody);
             ComponentList.Items.Add(collider);
+            ComponentList.Items.Add(animator);
 
             ComponentList.SelectedItem = ComponentList.Items[0];
             RemoveComponent.Enabled = false;
@@ -49,6 +51,7 @@ namespace ColonyPrefabManager
             AudioSource_Group.Visible = false;
             RigidBody_Group.Visible = false;
             Collider_Group.Visible = false;
+            Animator_Group.Visible = false;
         }
 
         private void ComponentList_SelectedIndexChanged(object sender, EventArgs e)
@@ -117,6 +120,14 @@ namespace ColonyPrefabManager
                 if (collider.GetAdded()) AddComponent.Text = "Save Component";
             }
             else Collider_Group.Visible = false;
+
+            // Animator settings
+            if (ComponentList.SelectedItem == animator)
+            {
+                Animator_Group.Visible = true;
+                if (animator.GetAdded()) AddComponent.Text = "Save Component";
+            }
+            else Animator_Group.Visible = false;
         }
 
         private void AddComponent_Click(object sender, EventArgs e)
@@ -488,6 +499,18 @@ namespace ColonyPrefabManager
             {
                 AudioSource_ClipPath.Text = audioSource.GetClip();
             }
+        }
+
+        private void Animator_Add_Click(object sender, EventArgs e)
+        {
+            AudioSource_FileDialog.Filter = ".anim|*.anim";
+            if (AudioSource_FileDialog.ShowDialog() == DialogResult.OK)
+                Animator_Animations.Items.Add(AudioSource_FileDialog.FileName);
+        }
+
+        private void Animator_Remove_Click(object sender, EventArgs e)
+        {
+            Animator_Animations.Items.Remove(Animator_Animations.SelectedItem);
         }
     }
 }
