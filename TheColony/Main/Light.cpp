@@ -1,6 +1,7 @@
 #include "Light.h"
 #include "Application.h"
 #include <fstream>
+#include "Time.h"
 
 Light::Light() : type(LightType::NONE)
 {
@@ -21,6 +22,7 @@ void Light::Update()
 	Transform* transform = gameObject->GetComponent<Transform>();
 	XMFLOAT4X4 worldMat;
 	XMStoreFloat4x4(&worldMat, gameObject->GetComponent<Transform>()->GetWorldMatrix());
+
 	lightBuffType.lightDirection = XMFLOAT4(worldMat.m[2][0], worldMat.m[2][1], worldMat.m[2][2], 1);
 	XMFLOAT3 wPos = transform->GetWorldPosition();
 	lightBuffType.lightPos = XMFLOAT4(wPos.x, wPos.y, wPos.z, 1);
