@@ -36,6 +36,17 @@ bool Font::LoadFontSheet(const char* _fontName)
 
 			characters.insert(nuPair);
 		}
+		reader.close();
+		pair<char, RendereredCharacter> nuPair;
+		nuPair.second = characters.begin()._Ptr->_Myval.second;
+		nuPair.first = ' ';
+		nuPair.second.key = nuPair.first;
+		nuPair.second.top = 0;
+		nuPair.second.bottom = 0;
+		nuPair.second.left = 0;
+		nuPair.second.right = 0;
+		characters.insert(nuPair);
+
 		return true;
 	}
 	return false;

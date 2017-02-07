@@ -26,15 +26,6 @@ void Transform::OnDelete()
 
 void Transform::LoadFromFile(fstream &_file)
 {
-	//string copy = _str;
-	//memcpy_s(&localMatrix, sizeof(localMatrix), &copy[0], copy.size());
-	//unsigned int offset = 64; // sizeof(float) * 16 (number of floats in XMMATRIX)
-	//unsigned int id = *(unsigned int*)&_str[offset];
-	//offset += sizeof(unsigned int);
-	//scale = *(float*)&_str[offset];
-	//if (id)
-	//	parent = GameObject::FindFromId(id)->GetComponent<Transform>();
-
 	float xPos, yPos, zPos;
 	_file.read((char*)&xPos, sizeof(float));
 	_file.read((char*)&yPos, sizeof(float));

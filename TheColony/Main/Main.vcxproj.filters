@@ -70,6 +70,12 @@
     <ClCompile Include="UIRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Defines.h">
@@ -127,6 +133,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UIRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -12,6 +12,10 @@ class GameObjectManager : public Component
 	GameObject pointLight;
 	GameObject prefabTest;
 	GameObject text;
+	GameObject button;
+	GameObject skybox;
+
+	float color = 0;
 
 public:
 	GameObjectManager();
@@ -25,4 +29,6 @@ public:
 	virtual void LoadFromFile(fstream &_file) override;
 	virtual void LoadFromString(string _str) override;
 	virtual string WriteToString() const override;
+
+	void Callback();
 };

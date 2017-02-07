@@ -20,6 +20,8 @@ namespace ColonyPrefabManager
         AudioSource audioSource = new AudioSource();
         RigidBody rigidBody = new RigidBody();
         Collider collider = new Collider();
+        Animator animator = new Animator();
+        MeshRenderer meshRenderer = new MeshRenderer();
         public string m_filePath = "0";
 
         public PrefabManager(string filePath = "0")
@@ -37,18 +39,21 @@ namespace ColonyPrefabManager
             ComponentList.Items.Add(audioSource);
             ComponentList.Items.Add(rigidBody);
             ComponentList.Items.Add(collider);
+            ComponentList.Items.Add(animator);
+            ComponentList.Items.Add(meshRenderer);
 
             ComponentList.SelectedItem = ComponentList.Items[0];
             RemoveComponent.Enabled = false;
             AddComponent.Text = "Save Component";
             
-            GameObject_Group.Visible = true;
-            Transform_Group.Visible = false;
-            Camera_Group.Visible = false;
-            Lighting_Group.Visible = false;
-            AudioSource_Group.Visible = false;
-            RigidBody_Group.Visible = false;
-            Collider_Group.Visible = false;
+            //GameObject_Group.Visible = true;
+            //Transform_Group.Visible = false;
+            //Camera_Group.Visible = false;
+            //Lighting_Group.Visible = false;
+            //AudioSource_Group.Visible = false;
+            //RigidBody_Group.Visible = false;
+            //Collider_Group.Visible = false;
+            //Animator_Group.Visible = false;
         }
 
         private void ComponentList_SelectedIndexChanged(object sender, EventArgs e)
@@ -117,10 +122,28 @@ namespace ColonyPrefabManager
                 if (collider.GetAdded()) AddComponent.Text = "Save Component";
             }
             else Collider_Group.Visible = false;
+
+            // Animator settings
+            if (ComponentList.SelectedItem == animator)
+            {
+                Animator_Group.Visible = true;
+                if (animator.GetAdded()) AddComponent.Text = "Save Component";
+            }
+            else Animator_Group.Visible = false;
+
+            // MeshRenderer settings
+            if (ComponentList.SelectedItem == meshRenderer)
+            {
+                MeshRenderer_Group.Visible = true;
+                if (meshRenderer.GetAdded()) AddComponent.Text = "Save Component";
+            }
+            else MeshRenderer_Group.Visible = false;
         }
 
         private void AddComponent_Click(object sender, EventArgs e)
         {
+            AddComponent.Text = "Save Component";
+
             // Save GameObject
             if (ComponentList.SelectedItem == gameObject)
             {
@@ -138,7 +161,6 @@ namespace ColonyPrefabManager
                 {
                     transform.SetAdded(true);
                     gameObject.m_Components.Add(transform.GetId());
-                    AddComponent.Text = "Save Component";
                 }
                 transform.SetPosition(float.Parse(Transform_Position_X_Input.Text), float.Parse(Transform_Position_Y_Input.Text), float.Parse(Transform_Position_Z_Input.Text));
                 transform.SetRotation(float.Parse(Transform_Rotation_X_Input.Text), float.Parse(Transform_Rotation_Y_Input.Text), float.Parse(Transform_Rotation_Z_Input.Text));
@@ -152,7 +174,6 @@ namespace ColonyPrefabManager
                 {
                     camera.SetAdded(true);
                     gameObject.m_Components.Add(camera.GetId());
-                    AddComponent.Text = "Save Component";
                 }
                 camera.SetFarPlane(float.Parse(Camera_FarPlane_Input.Text));
                 camera.SetNearPlane(float.Parse(Camera_NearPlane_Input.Text));
@@ -166,7 +187,6 @@ namespace ColonyPrefabManager
                 {
                     lighting.SetAdded(true);
                     gameObject.m_Components.Add(lighting.GetId());
-                    AddComponent.Text = "Save Component";
                 }
                 lighting.SetColor(float.Parse(Lighting_Color_R_Input.Text), float.Parse(Lighting_Color_G_Input.Text), float.Parse(Lighting_Color_B_Input.Text), float.Parse(Lighting_Color_A_Input.Text));
                 lighting.SetExtra(float.Parse(Lighting_Extra_X_Input.Text), float.Parse(Lighting_Extra_Y_Input.Text), float.Parse(Lighting_Extra_Z_Input.Text), float.Parse(Lighting_Extra_W_Input.Text));
@@ -180,7 +200,6 @@ namespace ColonyPrefabManager
                 {
                     audioSource.SetAdded(true);
                     gameObject.m_Components.Add(audioSource.GetId());
-                    AddComponent.Text = "Save Component";
                 }
                 audioSource.SetClip(AudioSource_ClipPath.Text);
             }
@@ -192,7 +211,6 @@ namespace ColonyPrefabManager
                 {
                     rigidBody.SetAdded(true);
                     gameObject.m_Components.Add(rigidBody.GetId());
-                    AddComponent.Text = "Save Component";
                 }
             }
 
@@ -203,53 +221,77 @@ namespace ColonyPrefabManager
                 {
                     collider.SetAdded(true);
                     gameObject.m_Components.Add(collider.GetId());
-                    AddComponent.Text = "Save Component";
                 }
+            }
+
+            // Save Animator
+            if (ComponentList.SelectedItem == animator)
+            {
+                if (!animator.GetAdded())
+                {
+                    animator.SetAdded(true);
+                    gameObject.m_Components.Add(animator.GetId());
+                }
+                foreach (string item in Animator_Animations.Items)
+                    animator.AddAnimation(item);
+            }
+
+            // Save MeshRenderer
+            if (ComponentList.SelectedItem == meshRenderer)
+            {
+                if (!meshRenderer.GetAdded())
+                {
+                    meshRenderer.SetAdded(true);
+                    gameObject.m_Components.Add(meshRenderer.GetId());
+                }
+                meshRenderer.SetMesh(MeshRenderer_Mesh_Input.Text);
             }
         }
 
         private void RemoveComponent_Click(object sender, EventArgs e)
         {
+            AddComponent.Text = "Add Component";
+
             if (ComponentList.SelectedItem == transform)
             {
                 transform.SetAdded(false);
                 gameObject.m_Components.Remove(transform.GetId());
-                AddComponent.Text = "Add Component";
             }
 
             if (ComponentList.SelectedItem == camera)
             {
                 camera.SetAdded(false);
                 gameObject.m_Components.Remove(camera.GetId());
-                AddComponent.Text = "Add Component";
             }
 
             if (ComponentList.SelectedItem == lighting)
             {
                 lighting.SetAdded(false);
                 gameObject.m_Components.Remove(lighting.GetId());
-                AddComponent.Text = "Add Component";
             }
 
             if (ComponentList.SelectedItem == audioSource)
             {
                 audioSource.SetAdded(false);
                 gameObject.m_Components.Remove(audioSource.GetId());
-                AddComponent.Text = "Add Component";
             }
 
             if (ComponentList.SelectedItem == rigidBody)
             {
                 rigidBody.SetAdded(false);
                 gameObject.m_Components.Remove(rigidBody.GetId());
-                AddComponent.Text = "Add Component";
             }
 
             if (ComponentList.SelectedItem == collider)
             {
                 collider.SetAdded(false);
                 gameObject.m_Components.Remove(collider.GetId());
-                AddComponent.Text = "Add Component";
+            }
+
+            if (ComponentList.SelectedItem == animator)
+            {
+                animator.SetAdded(false);
+                gameObject.m_Components.Remove(animator.GetId());
             }
         }
 
@@ -271,12 +313,41 @@ namespace ColonyPrefabManager
             }
         }
 
+        private void Animator_Add_Click(object sender, EventArgs e)
+        {
+            AudioSource_FileDialog.Filter = ".anim|*.anim";
+            AudioSource_FileDialog.Multiselect = true;
+            if (AudioSource_FileDialog.ShowDialog() == DialogResult.OK)
+            {
+                foreach (String file in AudioSource_FileDialog.FileNames)
+                {
+                    string fileName = Path.GetFileName(file);
+                    Animator_Animations.Items.Add(fileName);
+                }
+            }
+        }
+
+        private void Animator_Remove_Click(object sender, EventArgs e)
+        {
+            Animator_Animations.Items.Remove(Animator_Animations.SelectedItem);
+        }
+
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if(m_filePath != "0")
                 WriteToBinary(m_filePath);
             else
                 SaveAsToolStripMenuItem_Click(sender, e);
+        }
+
+        private void MeshRenderer_Mesh_Browser_Click(object sender, EventArgs e)
+        {
+            AudioSource_FileDialog.Filter = ".mesh|*.mesh";
+            if (AudioSource_FileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = Path.GetFileName(AudioSource_FileDialog.FileName);
+                MeshRenderer_Mesh_Input.Text = fileName;
+            }
         }
 
         private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -301,9 +372,9 @@ namespace ColonyPrefabManager
             {
                 // Write GameObject
                 writer.Write(gameObject.GetId());
-                writer.Write(gameObject.GetName().Length + 1);
+                writer.Write(gameObject.GetName().Length);
                 writer.Write(gameObject.GetName());
-                writer.Write(gameObject.GetTag().Length + 1);
+                writer.Write(gameObject.GetTag().Length);
                 writer.Write(gameObject.GetTag());
                 writer.Write(gameObject.GetTransparent());
                 writer.Write(gameObject.GetDynamic());
@@ -342,6 +413,13 @@ namespace ColonyPrefabManager
                     writer.Write(camera.GetFOV());
                 }
 
+                // Write MeshRenderer -- id = 6
+                if (meshRenderer.GetAdded())
+                {
+                    writer.Write(meshRenderer.GetMesh().Length);
+                    writer.Write(meshRenderer.GetMesh());
+                }
+
                 // Write Light -- id = 8
                 if (lighting.GetAdded())
                 {
@@ -354,6 +432,17 @@ namespace ColonyPrefabManager
                     writer.Write(lighting.GetExtra()[2]);
                     writer.Write(lighting.GetExtra()[3]);
                     writer.Write(lighting.GetLightType());
+                }
+
+                // Write Animator -- id = 10
+                if (animator.GetAdded())
+                {
+                    writer.Write(animator.GetAnimations().Count);
+                    for (int i = 0; i < animator.GetAnimations().Count; ++i)
+                    {
+                        writer.Write(animator.GetAnimations()[i].Length);
+                        writer.Write(animator.GetAnimations()[i]);
+                    }
                 }
 
                 // Write AudioSource -- id = 11
@@ -422,6 +511,14 @@ namespace ColonyPrefabManager
                         camera.SetNearPlane(reader.ReadSingle());
                         camera.SetFOV(reader.ReadSingle());
                     }
+
+                    // Load MeshRenderer -- id = 6
+                    if (gameObject.m_Components.Contains(meshRenderer.GetId()))
+                    {
+                        meshRenderer.SetAdded(true);
+                        reader.ReadInt32();
+                        meshRenderer.SetMesh(reader.ReadString());
+                    }
                     
                     // Load Light -- id = 8
                     if (gameObject.m_Components.Contains(lighting.GetId()))
@@ -430,6 +527,18 @@ namespace ColonyPrefabManager
                         lighting.SetColor(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                         lighting.SetExtra(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                         lighting.SetLightType(reader.ReadInt32());
+                    }
+
+                    // Load Animator -- id = 10
+                    if (gameObject.m_Components.Contains(animator.GetId()))
+                    {
+                        animator.SetAdded(true);
+                        int animations = reader.ReadInt32();
+                        for (int i = 0; i < animations; ++i)
+                        {
+                            reader.ReadInt32();
+                            animator.AddAnimation(reader.ReadString());
+                        }
                     }
 
                     // Load AudioSource -- id = 11
@@ -482,6 +591,17 @@ namespace ColonyPrefabManager
                 Lighting_Extra_Z_Input.Text = lighting.GetExtra()[2].ToString();
                 Lighting_Extra_W_Input.Text = lighting.GetExtra()[3].ToString();
                 Lighting_LightType_Input.SelectedIndex = lighting.GetLightType();
+            }
+
+            if (animator.GetAdded())
+            {
+                for (int i = 0; i < animator.GetAnimations().Count; ++i)
+                    Animator_Animations.Items.Add(animator.GetAnimations()[i]);
+            }
+
+            if (meshRenderer.GetAdded())
+            {
+                MeshRenderer_Mesh_Input.Text = meshRenderer.GetMesh();
             }
 
             if (audioSource.GetAdded())

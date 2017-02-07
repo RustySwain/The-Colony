@@ -1018,9 +1018,9 @@ void FBXExporterTool::WriteMeshToBinary(std::ostream & inStream)
 {
 	inStream.write((char*)&mHasAnimation, sizeof(bool));
 	// Diffuse map
-	int diffuseMapLength = mMaterialLookUp[0]->mDiffuseMapName.length() + 1;
-	inStream.write((char*)&diffuseMapLength, sizeof(int));
-	inStream.write(mMaterialLookUp[0]->mDiffuseMapName.c_str(), diffuseMapLength);
+	//int diffuseMapLength = mMaterialLookUp[0]->mDiffuseMapName.length() + 1;
+	//inStream.write((char*)&diffuseMapLength, sizeof(int));
+	//inStream.write(mMaterialLookUp[0]->mDiffuseMapName.c_str(), diffuseMapLength);
 	// Num tris
 	inStream.write((char*)&mTriangleCount, sizeof(int));
 	for(unsigned int i = 0; i < mTriangleCount; ++i)
@@ -1038,10 +1038,12 @@ void FBXExporterTool::WriteMeshToBinary(std::ostream & inStream)
 		inStream.write((char*)&mVertices[i].mPosition.x, sizeof(float));
 		inStream.write((char*)&mVertices[i].mPosition.y, sizeof(float));
 		inStream.write((char*)&mVertices[i].mPosition.z, sizeof(float));
+
 		// normal
 		inStream.write((char*)&mVertices[i].mNormal.x, sizeof(float));
 		inStream.write((char*)&mVertices[i].mNormal.y, sizeof(float));
 		inStream.write((char*)&mVertices[i].mNormal.z, sizeof(float));
+
 		if(mHasAnimation)
 		{
 			// skinning weights
@@ -1053,6 +1055,7 @@ void FBXExporterTool::WriteMeshToBinary(std::ostream & inStream)
 			inStream.write((char*)&sw2, sizeof(float));
 			float sw3 = (float)mVertices[i].mVertexBlendingInfos[3].mBlendingWeight;
 			inStream.write((char*)&sw3, sizeof(float));
+
 			// skinning indices
 			float si0 = (float)mVertices[i].mVertexBlendingInfos[0].mBlendingIndex;
 			inStream.write((char*)&si0, sizeof(float));
@@ -1063,6 +1066,7 @@ void FBXExporterTool::WriteMeshToBinary(std::ostream & inStream)
 			float si3 = (float)mVertices[i].mVertexBlendingInfos[3].mBlendingIndex;
 			inStream.write((char*)&si3, sizeof(float));
 		}
+
 		// uv
 		inStream.write((char*)&mVertices[i].mUV.x, sizeof(float));
 		inStream.write((char*)&mVertices[i].mUV.y, sizeof(float));

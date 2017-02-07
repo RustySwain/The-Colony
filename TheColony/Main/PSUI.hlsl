@@ -35,5 +35,5 @@ struct Input
 
 float4 main(Input _in) : SV_TARGET
 {
-	return diffuse.Sample(sam, _in.uv.xy);
+	return diffuse.Sample(sam, _in.uv.xy) * _in.color;
 }

@@ -55,6 +55,7 @@ void PrefabLoader::Load(string _path)
 		int nameLength;
 		inFile.read((char*)&nameLength, sizeof(int));
 		char* name = new char[nameLength + 1];
+		inFile.read(name, 1);
 		inFile.read(name, nameLength);
 		name[nameLength] = 0;
 		gameObject->SetName(name);
@@ -63,6 +64,7 @@ void PrefabLoader::Load(string _path)
 		int tagLength;
 		inFile.read((char*)&tagLength, sizeof(int));
 		char* tag = new char[tagLength + 1];
+		inFile.read(tag, 1);
 		inFile.read(tag, tagLength);
 		tag[tagLength] = 0;
 		gameObject->SetTag(tag);

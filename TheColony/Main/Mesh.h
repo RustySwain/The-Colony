@@ -34,6 +34,7 @@ public:
 	~Mesh();
 
 	bool LoadFromObj(const char* _path);
+	bool LoadFromBinary(const char* _path, string &_diffuseMapPath);
 	void BuildMesh(const vector<Vertex> _vertices, const vector<unsigned int> _indices);
 
 	vector<Vertex>& GetVertexData();

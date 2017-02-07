@@ -86,6 +86,7 @@ public:
 
 	// Mesh
 	bool LoadFromObj(char* _path);
+	bool LoadFromBinary(char* _path);
 	void LoadDiffuseMap(const wchar_t* _path);
 	void LoadNormalMap(const wchar_t* _path);
 	void LoadSpecularMap(const wchar_t* _path);
