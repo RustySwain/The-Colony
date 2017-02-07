@@ -14,6 +14,8 @@ class GameObjectManager : public Component
 	GameObject text;
 	GameObject button;
 
+	float color = 0;
+
 public:
 	GameObjectManager();
 	~GameObjectManager();

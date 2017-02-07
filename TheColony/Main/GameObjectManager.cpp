@@ -8,6 +8,8 @@
 #include "UIRenderer.h"
 #include "Button.h"
 #include "Light.h"
+#include "TextRenderer.h"
+
 GameObjectManager::GameObjectManager()
 {
 }
@@ -18,6 +20,9 @@ GameObjectManager::~GameObjectManager()
 
 void GameObjectManager::Start()
 {
+	cube.Start();
+	cube.AddComponent<Transform>();
+	cube.AddComponent<MeshRenderer>()->LoadFromObj("../Assets/cube.obj");
 	cube.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/crate.dds");
 
 	cam.Start();
@@ -31,7 +36,15 @@ void GameObjectManager::Start()
 	button.AddComponent<Transform>()->SetLocalPosition(-0.5f, -0.3f, 0);
 	button.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
 	button.AddComponent<UIRenderer>()->SetRect(0.1f, 0.1f, 0.3f, 0.3f);
-	button.AddComponent<Button>()->Subscribe([&]() -> void { Callback(); });
+	button.AddComponent<Button>()->Subscribe([=]() -> void { Callback(); });
+
+	text.Start();
+	text.AddComponent <Transform>();
+	text.AddComponent<MeshRenderer>();
+	text.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
+	text.GetComponent<Transform>()->ScalePost(0.0005f);
+	text.GetComponent<Transform>()->TranslatePost(XMFLOAT3(-1, 0, 0));
+	text.GetComponent<TextRenderer>()->SetText("Hello, World!");
 
 	//Lighting
 	spotLight.Start();
@@ -52,7 +65,6 @@ void GameObjectManager::Start()
 	dirLight.GetComponent<Transform>()->SetLocalPosition(4, 3, -2);
 	dirLight.GetComponent<Light>()->type = Light::DIRECTIONAL;
 	dirLight.GetComponent<Light>()->SetExtra(XMFLOAT4(100, 0.97, 0, 1));
-
 
 	prefabTest.AddComponent<PrefabLoader>()->Load("test.prefab");
 }
@@ -77,22 +89,26 @@ void GameObjectManager::Update()
 		unsigned int id = rand() % instanceInd;
 		cube.GetComponent<MeshRenderer>()->RemoveInstance(id);
 	}
+	cube.Update();
 	text.Update();
 	cam.Update();
 	prefabTest.Update();
 	button.Update();
 	spotLight.Update();
 	dirLight.Update();
+	button.Update();
 }
 
 void GameObjectManager::OnDelete()
 {
+	cube.OnDelete();
 	text.OnDelete();
 	cam.OnDelete();
 	prefabTest.OnDelete();
 	button.OnDelete();
 	spotLight.OnDelete();
 	dirLight.OnDelete();
+	button.OnDelete();
 }
 
 void GameObjectManager::LoadFromFile(fstream & _file)
@@ -110,5 +126,6 @@ string GameObjectManager::WriteToString() const
 
 void GameObjectManager::Callback()
 {
-	text.GetComponent<MeshRenderer>()->SetMeshColor(XMFLOAT4(1, 0, 0, 1));
+	text.GetComponent<MeshRenderer>()->SetMeshColor(XMFLOAT4(1, color, color, 1));
+	color = 1 - color;
 }

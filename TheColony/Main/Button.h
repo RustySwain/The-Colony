@@ -10,6 +10,9 @@ class Button : public Component
 {
 	const unsigned int id = 15;
 	vector<CallbackFunc> callbacks;
+
+	bool buttonDown = false;
+
 	void OnClick();
 
 public:

@@ -23,7 +23,12 @@ void Button::Start()
 
 void Button::Update()
 {
-	if (!GetAsyncKeyState(VK_LBUTTON) & 0x1)
+	if (!GetAsyncKeyState(VK_LBUTTON))
+	{
+		buttonDown = false;
+		return;
+	}
+	if (buttonDown)
 		return;
 	POINT cursorPos;
 	GetCursorPos(&cursorPos);
@@ -33,6 +38,7 @@ void Button::Update()
 	XMFLOAT4 uiRect = gameObject->GetComponent<UIRenderer>()->GetRect();
 	if (flCursorX > uiRect.y && flCursorX < uiRect.y + uiRect.w &&  -flCursorY < uiRect.x &&  -flCursorY > uiRect.x - uiRect.z)
 		OnClick();
+	buttonDown = true;
 }
 
 void Button::OnDelete()
