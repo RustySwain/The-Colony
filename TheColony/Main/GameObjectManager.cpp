@@ -4,9 +4,10 @@
 #include "CameraController.h"
 #include "Camera.h"
 #include "Time.h"
-#include "Debug.h"
 #include "TextRenderer.h"
 #include "PrefabLoader.h"
+#include "UIRenderer.h"
+#include "Button.h"
 
 GameObjectManager::GameObjectManager()
 {
@@ -38,6 +39,12 @@ void GameObjectManager::Start()
 	cam.AddComponent<CameraController>();
 	cam.GetComponent<Transform>()->SetLocalPosition(0, 0, 5);
 
+	button.Start();
+	button.AddComponent<Transform>()->SetLocalPosition(-0.5f, -0.3f, 0);
+	button.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
+	button.AddComponent<UIRenderer>()->SetRect(0.1f, 0.1f, 0.3f, 0.3f);
+	button.AddComponent<Button>()->Subscribe([&]() -> void { Callback(); });
+
 	prefabTest.AddComponent<PrefabLoader>()->Load("test.prefab");
 }
 
@@ -62,6 +69,7 @@ void GameObjectManager::Update()
 	text.Update();
 	cam.Update();
 	prefabTest.Update();
+	button.Update();
 }
 
 void GameObjectManager::OnDelete()
@@ -70,6 +78,7 @@ void GameObjectManager::OnDelete()
 	text.OnDelete();
 	cam.OnDelete();
 	prefabTest.OnDelete();
+	button.OnDelete();
 }
 
 void GameObjectManager::LoadFromFile(fstream & _file)
@@ -83,4 +92,9 @@ void GameObjectManager::LoadFromString(string _str)
 string GameObjectManager::WriteToString() const
 {
 	return "";
+}
+
+void GameObjectManager::Callback()
+{
+	text.GetComponent<MeshRenderer>()->SetMeshColor(XMFLOAT4(1, 0, 0, 1));
 }

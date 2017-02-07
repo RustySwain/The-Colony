@@ -1,19 +1,20 @@
 #pragma once
 #include "GameObject.h"
+#include <functional>
 
-// Dependencies: None
-class GameObjectManager : public Component
+typedef function<void(void)> CallbackFunc;
+
+// Dependencies
+// UIRenderer
+class Button : public Component
 {
-	const unsigned int id = 5;
-	GameObject cube;
-	GameObject cam;
-	GameObject prefabTest;
-	GameObject text;
-	GameObject button;
+	const unsigned int id = 15;
+	vector<CallbackFunc> callbacks;
+	void OnClick();
 
 public:
-	GameObjectManager();
-	~GameObjectManager();
+	Button();
+	~Button();
 
 	// Component
 	virtual const unsigned int GetId() const override { return id; };
@@ -24,5 +25,6 @@ public:
 	virtual void LoadFromString(string _str) override;
 	virtual string WriteToString() const override;
 
-	void Callback();
+	void Subscribe(CallbackFunc _callback);
+	bool Unsubscribe(CallbackFunc _callback);
 };
