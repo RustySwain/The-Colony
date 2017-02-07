@@ -67,6 +67,9 @@
     <ClCompile Include="Font.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UIRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Defines.h">
@@ -123,6 +126,9 @@
     <ClInclude Include="Font.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="UIRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VSMesh.hlsl">
@@ -135,6 +141,9 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="VSUI.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PSUI.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

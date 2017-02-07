@@ -349,7 +349,7 @@ void MeshRenderer::Render() const
 	}
 	else if (type == UI)
 	{
-		context->PSSetShader(Application::GetInstance()->GetPSMesh(), 0, 0);
+		context->PSSetShader(Application::GetInstance()->GetPSUI(), 0, 0);
 		context->VSSetShader(Application::GetInstance()->GetVSUI(), 0, 0);
 	}
 

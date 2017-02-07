@@ -146,6 +146,7 @@
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="PrefabLoader.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="UIRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="Time.h" />
     <ClInclude Include="PrefabLoader.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="UIRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PSMesh.hlsl">
@@ -175,6 +177,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="PSSkybox.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="PSUI.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
