@@ -41,7 +41,8 @@ bool TextRenderer::SetFont(const char* _sheetPath, const wchar_t* _texPath)
 {
 	if (font) delete font;
 	font = new Font();
-	return font->LoadFromFile(_sheetPath, _texPath);
+	gameObject->GetComponent<MeshRenderer>()->LoadDiffuseMap(_texPath);
+	return font->LoadFromFile(_sheetPath);
 }
 
 void TextRenderer::SetText(string _text)
@@ -60,13 +61,13 @@ void TextRenderer::SetText(string _text)
 		verts.clear();
 		tris.clear();
 		gameObject->GetComponent<MeshRenderer>()->SetInitialized(false);
-		textLength = _text.length();
+		textLength = (unsigned int)_text.length();
 
 		verts.reserve(textLength * 4);
-		for (int i = 0; i < textLength * 4; i++)
+		for (unsigned int i = 0; i < textLength * 4; i++)
 			verts.push_back(Vertex());
 		tris.reserve(textLength * 6);
-		for (int i = 0; i < textLength * 6; i++)
+		for (unsigned int i = 0; i < textLength * 6; i++)
 			tris.push_back(0);
 	}
 	unsigned int rightOffset = 0;
@@ -78,28 +79,28 @@ void TextRenderer::SetText(string _text)
 		RendereredCharacter value = font->GetChar(key);
 
 		Vertex topLeft;
-		topLeft.position.x = rightOffset;
-		topLeft.position.y = value.pixelHeight;
+		topLeft.position.x = (float)rightOffset;
+		topLeft.position.y = (float)value.pixelHeight;
 		topLeft.uv.x = value.left;
 		topLeft.uv.y = value.top;
 
 		Vertex bottomLeft;
-		bottomLeft.position.x = rightOffset;
-		bottomLeft.position.y = 0;
+		bottomLeft.position.x = (float)rightOffset;
+		bottomLeft.position.y = 0.0f;
 		bottomLeft.uv.x = value.left;
 		bottomLeft.uv.y = value.bottom;
 
 		rightOffset += value.pixelWidth / 2;
 
 		Vertex topRight;
-		topRight.position.x = rightOffset;
-		topRight.position.y = value.pixelHeight;
+		topRight.position.x = (float)rightOffset;
+		topRight.position.y = (float)value.pixelHeight;
 		topRight.uv.x = value.right;
 		topRight.uv.y = value.top;
 
 		Vertex bottomRight;
-		bottomRight.position.x = rightOffset;
-		bottomRight.position.y = 0;
+		bottomRight.position.x = (float)rightOffset;
+		bottomRight.position.y = 0.0f;
 		bottomRight.uv.x = value.right;
 		bottomRight.uv.y = value.bottom;
 

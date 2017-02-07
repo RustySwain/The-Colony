@@ -18,17 +18,13 @@ class Font
 	unsigned int charTop = 0;
 	unsigned int charBottom = 0;
 	map<char, RendereredCharacter> characters;
-	ID3D11ShaderResourceView* fontTexture = nullptr;
 
 	bool LoadFontSheet(const char* _fontName);
-	bool LoadFontTexture(const wchar_t* _fontName);
 
 public:
 	Font();
 	~Font();
 
-	bool LoadFromFile(const char* _fontsheetPath, const wchar_t* _texPath);
+	bool LoadFromFile(const char* _fontsheetPath);
 	const RendereredCharacter GetChar(char _char);
-
-	ID3D11ShaderResourceView* GetTexture() const { return fontTexture; };
 };

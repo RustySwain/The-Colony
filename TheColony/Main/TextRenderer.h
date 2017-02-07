@@ -25,5 +25,4 @@ public:
 
 	bool SetFont(const char* _sheetPath, const wchar_t* _texPath);
 	void SetText(string _text);
-	ID3D11ShaderResourceView* GetTexture() const { return font->GetTexture(); };
 };
