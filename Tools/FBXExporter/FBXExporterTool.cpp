@@ -924,9 +924,8 @@ void FBXExporterTool::CleanupFbxManager()
 
 void FBXExporterTool::WriteMeshToStream(std::ostream& inStream)
 {
-	
 	inStream << "<?xml version='1.0' encoding='UTF-8' ?>" << std::endl;
-	inStream << "<itpmesh>" << std::endl;
+	inStream << "<mesh>" << std::endl;
 	if(mHasAnimation)
 	{
 		inStream << "\t<!-- position, normal, skinning weights, skinning indices, texture-->" << std::endl;
@@ -963,13 +962,13 @@ void FBXExporterTool::WriteMeshToStream(std::ostream& inStream)
 	}
 	
 	inStream << "\t</vertices>" << std::endl;
-	inStream << "</itpmesh>" << std::endl;
+	inStream << "</mesh>" << std::endl;
 }
 
 void FBXExporterTool::WriteAnimationToStream(std::ostream& inStream)
 {
 	inStream << "<?xml version='1.0' encoding='UTF-8' ?>" << std::endl;
-	inStream << "<itpanim>" << std::endl;
+	inStream << "<anim>" << std::endl;
 	inStream << "\t<skeleton count='" << mSkeleton.mJoints.size() << "'>" << std::endl;
 	for (unsigned int i = 0; i < mSkeleton.mJoints.size(); ++i)
 	{
@@ -1012,13 +1011,119 @@ void FBXExporterTool::WriteAnimationToStream(std::ostream& inStream)
 	}
 	inStream << "\t\t</animation>\n";
 	inStream << "</animations>\n";
-	inStream << "</itpanim>";
+	inStream << "</anim>";
 }
 
 void FBXExporterTool::WriteMeshToBinary(std::ostream & inStream)
 {
+	inStream.write((char*)&mHasAnimation, sizeof(bool));
+	// Diffuse map
+	int diffuseMapLength = mMaterialLookUp[0]->mDiffuseMapName.length() + 1;
+	inStream.write((char*)&diffuseMapLength, sizeof(int));
+	inStream.write(mMaterialLookUp[0]->mDiffuseMapName.c_str(), diffuseMapLength);
+	// Num tris
+	inStream.write((char*)&mTriangleCount, sizeof(int));
+	for(unsigned int i = 0; i < mTriangleCount; ++i)
+	{
+		inStream.write((char*)&mTriangles[i].mIndices[0], sizeof(int));
+		inStream.write((char*)&mTriangles[i].mIndices[2], sizeof(int));
+		inStream.write((char*)&mTriangles[i].mIndices[1], sizeof(int));
+	}
+	// Num verts
+	int verticesSize = (int)mVertices.size();
+	inStream.write((char*)&verticesSize, sizeof(int));
+	for(unsigned int i = 0; i < mVertices.size(); ++i)
+	{
+		// position
+		inStream.write((char*)&mVertices[i].mPosition.x, sizeof(float));
+		inStream.write((char*)&mVertices[i].mPosition.y, sizeof(float));
+		inStream.write((char*)&mVertices[i].mPosition.z, sizeof(float));
+		// normal
+		inStream.write((char*)&mVertices[i].mNormal.x, sizeof(float));
+		inStream.write((char*)&mVertices[i].mNormal.y, sizeof(float));
+		inStream.write((char*)&mVertices[i].mNormal.z, sizeof(float));
+		if(mHasAnimation)
+		{
+			// skinning weights
+			float sw0 = (float)mVertices[i].mVertexBlendingInfos[0].mBlendingWeight;
+			inStream.write((char*)&sw0, sizeof(float));
+			float sw1 = (float)mVertices[i].mVertexBlendingInfos[1].mBlendingWeight;
+			inStream.write((char*)&sw1, sizeof(float));
+			float sw2 = (float)mVertices[i].mVertexBlendingInfos[2].mBlendingWeight;
+			inStream.write((char*)&sw2, sizeof(float));
+			float sw3 = (float)mVertices[i].mVertexBlendingInfos[3].mBlendingWeight;
+			inStream.write((char*)&sw3, sizeof(float));
+			// skinning indices
+			float si0 = (float)mVertices[i].mVertexBlendingInfos[0].mBlendingIndex;
+			inStream.write((char*)&si0, sizeof(float));
+			float si1 = (float)mVertices[i].mVertexBlendingInfos[1].mBlendingIndex;
+			inStream.write((char*)&si1, sizeof(float));
+			float si2 = (float)mVertices[i].mVertexBlendingInfos[2].mBlendingIndex;
+			inStream.write((char*)&si2, sizeof(float));
+			float si3 = (float)mVertices[i].mVertexBlendingInfos[3].mBlendingIndex;
+			inStream.write((char*)&si3, sizeof(float));
+		}
+		// uv
+		inStream.write((char*)&mVertices[i].mUV.x, sizeof(float));
+		inStream.write((char*)&mVertices[i].mUV.y, sizeof(float));
+	}
 }
 
 void FBXExporterTool::WriteAnimationToBinary(std::ostream & inStream)
 {
+	inStream.write((char*)mSkeleton.mJoints.size(), sizeof(int));
+	for (unsigned int i = 0; i < mSkeleton.mJoints.size(); ++i)
+	{
+		// joint id
+		inStream.write((char*)&i, sizeof(int));
+		// name
+		int nameLength = mSkeleton.mJoints[i].mName.length() + 1;
+		inStream.write((char*)&nameLength, sizeof(int));
+		inStream.write(mSkeleton.mJoints[i].mName.c_str(), nameLength);
+		// parent
+		inStream.write((char*)&mSkeleton.mJoints[i].mParentIndex, sizeof(int));
+		// matrix
+		FbxVector4 translation = mSkeleton.mJoints[i].mGlobalBindposeInverse.GetT();
+		FbxVector4 rotation = mSkeleton.mJoints[i].mGlobalBindposeInverse.GetR();
+		translation.Set(translation.mData[0], translation.mData[1], -translation.mData[2]);
+		rotation.Set(-rotation.mData[0], -rotation.mData[1], rotation.mData[2]);
+		mSkeleton.mJoints[i].mGlobalBindposeInverse.SetT(translation);
+		mSkeleton.mJoints[i].mGlobalBindposeInverse.SetR(rotation);
+		FbxMatrix out = mSkeleton.mJoints[i].mGlobalBindposeInverse;
+		Utilities::WriteMatrixBinary(inStream, out.Transpose(), true);
+	}
+	// animation name
+	int animationNameLength = mAnimationName.length() + 1;
+	inStream.write((char*)&animationNameLength, sizeof(int));
+	inStream.write(mAnimationName.c_str(), animationNameLength);
+	// animation length
+	inStream.write((char*)&mAnimationLength, sizeof(int));
+	// joints
+	for (unsigned int i = 0; i < mSkeleton.mJoints.size(); ++i)
+	{
+		// joint id
+		inStream.write((char*)&i, sizeof(int));
+		// name
+		int nameLength = mSkeleton.mJoints[i].mName.length() + 1;
+		inStream.write((char*)&nameLength, sizeof(int));
+		inStream.write(mSkeleton.mJoints[i].mName.c_str(), nameLength);
+		// frames
+		Keyframe* walker = mSkeleton.mJoints[i].mAnimation;
+		while (walker)
+		{
+			// frame number
+			int frameNumber = (int)walker->mFrameNum;
+			inStream.write((char*)&frameNumber, sizeof(int));
+			// joint position
+			FbxVector4 translation = walker->mGlobalTransform.GetT();
+			FbxVector4 rotation = walker->mGlobalTransform.GetR();
+			translation.Set(translation.mData[0], translation.mData[1], -translation.mData[2]);
+			rotation.Set(-rotation.mData[0], -rotation.mData[1], rotation.mData[2]);
+			walker->mGlobalTransform.SetT(translation);
+			walker->mGlobalTransform.SetR(rotation);
+			FbxMatrix out = walker->mGlobalTransform;
+			Utilities::WriteMatrixBinary(inStream, out.Transpose(), true);
+			walker = walker->mNext;
+		}
+	}
 }

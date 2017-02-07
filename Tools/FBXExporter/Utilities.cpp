@@ -8,6 +8,19 @@ void Utilities::WriteMatrix(std::ostream& inStream, FbxMatrix& inMatrix, bool in
 		<< static_cast<float>(inMatrix.Get(3, 0)) << "," << static_cast<float>(inMatrix.Get(3, 1)) << "," << static_cast<float>(inMatrix.Get(3, 2)) << "," << static_cast<float>(inMatrix.Get(3, 3)) << "</mat>\n";
 }
 
+void Utilities::WriteMatrixBinary(std::ostream & inStream, FbxMatrix & inMatrix, bool inIsRoot)
+{
+	for(int x = 0; x < 4; ++x)
+	{
+		for(int y = 0; y < 4; ++y)
+		{
+			float temp = (float)inMatrix.Get(x, y);
+			inStream.write((char*)&temp, sizeof(float));
+		}
+	}
+	
+}
+
 void Utilities::PrintMatrix(FbxMatrix& inMatrix)
 {
 	FbxString lMatrixValue;

@@ -100,7 +100,7 @@ public:
 
 	// This function should be changed if exporting to another format
 	static void WriteMatrix(std::ostream& inStream, FbxMatrix& inMatrix, bool inIsRoot);
-
+	static void WriteMatrixBinary(std::ostream& inStream, FbxMatrix& inMatrix, bool inIsRoot);
 	static void PrintMatrix(FbxMatrix& inMatrix);
 	
 	static FbxAMatrix GetGeometryTransformation(FbxNode* inNode);
