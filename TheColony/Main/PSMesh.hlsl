@@ -81,6 +81,7 @@ float4 main(Input _in) : SV_TARGET
 {
 	float4 textureColor = diffuse.Sample(sam, _in.uv.xy);
 	float alpha = textureColor.w;
+	float3 lightDir;
 
 	float4 normal = normals.Sample(sam, _in.uv.xy);
 	if (length(normal) > 0.5f)
@@ -115,7 +116,7 @@ float4 main(Input _in) : SV_TARGET
 		}
 		case 3: // point
 		{
-			float attenuation = calcAttenuation(lights[i].position, _in.worldPos, lights[i].direction.w);
+			float attenuation = calcAttenuation(lights[i].position, _in.worldPos, lights[i].extra.x);
 			float4 lightDir = float4(lights[i].position.xyz - _in.worldPos.xyz, 1);
 			lightColor += attenuation * pointLight(lights[i].position, _in.worldPos, _in.normal, lights[i].color);
 			lightColor += specularRatio * attenuation * applySpecular(camPos, 1024, _in.worldPos, lightDir, _in.normal, lights[i].color, lights[i].color.w);

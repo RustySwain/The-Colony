@@ -1,6 +1,7 @@
 #include "Light.h"
 #include "Application.h"
 #include <fstream>
+#include "Time.h"
 
 Light::Light() : type(LightType::NONE)
 {
@@ -21,6 +22,20 @@ void Light::Update()
 	Transform* transform = gameObject->GetComponent<Transform>();
 	XMFLOAT4X4 worldMat;
 	XMStoreFloat4x4(&worldMat, gameObject->GetComponent<Transform>()->GetWorldMatrix());
+
+	//Test
+	/*float radius = 7.0f;
+	float offset = 0;
+	float radiansPerSecond = XMConvertToRadians(45);
+	double totalRotation =  Time::Delta() * radiansPerSecond;
+	XMFLOAT4 lightPos = XMFLOAT4(std::sin(totalRotation + offset) * radius, 7.0f, std::cos(totalRotation + offset) * radius, 1.0f);
+	XMVECTOR lightDir = XMVectorSet(-lightPos.x, -lightPos.y, -lightPos.z, 1.0f);
+	XMFLOAT4 tmp = lightBuffType.lightDirection;
+	XMStoreFloat4(&tmp, lightDir);
+	lightBuffType.lightDirection = tmp;*/
+	//lightBuffType.lightDirection = XMFLOAT4(worldMat._41, worldMat._42, worldMat._43, 1);
+	//END TEST
+
 	lightBuffType.lightDirection = XMFLOAT4(worldMat.m[2][0], worldMat.m[2][1], worldMat.m[2][2], 1);
 	XMFLOAT3 wPos = transform->GetWorldPosition();
 	lightBuffType.lightPos = XMFLOAT4(wPos.x, wPos.y, wPos.z, 1);
