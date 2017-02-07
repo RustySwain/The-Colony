@@ -5,8 +5,10 @@
 class GameObjectManager : public Component
 {
 	const unsigned int id = 5;
-	GameObject go;
+	GameObject cube;
 	GameObject cam;
+	GameObject prefabTest;
+	GameObject text;
 
 public:
 	GameObjectManager();
@@ -17,6 +19,7 @@ public:
 	virtual void Start() override;
 	virtual void Update() override;
 	virtual void OnDelete() override;
+	virtual void LoadFromFile(fstream &_file) override;
 	virtual void LoadFromString(string _str) override;
 	virtual string WriteToString() const override;
 };

@@ -1,5 +1,6 @@
 #include "Transform.h"
 #include "Defines.h"
+#include <fstream>
 
 Transform::Transform()
 {
@@ -23,16 +24,38 @@ void Transform::OnDelete()
 	
 }
 
+void Transform::LoadFromFile(fstream &_file)
+{
+	//string copy = _str;
+	//memcpy_s(&localMatrix, sizeof(localMatrix), &copy[0], copy.size());
+	//unsigned int offset = 64; // sizeof(float) * 16 (number of floats in XMMATRIX)
+	//unsigned int id = *(unsigned int*)&_str[offset];
+	//offset += sizeof(unsigned int);
+	//scale = *(float*)&_str[offset];
+	//if (id)
+	//	parent = GameObject::FindFromId(id)->GetComponent<Transform>();
+
+	float xPos, yPos, zPos;
+	_file.read((char*)&xPos, sizeof(float));
+	_file.read((char*)&yPos, sizeof(float));
+	_file.read((char*)&zPos, sizeof(float));
+	SetLocalPosition(xPos, yPos, zPos);
+
+	float xRot, yRot, zRot;
+	_file.read((char*)&xRot, sizeof(float));
+	_file.read((char*)&yRot, sizeof(float));
+	_file.read((char*)&zRot, sizeof(float));
+	RotateXPre(xRot);
+	RotateYPre(yRot);
+	RotateZPre(zRot);
+
+	float scale;
+	_file.read((char*)&scale, sizeof(float));
+	ScalePre(scale);
+}
+
 void Transform::LoadFromString(string _str)
 {
-	string copy = _str;
-	memcpy_s(&localMatrix, sizeof(localMatrix), &copy[0], copy.size());
-	unsigned int offset = 64; // sizeof(float) * 16 (number of floats in XMMATRIX)
-	unsigned int id = *(unsigned int*)&_str[offset];
-	offset += sizeof(unsigned int);
-	scale = *(float*)&_str[offset];
-	if (id)
-		parent = GameObject::FindFromId(id)->GetComponent<Transform>();
 }
 
 string Transform::WriteToString() const

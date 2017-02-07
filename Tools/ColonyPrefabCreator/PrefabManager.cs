@@ -299,13 +299,11 @@ namespace ColonyPrefabManager
 
             using (BinaryWriter writer = new BinaryWriter(File.Open(path, FileMode.Create)))
             {
-                byte delimiter = 1;
-
                 // Write GameObject
                 writer.Write(gameObject.GetId());
-                writer.Write(gameObject.GetName().Length);
+                writer.Write(gameObject.GetName().Length + 1);
                 writer.Write(gameObject.GetName());
-                writer.Write(gameObject.GetTag().Length);
+                writer.Write(gameObject.GetTag().Length + 1);
                 writer.Write(gameObject.GetTag());
                 writer.Write(gameObject.GetTransparent());
                 writer.Write(gameObject.GetDynamic());
@@ -313,8 +311,6 @@ namespace ColonyPrefabManager
                 writer.Write(gameObject.m_Components.Count);
                 for(int i = 0; i < gameObject.m_Components.Count; ++i)
                     writer.Write(gameObject.m_Components[i]);
-                // Write delimiter
-                writer.Write(delimiter);
 
                 // Write Transform -- id = 1
                 if (transform.GetAdded())
@@ -326,22 +322,16 @@ namespace ColonyPrefabManager
                     writer.Write(transform.GetRotation()[1]);
                     writer.Write(transform.GetRotation()[2]);
                     writer.Write(transform.GetScale());
-                    // Write delimiter
-                    writer.Write(delimiter);
                 }
 
                 // Write RigidBody -- id = 2
-                if (audioSource.GetAdded())
+                if (rigidBody.GetAdded())
                 {
-                    // Write delimiter
-                    writer.Write(delimiter);
                 }
 
                 // Write Collider -- id = 3
                 if (collider.GetAdded())
                 {
-                    // Write delimiter
-                    writer.Write(delimiter);
                 }
 
                 // Write Camera -- id = 4
@@ -350,8 +340,6 @@ namespace ColonyPrefabManager
                     writer.Write(camera.GetFarPlane());
                     writer.Write(camera.GetNearPlane());
                     writer.Write(camera.GetFOV());
-                    // Write delimiter
-                    writer.Write(delimiter);
                 }
 
                 // Write Light -- id = 8
@@ -366,16 +354,12 @@ namespace ColonyPrefabManager
                     writer.Write(lighting.GetExtra()[2]);
                     writer.Write(lighting.GetExtra()[3]);
                     writer.Write(lighting.GetLightType());
-                    // Write delimiter
-                    writer.Write(delimiter);
                 }
 
                 // Write AudioSource -- id = 11
                 if (audioSource.GetAdded())
                 {
                     writer.Write(audioSource.GetClip());
-                    // Write delimiter
-                    writer.Write(delimiter);
                 }
 
                 writer.Close();
@@ -408,7 +392,6 @@ namespace ColonyPrefabManager
                     int numOfComponents = reader.ReadInt32();
                     for(int i = 0; i < numOfComponents; ++i)
                         gameObject.m_Components.Add(reader.ReadInt32());
-                    reader.ReadByte();
 
                     // Load Transform -- id = 1
                     if (gameObject.m_Components.Contains(transform.GetId()))
@@ -417,21 +400,18 @@ namespace ColonyPrefabManager
                         transform.SetPosition(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                         transform.SetRotation(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                         transform.SetScale(reader.ReadSingle());
-                        reader.ReadByte();
                     }
 
                     // Load RigidBody -- id = 2
                     if (gameObject.m_Components.Contains(rigidBody.GetId()))
                     {
                         rigidBody.SetAdded(true);
-                        reader.ReadByte();
                     }
 
                     // Load Collider -- id = 3
                     if (gameObject.m_Components.Contains(collider.GetId()))
                     {
                         collider.SetAdded(true);
-                        reader.ReadByte();
                     }
 
                     // Load Camera -- id = 4
@@ -441,7 +421,6 @@ namespace ColonyPrefabManager
                         camera.SetFarPlane(reader.ReadSingle());
                         camera.SetNearPlane(reader.ReadSingle());
                         camera.SetFOV(reader.ReadSingle());
-                        reader.ReadByte();
                     }
                     
                     // Load Light -- id = 8
@@ -451,7 +430,6 @@ namespace ColonyPrefabManager
                         lighting.SetColor(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                         lighting.SetExtra(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                         lighting.SetLightType(reader.ReadInt32());
-                        reader.ReadByte();
                     }
 
                     // Load AudioSource -- id = 11
@@ -459,7 +437,6 @@ namespace ColonyPrefabManager
                     {
                         audioSource.SetAdded(true);
                         audioSource.SetClip(reader.ReadString());
-                        reader.ReadByte();
                     }
 
                     AssignValues();

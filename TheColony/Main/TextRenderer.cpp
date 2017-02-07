@@ -24,6 +24,10 @@ void TextRenderer::OnDelete()
 	if (font) delete font;
 }
 
+void TextRenderer::LoadFromFile(fstream & _file)
+{
+}
+
 void TextRenderer::LoadFromString(string _str)
 {
 }

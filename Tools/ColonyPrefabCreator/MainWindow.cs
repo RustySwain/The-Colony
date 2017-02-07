@@ -16,6 +16,17 @@ namespace ColonyPrefabCreator
         public MainWindow()
         {
             InitializeComponent();
+            var pos = this.PointToScreen(TheColony.Location);
+            pos = Background.PointToClient(pos);
+            TheColony.Parent = Background;
+            TheColony.Location = pos;
+            TheColony.BackColor = Color.Transparent;
+
+            var pos2 = this.PointToScreen(label2.Location);
+            pos2 = Background.PointToClient(pos2);
+            label2.Parent = Background;
+            label2.Location = pos2;
+            label2.BackColor = Color.Transparent;
         }
 
         private void NewPrefab_Click(object sender, EventArgs e)
@@ -37,6 +48,11 @@ namespace ColonyPrefabCreator
         private void Exit_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include "Application.h"
 #include "Macros.h"
+#include <fstream>
 
 Camera* Camera::mainCam = nullptr;
 
@@ -64,6 +65,18 @@ void Camera::Update()
 void Camera::OnDelete()
 {
 	SAFE_RELEASE(constantBuffer);
+}
+
+void Camera::LoadFromFile(fstream &_file)
+{
+	float farPlane, nearPlane, FOV;
+	_file.read((char*)&farPlane, sizeof(float));
+	_file.read((char*)&nearPlane, sizeof(float));
+	_file.read((char*)&FOV, sizeof(float));
+
+	SetFarPlane(farPlane);
+	SetNearPlane(nearPlane);
+	SetFov(FOV);
 }
 
 void Camera::LoadFromString(string _str)

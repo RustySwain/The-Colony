@@ -7,20 +7,52 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColonySaveEditor", "ColonyS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FontExporter", "FontExporter\FontExporter.csproj", "{D168B014-B90F-4708-8012-EEE4831B1D18}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FBXExporter", "FBXExporter\FBXExporter.vcxproj", "{9696B190-8A31-45BA-A43E-0287102EF438}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{60C70F9E-FBD1-425D-A5C9-94518FDEB8AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{60C70F9E-FBD1-425D-A5C9-94518FDEB8AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60C70F9E-FBD1-425D-A5C9-94518FDEB8AA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{60C70F9E-FBD1-425D-A5C9-94518FDEB8AA}.Debug|x64.Build.0 = Debug|Any CPU
+		{60C70F9E-FBD1-425D-A5C9-94518FDEB8AA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{60C70F9E-FBD1-425D-A5C9-94518FDEB8AA}.Debug|x86.Build.0 = Debug|Any CPU
 		{60C70F9E-FBD1-425D-A5C9-94518FDEB8AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60C70F9E-FBD1-425D-A5C9-94518FDEB8AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60C70F9E-FBD1-425D-A5C9-94518FDEB8AA}.Release|x64.ActiveCfg = Release|Any CPU
+		{60C70F9E-FBD1-425D-A5C9-94518FDEB8AA}.Release|x64.Build.0 = Release|Any CPU
+		{60C70F9E-FBD1-425D-A5C9-94518FDEB8AA}.Release|x86.ActiveCfg = Release|Any CPU
+		{60C70F9E-FBD1-425D-A5C9-94518FDEB8AA}.Release|x86.Build.0 = Release|Any CPU
 		{D168B014-B90F-4708-8012-EEE4831B1D18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D168B014-B90F-4708-8012-EEE4831B1D18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D168B014-B90F-4708-8012-EEE4831B1D18}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D168B014-B90F-4708-8012-EEE4831B1D18}.Debug|x64.Build.0 = Debug|Any CPU
+		{D168B014-B90F-4708-8012-EEE4831B1D18}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D168B014-B90F-4708-8012-EEE4831B1D18}.Debug|x86.Build.0 = Debug|Any CPU
 		{D168B014-B90F-4708-8012-EEE4831B1D18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D168B014-B90F-4708-8012-EEE4831B1D18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D168B014-B90F-4708-8012-EEE4831B1D18}.Release|x64.ActiveCfg = Release|Any CPU
+		{D168B014-B90F-4708-8012-EEE4831B1D18}.Release|x64.Build.0 = Release|Any CPU
+		{D168B014-B90F-4708-8012-EEE4831B1D18}.Release|x86.ActiveCfg = Release|Any CPU
+		{D168B014-B90F-4708-8012-EEE4831B1D18}.Release|x86.Build.0 = Release|Any CPU
+		{9696B190-8A31-45BA-A43E-0287102EF438}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{9696B190-8A31-45BA-A43E-0287102EF438}.Debug|x64.ActiveCfg = Debug|x64
+		{9696B190-8A31-45BA-A43E-0287102EF438}.Debug|x64.Build.0 = Debug|x64
+		{9696B190-8A31-45BA-A43E-0287102EF438}.Debug|x86.ActiveCfg = Debug|Win32
+		{9696B190-8A31-45BA-A43E-0287102EF438}.Debug|x86.Build.0 = Debug|Win32
+		{9696B190-8A31-45BA-A43E-0287102EF438}.Release|Any CPU.ActiveCfg = Release|Win32
+		{9696B190-8A31-45BA-A43E-0287102EF438}.Release|x64.ActiveCfg = Release|x64
+		{9696B190-8A31-45BA-A43E-0287102EF438}.Release|x64.Build.0 = Release|x64
+		{9696B190-8A31-45BA-A43E-0287102EF438}.Release|x86.ActiveCfg = Release|Win32
+		{9696B190-8A31-45BA-A43E-0287102EF438}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
