@@ -9,6 +9,7 @@
 #include "Button.h"
 #include "Light.h"
 #include "TextRenderer.h"
+#include "Skybox.h"
 
 GameObjectManager::GameObjectManager()
 {
@@ -20,6 +21,11 @@ GameObjectManager::~GameObjectManager()
 
 void GameObjectManager::Start()
 {
+	skybox.Start();
+	skybox.AddComponent<Transform>()->ScalePost(100);
+	skybox.AddComponent<MeshRenderer>();
+	skybox.AddComponent<Skybox>();
+
 	cube.Start();
 	cube.AddComponent<Transform>();
 	cube.AddComponent<MeshRenderer>()->LoadFromObj("../Assets/cube.obj");
@@ -33,7 +39,7 @@ void GameObjectManager::Start()
 	cam.GetComponent<Transform>()->SetLocalPosition(0, 0, 5);
 
 	button.Start();
-	button.AddComponent<Transform>()->SetLocalPosition(-0.5f, -0.3f, 0);
+	button.AddComponent<Transform>()->SetLocalPosition(-0.4f, -0.7f, 0);
 	button.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
 	button.AddComponent<UIRenderer>()->SetRect(0.1f, 0.1f, 0.3f, 0.3f);
 	button.AddComponent<Button>()->Subscribe([=]() -> void { Callback(); });
@@ -43,7 +49,7 @@ void GameObjectManager::Start()
 	text.AddComponent<MeshRenderer>();
 	text.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
 	text.GetComponent<Transform>()->ScalePost(0.0005f);
-	text.GetComponent<Transform>()->TranslatePost(XMFLOAT3(-1, 0, 0));
+	text.GetComponent<Transform>()->TranslatePost(XMFLOAT3(-0.3f, 0, 0));
 	text.GetComponent<TextRenderer>()->SetText("Hello, World!");
 
 	//Lighting
@@ -55,7 +61,7 @@ void GameObjectManager::Start()
 	spotLight.GetComponent<Transform>()->RotateZPre(0);
 	spotLight.GetComponent<Transform>()->SetLocalPosition(0, 2, -2);
 	spotLight.GetComponent<Light>()->type = Light::SPOT;
-	spotLight.GetComponent<Light>()->SetExtra(XMFLOAT4(100, 0.97, 0, 1));
+	spotLight.GetComponent<Light>()->SetExtra(XMFLOAT4(100, 0.97f, 0, 1));
 
 	dirLight.Start();
 	dirLight.AddComponent<Light>()->SetColor(XMFLOAT4(0, 0, 1, 1));
@@ -64,7 +70,7 @@ void GameObjectManager::Start()
 	dirLight.GetComponent<Transform>()->RotateZPre(-15);
 	dirLight.GetComponent<Transform>()->SetLocalPosition(4, 3, -2);
 	dirLight.GetComponent<Light>()->type = Light::DIRECTIONAL;
-	dirLight.GetComponent<Light>()->SetExtra(XMFLOAT4(100, 0.97, 0, 1));
+	dirLight.GetComponent<Light>()->SetExtra(XMFLOAT4(100, 0.97f, 0, 1));
 
 	prefabTest.AddComponent<PrefabLoader>()->Load("test.prefab");
 }
@@ -97,6 +103,7 @@ void GameObjectManager::Update()
 	spotLight.Update();
 	dirLight.Update();
 	button.Update();
+	skybox.Update();
 }
 
 void GameObjectManager::OnDelete()
@@ -109,6 +116,7 @@ void GameObjectManager::OnDelete()
 	spotLight.OnDelete();
 	dirLight.OnDelete();
 	button.OnDelete();
+	skybox.OnDelete();
 }
 
 void GameObjectManager::LoadFromFile(fstream & _file)

@@ -13,6 +13,7 @@ class GameObjectManager : public Component
 	GameObject prefabTest;
 	GameObject text;
 	GameObject button;
+	GameObject skybox;
 
 	float color = 0;
 
