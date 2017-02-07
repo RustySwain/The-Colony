@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 
 namespace ColonyPrefabManager
 {
-    class Animator
+    class MeshRenderer
     {
-        private const int Id = 10;
+        private const int Id = 6;
         private bool m_added;
-        private List<string> m_animations = new List<string>();
+        private string m_Mesh;
 
-        public override string ToString() { return "Animator"; }
+        public override string ToString() { return "MeshRenderer"; }
 
         // Accessors
         public bool GetAdded() { return m_added; }
         public int GetId() { return Id; }
-        public List<string> GetAnimations() { return m_animations; }
+        public string GetMesh() { return m_Mesh; }
 
         // Mutators
         public void SetAdded(bool added) { m_added = added; }
-        public void AddAnimation(string file) { m_animations.Add(file); }
+        public void SetMesh(string mesh) { m_Mesh = mesh; }
     }
 }

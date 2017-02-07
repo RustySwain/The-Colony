@@ -3,6 +3,7 @@
 #include "DDSTextureLoader.h"
 #include "Application.h"
 #include "Transform.h"
+#include <fstream>
 
 #define INSTANCE_MAX 100000
 
@@ -105,6 +106,14 @@ void MeshRenderer::OnDelete()
 
 void MeshRenderer::LoadFromFile(fstream & _file)
 {
+	int meshLength;
+	_file.read((char*)&meshLength, sizeof(int));
+	char* mesh = new char[meshLength + 1];
+	_file.read(mesh, 1);
+	_file.read(mesh, meshLength);
+	mesh[meshLength] = 0;
+	LoadFromBinary(mesh);
+	delete[] mesh;
 }
 
 void MeshRenderer::LoadFromString(string _str)
@@ -243,6 +252,24 @@ bool MeshRenderer::LoadFromObj(char* _path)
 	memcpy_s(&meshPath[0], 256, _path, strlen(_path));
 	flags |= HAS_MESH;
 	return mesh->LoadFromObj(_path);
+}
+
+bool MeshRenderer::LoadFromBinary(char * _path)
+{
+	if (mesh) delete mesh;
+	mesh = new Mesh();
+	memcpy_s(&meshPath[0], 256, _path, strlen(_path));
+	flags |= HAS_MESH;
+	string diffuseMapPath;
+	bool loader = mesh->LoadFromBinary(_path, diffuseMapPath);
+	if (loader)
+	{
+		wstring wDiffuseMapPath(diffuseMapPath.size(), L'#');
+		size_t outSize;
+		mbstowcs_s(&outSize, &wDiffuseMapPath[0], wDiffuseMapPath.size() + 1, diffuseMapPath.c_str(), wDiffuseMapPath.size());
+		//LoadDiffuseMap(wDiffuseMapPath.c_str());
+	}
+	return loader;
 }
 
 void MeshRenderer::LoadDiffuseMap(const wchar_t* _path)

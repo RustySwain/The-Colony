@@ -69,6 +69,8 @@ namespace ColonyPrefabManager
             this.Camera_FarPlane_Label = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fIleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SaveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Lighting_Group = new System.Windows.Forms.GroupBox();
             this.Lighting_LightType_Input = new System.Windows.Forms.ComboBox();
             this.Lighting_LightType = new System.Windows.Forms.Label();
@@ -102,12 +104,14 @@ namespace ColonyPrefabManager
             this.Collider_Group = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
             this.Animator_Group = new System.Windows.Forms.GroupBox();
-            this.Animator_Animations = new System.Windows.Forms.ListBox();
+            this.Animator_Label1 = new System.Windows.Forms.Label();
             this.Animator_Remove = new System.Windows.Forms.Button();
             this.Animator_Add = new System.Windows.Forms.Button();
-            this.SaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SaveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.Animator_Label1 = new System.Windows.Forms.Label();
+            this.Animator_Animations = new System.Windows.Forms.ListBox();
+            this.MeshRenderer_Group = new System.Windows.Forms.GroupBox();
+            this.MeshRenderer_Mesh_Label = new System.Windows.Forms.Label();
+            this.MeshRenderer_Mesh_Input = new System.Windows.Forms.TextBox();
+            this.MeshRenderer_Mesh_Browser = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.GameObject_ID_Input)).BeginInit();
             this.GameObject_Group.SuspendLayout();
             this.Transform_Group.SuspendLayout();
@@ -136,6 +140,7 @@ namespace ColonyPrefabManager
             this.RigidBody_Group.SuspendLayout();
             this.Collider_Group.SuspendLayout();
             this.Animator_Group.SuspendLayout();
+            this.MeshRenderer_Group.SuspendLayout();
             this.SuspendLayout();
             // 
             // AddComponent
@@ -218,7 +223,7 @@ namespace ColonyPrefabManager
             // GameObject_Transperent
             // 
             this.GameObject_Transperent.AutoSize = true;
-            this.GameObject_Transperent.Location = new System.Drawing.Point(18, 125);
+            this.GameObject_Transperent.Location = new System.Drawing.Point(18, 136);
             this.GameObject_Transperent.Name = "GameObject_Transperent";
             this.GameObject_Transperent.Size = new System.Drawing.Size(92, 19);
             this.GameObject_Transperent.TabIndex = 12;
@@ -228,7 +233,7 @@ namespace ColonyPrefabManager
             // GameObject_Dynamic
             // 
             this.GameObject_Dynamic.AutoSize = true;
-            this.GameObject_Dynamic.Location = new System.Drawing.Point(18, 150);
+            this.GameObject_Dynamic.Location = new System.Drawing.Point(18, 161);
             this.GameObject_Dynamic.Name = "GameObject_Dynamic";
             this.GameObject_Dynamic.Size = new System.Drawing.Size(74, 19);
             this.GameObject_Dynamic.TabIndex = 13;
@@ -250,7 +255,7 @@ namespace ColonyPrefabManager
             this.GameObject_Group.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GameObject_Group.Location = new System.Drawing.Point(12, 69);
             this.GameObject_Group.Name = "GameObject_Group";
-            this.GameObject_Group.Size = new System.Drawing.Size(378, 183);
+            this.GameObject_Group.Size = new System.Drawing.Size(378, 197);
             this.GameObject_Group.TabIndex = 14;
             this.GameObject_Group.TabStop = false;
             this.GameObject_Group.Text = "GameObject";
@@ -622,6 +627,22 @@ namespace ColonyPrefabManager
             this.fIleToolStripMenuItem.Name = "fIleToolStripMenuItem";
             this.fIleToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fIleToolStripMenuItem.Text = "File";
+            // 
+            // SaveToolStripMenuItem
+            // 
+            this.SaveToolStripMenuItem.Image = global::ColonyPrefabManager.Properties.Resources.save;
+            this.SaveToolStripMenuItem.Name = "SaveToolStripMenuItem";
+            this.SaveToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.SaveToolStripMenuItem.Text = "Save";
+            this.SaveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
+            // 
+            // SaveAsToolStripMenuItem
+            // 
+            this.SaveAsToolStripMenuItem.Image = global::ColonyPrefabManager.Properties.Resources.save_as;
+            this.SaveAsToolStripMenuItem.Name = "SaveAsToolStripMenuItem";
+            this.SaveAsToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.SaveAsToolStripMenuItem.Text = "Save As";
+            this.SaveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsToolStripMenuItem_Click);
             // 
             // Lighting_Group
             // 
@@ -1010,20 +1031,20 @@ namespace ColonyPrefabManager
             this.Animator_Group.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Animator_Group.Location = new System.Drawing.Point(12, 69);
             this.Animator_Group.Name = "Animator_Group";
-            this.Animator_Group.Size = new System.Drawing.Size(378, 210);
+            this.Animator_Group.Size = new System.Drawing.Size(378, 173);
             this.Animator_Group.TabIndex = 29;
             this.Animator_Group.TabStop = false;
             this.Animator_Group.Text = "Animator";
             this.Animator_Group.Visible = false;
             // 
-            // Animator_Animations
+            // Animator_Label1
             // 
-            this.Animator_Animations.FormattingEnabled = true;
-            this.Animator_Animations.ItemHeight = 15;
-            this.Animator_Animations.Location = new System.Drawing.Point(6, 44);
-            this.Animator_Animations.Name = "Animator_Animations";
-            this.Animator_Animations.Size = new System.Drawing.Size(363, 94);
-            this.Animator_Animations.TabIndex = 0;
+            this.Animator_Label1.AutoSize = true;
+            this.Animator_Label1.Location = new System.Drawing.Point(3, 26);
+            this.Animator_Label1.Name = "Animator_Label1";
+            this.Animator_Label1.Size = new System.Drawing.Size(71, 15);
+            this.Animator_Label1.TabIndex = 3;
+            this.Animator_Label1.Text = "Animations:";
             // 
             // Animator_Remove
             // 
@@ -1045,30 +1066,56 @@ namespace ColonyPrefabManager
             this.Animator_Add.UseVisualStyleBackColor = true;
             this.Animator_Add.Click += new System.EventHandler(this.Animator_Add_Click);
             // 
-            // SaveToolStripMenuItem
+            // Animator_Animations
             // 
-            this.SaveToolStripMenuItem.Image = global::ColonyPrefabManager.Properties.Resources.save;
-            this.SaveToolStripMenuItem.Name = "SaveToolStripMenuItem";
-            this.SaveToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.SaveToolStripMenuItem.Text = "Save";
-            this.SaveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
+            this.Animator_Animations.FormattingEnabled = true;
+            this.Animator_Animations.ItemHeight = 15;
+            this.Animator_Animations.Location = new System.Drawing.Point(6, 44);
+            this.Animator_Animations.Name = "Animator_Animations";
+            this.Animator_Animations.Size = new System.Drawing.Size(363, 94);
+            this.Animator_Animations.TabIndex = 0;
             // 
-            // SaveAsToolStripMenuItem
+            // MeshRenderer_Group
             // 
-            this.SaveAsToolStripMenuItem.Image = global::ColonyPrefabManager.Properties.Resources.save_as;
-            this.SaveAsToolStripMenuItem.Name = "SaveAsToolStripMenuItem";
-            this.SaveAsToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.SaveAsToolStripMenuItem.Text = "Save As";
-            this.SaveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsToolStripMenuItem_Click);
+            this.MeshRenderer_Group.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.MeshRenderer_Group.Controls.Add(this.MeshRenderer_Mesh_Browser);
+            this.MeshRenderer_Group.Controls.Add(this.MeshRenderer_Mesh_Input);
+            this.MeshRenderer_Group.Controls.Add(this.MeshRenderer_Mesh_Label);
+            this.MeshRenderer_Group.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MeshRenderer_Group.Location = new System.Drawing.Point(12, 69);
+            this.MeshRenderer_Group.Name = "MeshRenderer_Group";
+            this.MeshRenderer_Group.Size = new System.Drawing.Size(378, 94);
+            this.MeshRenderer_Group.TabIndex = 17;
+            this.MeshRenderer_Group.TabStop = false;
+            this.MeshRenderer_Group.Text = "MeshRenderer";
+            this.MeshRenderer_Group.Visible = false;
             // 
-            // Animator_Label1
+            // MeshRenderer_Mesh_Label
             // 
-            this.Animator_Label1.AutoSize = true;
-            this.Animator_Label1.Location = new System.Drawing.Point(3, 26);
-            this.Animator_Label1.Name = "Animator_Label1";
-            this.Animator_Label1.Size = new System.Drawing.Size(71, 15);
-            this.Animator_Label1.TabIndex = 3;
-            this.Animator_Label1.Text = "Animations:";
+            this.MeshRenderer_Mesh_Label.AutoSize = true;
+            this.MeshRenderer_Mesh_Label.Location = new System.Drawing.Point(15, 33);
+            this.MeshRenderer_Mesh_Label.Name = "MeshRenderer_Mesh_Label";
+            this.MeshRenderer_Mesh_Label.Size = new System.Drawing.Size(41, 15);
+            this.MeshRenderer_Mesh_Label.TabIndex = 0;
+            this.MeshRenderer_Mesh_Label.Text = "Mesh:";
+            // 
+            // MeshRenderer_Mesh_Input
+            // 
+            this.MeshRenderer_Mesh_Input.Location = new System.Drawing.Point(69, 31);
+            this.MeshRenderer_Mesh_Input.Name = "MeshRenderer_Mesh_Input";
+            this.MeshRenderer_Mesh_Input.Size = new System.Drawing.Size(126, 21);
+            this.MeshRenderer_Mesh_Input.TabIndex = 1;
+            // 
+            // MeshRenderer_Mesh_Browser
+            // 
+            this.MeshRenderer_Mesh_Browser.Location = new System.Drawing.Point(195, 30);
+            this.MeshRenderer_Mesh_Browser.Name = "MeshRenderer_Mesh_Browser";
+            this.MeshRenderer_Mesh_Browser.Size = new System.Drawing.Size(31, 23);
+            this.MeshRenderer_Mesh_Browser.TabIndex = 2;
+            this.MeshRenderer_Mesh_Browser.Text = "...";
+            this.MeshRenderer_Mesh_Browser.UseVisualStyleBackColor = true;
+            this.MeshRenderer_Mesh_Browser.Click += new System.EventHandler(this.MeshRenderer_Mesh_Browser_Click);
             // 
             // PrefabManager
             // 
@@ -1076,18 +1123,19 @@ namespace ColonyPrefabManager
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(402, 434);
-            this.Controls.Add(this.Animator_Group);
+            this.Controls.Add(this.MeshRenderer_Group);
             this.Controls.Add(this.RemoveComponent);
             this.Controls.Add(this.ComponentList);
             this.Controls.Add(this.AddComponent);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.Transform_Group);
-            this.Controls.Add(this.Camera_Group);
-            this.Controls.Add(this.Lighting_Group);
             this.Controls.Add(this.Collider_Group);
             this.Controls.Add(this.RigidBody_Group);
             this.Controls.Add(this.GameObject_Group);
             this.Controls.Add(this.AudioSource_Group);
+            this.Controls.Add(this.Animator_Group);
+            this.Controls.Add(this.Transform_Group);
+            this.Controls.Add(this.Camera_Group);
+            this.Controls.Add(this.Lighting_Group);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "PrefabManager";
@@ -1129,6 +1177,8 @@ namespace ColonyPrefabManager
             this.Collider_Group.PerformLayout();
             this.Animator_Group.ResumeLayout(false);
             this.Animator_Group.PerformLayout();
+            this.MeshRenderer_Group.ResumeLayout(false);
+            this.MeshRenderer_Group.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1212,5 +1262,9 @@ namespace ColonyPrefabManager
         private System.Windows.Forms.Button Animator_Remove;
         private System.Windows.Forms.Button Animator_Add;
         private System.Windows.Forms.Label Animator_Label1;
+        private System.Windows.Forms.GroupBox MeshRenderer_Group;
+        private System.Windows.Forms.Label MeshRenderer_Mesh_Label;
+        private System.Windows.Forms.Button MeshRenderer_Mesh_Browser;
+        private System.Windows.Forms.TextBox MeshRenderer_Mesh_Input;
     }
 }

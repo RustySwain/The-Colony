@@ -29,7 +29,8 @@ void GameObjectManager::Start()
 	cam.AddComponent<CameraController>();
 	cam.GetComponent<Transform>()->SetLocalPosition(0, 0, 5);
 
-	prefabTest.AddComponent<PrefabLoader>()->Load("test.prefab");
+	prefabTest.AddComponent<PrefabLoader>()->Load("../Assets/Box.prefab");
+	prefabTest.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box.dds");
 }
 
 void GameObjectManager::Update()
