@@ -18,7 +18,7 @@ void CameraController::Start()
 	screenMiddle.x = winRect.right * 0.5f;
 	screenMiddle.y = winRect.bottom * 0.5f;
 	// invisible cursor
-	ShowCursor(false);
+	//ShowCursor(false);
 	// put cursor in the middle of the screen
 	SetCursorPos((int)screenMiddle.x, (int)screenMiddle.y);
 }
@@ -57,18 +57,20 @@ void CameraController::Update()
 	// rotate based on mouse movement
 	float dx = (screenMiddle.x - newMousePos.x) * 0.5f;
 	float dy = (screenMiddle.y - newMousePos.y) * 0.5f;
-	transform->RotateYPost(dx);
-	transform->RotateXPre(dy);
 
-	// put camera back to saved position
-	transform->SetLocalPosition(pos.x, pos.y, pos.z);
-	// put cursor back in the middle of the screen
-	SetCursorPos((int)screenMiddle.x, (int)screenMiddle.y);
+	if (GetAsyncKeyState(VK_NUMPAD4))
+	{
+		transform->RotateYPost(dx);
+		transform->RotateXPre(dy);
+		// put camera back to saved position
+		transform->SetLocalPosition(pos.x, pos.y, pos.z);
+		// put cursor back in the middle of the screen
+		SetCursorPos((int)screenMiddle.x, (int)screenMiddle.y);
+	}
 }
 
 void CameraController::OnDelete()
 {
-	return;
 }
 
 void CameraController::LoadFromFile(fstream & _file)

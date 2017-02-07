@@ -5,6 +5,8 @@
 
 using namespace DirectX;
 
+// Dependencies
+// Transform
 class Light : public Component
 {
 	const int id = 8;

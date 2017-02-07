@@ -9,6 +9,7 @@
 #include "VSUI.csh"
 #include "PSMesh.csh"
 #include "PSSkybox.csh"
+#include "PSUI.csh"
 
 Application* Application::instance = nullptr;
 
@@ -66,6 +67,7 @@ void Application::CreateShaders()
 	device->CreateVertexShader(VSUI, sizeof(VSUI), 0, &vsUI);
 	device->CreatePixelShader(PSMesh, sizeof(PSMesh), 0, &psMesh);
 	device->CreatePixelShader(PSSkybox, sizeof(PSSkybox), 0, &psSkybox);
+	device->CreatePixelShader(PSUI, sizeof(PSUI), 0, &psUI);
 }
 
 void Application::CreateDepthStencil()
@@ -248,6 +250,7 @@ void Application::Shutdown()
 	SAFE_RELEASE(vsUI);
 	SAFE_RELEASE(psMesh);
 	SAFE_RELEASE(psSkybox);
+	SAFE_RELEASE(psUI);
 
 	gameObjectManager.OnDelete();
 }

@@ -32,6 +32,7 @@ class Application
 	ID3D11VertexShader* vsUI = nullptr;
 	ID3D11PixelShader* psMesh = nullptr;
 	ID3D11PixelShader* psSkybox = nullptr;
+	ID3D11PixelShader* psUI = nullptr;
 
 	float backBufferColor[4] = { 0, 1, 1, 1 };
 	unsigned int msCount = 8;
@@ -57,12 +58,14 @@ public:
 
 	static Application* GetInstance() { if (!instance) instance = new Application(); return instance; };
 
+	HWND GetWindow() const { return *window; };
 	RECT& GetWindowRect() { return windowRect; };
 	ID3D11Device* GetDevice() const { return device; };
 	ID3D11DeviceContext* GetContext() const { return context; };
 
 	ID3D11PixelShader* GetPSMesh() const { return psMesh; };
 	ID3D11PixelShader* GetPSSkybox() const { return psSkybox; };
+	ID3D11PixelShader* GetPSUI() const { return psUI; };
 	ID3D11VertexShader* GetVSMesh() const { return vsMesh; };
 	ID3D11VertexShader* GetVSUI() const { return vsUI; };
 
