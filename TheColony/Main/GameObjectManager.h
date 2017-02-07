@@ -7,6 +7,7 @@ class GameObjectManager : public Component
 	const unsigned int id = 5;
 	GameObject go;
 	GameObject cam;
+	GameObject lights;
 	GameObject prefabTest;
 
 public:

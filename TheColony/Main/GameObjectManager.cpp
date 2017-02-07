@@ -6,6 +6,7 @@
 #include "Time.h"
 #include "Debug.h"
 #include "PrefabLoader.h"
+#include "Light.h"
 
 GameObjectManager::GameObjectManager()
 {
@@ -29,14 +30,28 @@ void GameObjectManager::Start()
 	cam.AddComponent<CameraController>();
 	cam.GetComponent<Transform>()->SetLocalPosition(0, 0, 5);
 
+	//Lighting
+	lights.Start();
+	lights.AddComponent<Light>()->SetColor(XMFLOAT4(1, 1, 1, 1));
+	lights.AddComponent<Transform>();
+	lights.GetComponent<Transform>()->RotateYPre(180);
+	lights.GetComponent<Transform>()->RotateXPre(-50);
+	lights.GetComponent<Transform>()->RotateZPre(-15);
+	lights.GetComponent<Transform>()->SetLocalPosition(0, 3, -2);
+	lights.GetComponent<Light>()->type = Light::SPOT;
+	lights.GetComponent<Light>()->SetExtra(XMFLOAT4(100, 0.97, 0, 1));
+
 	prefabTest.AddComponent<PrefabLoader>()->Load("test.prefab");
 }
 
 void GameObjectManager::Update()
 {
+	//Rotate light
+	lights.GetComponent<Transform>()->RotateYPost(Time::Delta() * 100);
+
 	// Testing instancing stuff, feel free to remove, but it works
 	static unsigned int instanceInd = 0;
-	go.GetComponent<Transform>()->RotateYPost(Time::Delta() * 90);
+	//go.GetComponent<Transform>()->RotateYPost(Time::Delta() * 90);
 	if (GetAsyncKeyState('O') & 0x1)
 	{
 		XMMATRIX mat = XMMatrixIdentity();
@@ -52,6 +67,7 @@ void GameObjectManager::Update()
 	go.Update();
 	cam.Update();
 	prefabTest.Update();
+	lights.Update();
 }
 
 void GameObjectManager::OnDelete()
@@ -59,6 +75,7 @@ void GameObjectManager::OnDelete()
 	go.OnDelete();
 	cam.OnDelete();
 	prefabTest.OnDelete();
+	lights.OnDelete();
 }
 
 void GameObjectManager::LoadFromFile(fstream & _file)

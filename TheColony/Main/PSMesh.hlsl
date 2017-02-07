@@ -92,8 +92,9 @@ float4 main(Input _in) : SV_TARGET
 
 	float4 lightColor = float4(0, 0, 0, 0);
 	// HARD CODED AMBIENT LIGHT. REMOVE
-	lightColor += float4(1, 1, 1, 1);
+	//lightColor += float4(1, 1, 1, 1);
 	// END REMOVE
+
 	bool end = false;
 	for (int i = 0; !end && i < MAX_LIGHTS; i++)
 	{
