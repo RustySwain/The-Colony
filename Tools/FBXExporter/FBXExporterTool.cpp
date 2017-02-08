@@ -994,7 +994,7 @@ void FBXExporterTool::WriteAnimationToStream(std::ostream& inStream)
 		Keyframe* walker = mSkeleton.mJoints[i].mAnimation;
 		while(walker)
 		{
-			inStream << "\t\t\t\t" << "<frame num='" << walker->mFrameNum - 1 << "'>\n";
+			inStream << "\t\t\t\t" << "<frame num='" << walker->mFrameNum << "'>\n";
 			inStream << "\t\t\t\t\t";
 			FbxVector4 translation = walker->mGlobalTransform.GetT();
 			FbxVector4 rotation = walker->mGlobalTransform.GetR();
@@ -1075,7 +1075,7 @@ void FBXExporterTool::WriteMeshToBinary(std::ostream & inStream)
 
 		// uv
 		XMFLOAT4 uv;
-		uv.x = 1.0f - mVertices[i].mUV.x;
+		uv.x = mVertices[i].mUV.x;
 		uv.y = 1.0f - mVertices[i].mUV.y;
 		uv.z = uv.w = 0;
 		inStream.write((char*)&uv, sizeof(XMFLOAT4));
@@ -1111,7 +1111,8 @@ void FBXExporterTool::WriteAnimationToBinary(std::ostream & inStream)
 	inStream.write((char*)&animationNameLength, sizeof(int));
 	inStream.write(mAnimationName.c_str(), animationNameLength);
 	// animation length
-	inStream.write((char*)&mAnimationLength, sizeof(int));
+	float length = (float)mAnimationLength;
+	inStream.write((char*)&length, sizeof(float));
 	// joints
 	for (unsigned int i = 0; i < mSkeleton.mJoints.size(); ++i)
 	{
@@ -1121,6 +1122,15 @@ void FBXExporterTool::WriteAnimationToBinary(std::ostream & inStream)
 		int nameLength = mSkeleton.mJoints[i].mName.length() + 1;
 		inStream.write((char*)&nameLength, sizeof(int));
 		inStream.write(mSkeleton.mJoints[i].mName.c_str(), nameLength);
+		// num of frames
+		Keyframe* frame = mSkeleton.mJoints[i].mAnimation;
+		int count = 0;
+		while(frame)
+		{
+			count += 1;
+			frame = frame->mNext;
+		}
+		inStream.write((char*)&count, sizeof(int));
 		// frames
 		Keyframe* walker = mSkeleton.mJoints[i].mAnimation;
 		while (walker)

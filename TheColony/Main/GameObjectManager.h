@@ -10,10 +10,12 @@ class GameObjectManager : public Component
 	GameObject spotLight;
 	GameObject dirLight;
 	GameObject pointLight;
-	GameObject prefabTest;
 	GameObject text;
 	GameObject button;
 	GameObject skybox;
+
+	// Test objects
+	GameObject teddy, box;
 
 	float color = 0;
 

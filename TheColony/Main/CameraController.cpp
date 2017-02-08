@@ -58,7 +58,7 @@ void CameraController::Update()
 	float dx = (screenMiddle.x - newMousePos.x) * 0.5f;
 	float dy = (screenMiddle.y - newMousePos.y) * 0.5f;
 
-	if (GetAsyncKeyState(VK_NUMPAD4))
+	if (!GetAsyncKeyState(VK_NUMPAD4))
 	{
 		transform->RotateYPost(dx);
 		transform->RotateXPre(dy);
