@@ -935,7 +935,7 @@ void FBXExporterTool::WriteMeshToStream(std::ostream& inStream)
 	{
 		inStream << "\t<format>pnt</format>" << std::endl;
 	}
-	inStream << "\t<texture>" << mMaterialLookUp[0]->mDiffuseMapName << "</texture>" << std::endl;
+	//inStream << "\t<texture>" << mMaterialLookUp[0]->mDiffuseMapName << "</texture>" << std::endl;
 	inStream << "\t<triangles count='" << mTriangleCount << "'>" << std::endl;
 
 	for (unsigned int i = 0; i < mTriangleCount; ++i)
@@ -957,7 +957,7 @@ void FBXExporterTool::WriteMeshToStream(std::ostream& inStream)
 			inStream << "\t\t\t<sw>" << static_cast<float>(mVertices[i].mVertexBlendingInfos[0].mBlendingWeight) << "," << static_cast<float>(mVertices[i].mVertexBlendingInfos[1].mBlendingWeight) << "," << static_cast<float>(mVertices[i].mVertexBlendingInfos[2].mBlendingWeight) << "," << static_cast<float>(mVertices[i].mVertexBlendingInfos[3].mBlendingWeight) << "</sw>" << std::endl;
 			inStream << "\t\t\t<si>" << mVertices[i].mVertexBlendingInfos[0].mBlendingIndex << "," << mVertices[i].mVertexBlendingInfos[1].mBlendingIndex << "," << mVertices[i].mVertexBlendingInfos[2].mBlendingIndex << "," << mVertices[i].mVertexBlendingInfos[3].mBlendingIndex << "</si>" << std::endl;
 		}
-		inStream << "\t\t\t<tex>" << mVertices[i].mUV.x << "," << 1.0f - mVertices[i].mUV.y << "</tex>" << std::endl;
+		inStream << "\t\t\t<tex>" << 1.0f - mVertices[i].mUV.x << "," << 1.0f - mVertices[i].mUV.y << "</tex>" << std::endl;
 		inStream << "\t\t</vtx>" << std::endl;
 	}
 	
@@ -1018,16 +1018,16 @@ void FBXExporterTool::WriteMeshToBinary(std::ostream & inStream)
 {
 	inStream.write((char*)&mHasAnimation, sizeof(bool));
 	// Diffuse map
-	int diffuseMapLength = mMaterialLookUp[0]->mDiffuseMapName.length() + 1;
-	inStream.write((char*)&diffuseMapLength, sizeof(int));
-	inStream.write(mMaterialLookUp[0]->mDiffuseMapName.c_str(), diffuseMapLength);
+	//int diffuseMapLength = mMaterialLookUp[0]->mDiffuseMapName.length() + 1;
+	//inStream.write((char*)&diffuseMapLength, sizeof(int));
+	//inStream.write(mMaterialLookUp[0]->mDiffuseMapName.c_str(), diffuseMapLength);
 	// Num tris
 	inStream.write((char*)&mTriangleCount, sizeof(int));
 	for(unsigned int i = 0; i < mTriangleCount; ++i)
 	{
 		inStream.write((char*)&mTriangles[i].mIndices[0], sizeof(int));
-		inStream.write((char*)&mTriangles[i].mIndices[2], sizeof(int));
 		inStream.write((char*)&mTriangles[i].mIndices[1], sizeof(int));
+		inStream.write((char*)&mTriangles[i].mIndices[2], sizeof(int));
 	}
 	// Num verts
 	int verticesSize = (int)mVertices.size();
@@ -1035,13 +1035,21 @@ void FBXExporterTool::WriteMeshToBinary(std::ostream & inStream)
 	for(unsigned int i = 0; i < mVertices.size(); ++i)
 	{
 		// position
-		inStream.write((char*)&mVertices[i].mPosition.x, sizeof(float));
-		inStream.write((char*)&mVertices[i].mPosition.y, sizeof(float));
-		inStream.write((char*)&mVertices[i].mPosition.z, sizeof(float));
+		XMFLOAT4 position;
+		position.x = mVertices[i].mPosition.x;
+		position.y = mVertices[i].mPosition.y;
+		position.z = -mVertices[i].mPosition.z;
+		position.w = 0;
+		inStream.write((char*)&position, sizeof(XMFLOAT4));
+
 		// normal
-		inStream.write((char*)&mVertices[i].mNormal.x, sizeof(float));
-		inStream.write((char*)&mVertices[i].mNormal.y, sizeof(float));
-		inStream.write((char*)&mVertices[i].mNormal.z, sizeof(float));
+		XMFLOAT4 normal;
+		normal.x = mVertices[i].mNormal.x;
+		normal.y = mVertices[i].mNormal.y;
+		normal.z = -mVertices[i].mNormal.z;
+		normal.w = 0;
+		inStream.write((char*)&normal, sizeof(XMFLOAT4));
+
 		if(mHasAnimation)
 		{
 			// skinning weights
@@ -1053,6 +1061,7 @@ void FBXExporterTool::WriteMeshToBinary(std::ostream & inStream)
 			inStream.write((char*)&sw2, sizeof(float));
 			float sw3 = (float)mVertices[i].mVertexBlendingInfos[3].mBlendingWeight;
 			inStream.write((char*)&sw3, sizeof(float));
+
 			// skinning indices
 			float si0 = (float)mVertices[i].mVertexBlendingInfos[0].mBlendingIndex;
 			inStream.write((char*)&si0, sizeof(float));
@@ -1063,9 +1072,13 @@ void FBXExporterTool::WriteMeshToBinary(std::ostream & inStream)
 			float si3 = (float)mVertices[i].mVertexBlendingInfos[3].mBlendingIndex;
 			inStream.write((char*)&si3, sizeof(float));
 		}
+
 		// uv
-		inStream.write((char*)&mVertices[i].mUV.x, sizeof(float));
-		inStream.write((char*)&mVertices[i].mUV.y, sizeof(float));
+		XMFLOAT4 uv;
+		uv.x = 1.0f - mVertices[i].mUV.x;
+		uv.y = 1.0f - mVertices[i].mUV.y;
+		uv.z = uv.w = 0;
+		inStream.write((char*)&uv, sizeof(XMFLOAT4));
 	}
 }
 

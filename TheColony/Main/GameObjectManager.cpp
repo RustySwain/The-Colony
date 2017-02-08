@@ -21,15 +21,15 @@ GameObjectManager::~GameObjectManager()
 
 void GameObjectManager::Start()
 {
-	skybox.Start();
-	skybox.AddComponent<Transform>()->ScalePost(100);
-	skybox.AddComponent<MeshRenderer>();
-	skybox.AddComponent<Skybox>();
-
+	
 	cube.Start();
 	cube.AddComponent<Transform>();
 	cube.AddComponent<MeshRenderer>()->LoadFromObj("../Assets/cube.obj");
 	cube.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/crate.dds");
+	skybox.Start();
+	skybox.AddComponent<Transform>()->ScalePost(100);
+	skybox.AddComponent<MeshRenderer>();
+	skybox.AddComponent<Skybox>();
 
 	cam.Start();
 	cam.AddComponent<Camera>();
@@ -57,7 +57,7 @@ void GameObjectManager::Start()
 	spotLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, 1, 1, 1));
 	spotLight.AddComponent<Transform>();
 	spotLight.GetComponent<Transform>()->RotateYPre(180);
-	spotLight.GetComponent<Transform>()->RotateXPre(0);
+	spotLight.GetComponent<Transform>()->RotateXPre(-50);
 	spotLight.GetComponent<Transform>()->RotateZPre(0);
 	spotLight.GetComponent<Transform>()->SetLocalPosition(0, 2, -2);
 	spotLight.GetComponent<Light>()->type = Light::SPOT;
@@ -70,15 +70,23 @@ void GameObjectManager::Start()
 	dirLight.GetComponent<Transform>()->RotateZPre(-15);
 	dirLight.GetComponent<Transform>()->SetLocalPosition(4, 3, -2);
 	dirLight.GetComponent<Light>()->type = Light::DIRECTIONAL;
-	dirLight.GetComponent<Light>()->SetExtra(XMFLOAT4(100, 0.97f, 0, 1));
 
-	prefabTest.AddComponent<PrefabLoader>()->Load("test.prefab");
+	prefabTest.AddComponent<PrefabLoader>()->Load("../Assets/Box.prefab");
+	prefabTest.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box.dds");
+
+	pointLight.Start();
+	pointLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, 1, 0, 1));
+	pointLight.AddComponent<Transform>();
+	pointLight.GetComponent<Transform>()->SetLocalPosition(0, 0, 1);
+	pointLight.GetComponent<Light>()->SetExtra(XMFLOAT4(3, 0, 0, 1));
+	pointLight.GetComponent<Light>()->type = Light::POINT;
+
 }
 
 void GameObjectManager::Update()
 {
 	//Rotate light
-	spotLight.GetComponent<Transform>()->RotateYPost(Time::Delta() * 100);
+	//spotLight.GetComponent<Transform>()->RotateYPost(Time::Delta() * 100);
 
 	// Testing instancing stuff, feel free to remove, but it works
 	static unsigned int instanceInd = 0;
@@ -104,6 +112,7 @@ void GameObjectManager::Update()
 	dirLight.Update();
 	button.Update();
 	skybox.Update();
+	pointLight.Update();
 }
 
 void GameObjectManager::OnDelete()
@@ -115,7 +124,7 @@ void GameObjectManager::OnDelete()
 	button.OnDelete();
 	spotLight.OnDelete();
 	dirLight.OnDelete();
-	button.OnDelete();
+	pointLight.OnDelete();
 	skybox.OnDelete();
 }
 

@@ -93,6 +93,75 @@ bool Mesh::LoadFromObj(const char* _path)
 	return false;
 }
 
+bool Mesh::LoadFromBinary(const char * _path, string &_diffuseMapPath)
+{
+	// format path
+	string path = "../Assets/";
+	path.append(_path);
+
+	fstream file;
+	file.open(path, ios_base::binary | ios_base::in);
+	if(file.is_open())
+	{
+		// has animation?
+		bool hasAnimation;
+		file.read((char*)&hasAnimation, sizeof(bool));
+
+		// read diffuse map
+		/*int diffuseMapLength;
+		file.read((char*)&diffuseMapLength, sizeof(int));
+		char* diffuseMap = new char[diffuseMapLength + 1];
+		file.read(diffuseMap, diffuseMapLength);
+		_diffuseMapPath = diffuseMap;*/
+
+		// read triangles
+		int numTris = 0;
+		file.read((char*)&numTris, sizeof(int));
+		for(int i = 0; i < numTris; ++i)
+		{
+			unsigned int tri;
+			file.read((char*)&tri, sizeof(unsigned int));
+			tris.push_back(tri);
+			file.read((char*)&tri, sizeof(unsigned int));
+			tris.push_back(tri);
+			file.read((char*)&tri, sizeof(unsigned int));
+			tris.push_back(tri);
+		}
+
+		// read vertices
+		int numVerts = 0;
+		file.read((char*)&numVerts, sizeof(int));
+		for(int i = 0; i < numVerts; ++i)
+		{
+			Vertex vertex;
+			file.read((char*)&vertex.position, sizeof(XMFLOAT4));
+			file.read((char*)&vertex.normal, sizeof(XMFLOAT4));
+
+			if(hasAnimation)
+			{
+				file.read((char*)&vertex.jointWeight[0], sizeof(float));
+				file.read((char*)&vertex.jointWeight[1], sizeof(float));
+				file.read((char*)&vertex.jointWeight[2], sizeof(float));
+				file.read((char*)&vertex.jointWeight[3], sizeof(float));
+
+				file.read((char*)&vertex.jointIndex[0], sizeof(float));
+				file.read((char*)&vertex.jointIndex[1], sizeof(float));
+				file.read((char*)&vertex.jointIndex[2], sizeof(float));
+				file.read((char*)&vertex.jointIndex[3], sizeof(float));
+			}
+
+			file.read((char*)&vertex.uv, sizeof(XMFLOAT4));
+
+			vertices.push_back(vertex);
+		}
+
+		file.close();
+		return true;
+	}
+
+	return false;
+}
+
 void Mesh::BuildMesh(const vector<Vertex> _vertices, const vector<unsigned int> _indices)
 {
 	vertices = _vertices;
