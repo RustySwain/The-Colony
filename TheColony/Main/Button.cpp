@@ -6,7 +6,7 @@
 void Button::OnClick()
 {
 	for (size_t i = 0; i < callbacks.size(); i++)
-		callbacks[i]();
+		(*callbacks[i])();
 }
 
 Button::Button()
@@ -58,20 +58,20 @@ string Button::WriteToString() const
 	return "";
 }
 
-void Button::Subscribe(CallbackFunc _callback)
+void Button::Subscribe(CallbackFunc* _callback)
 {
 	callbacks.push_back(_callback);
 }
 
-bool Button::Unsubscribe(CallbackFunc _callback)
+bool Button::Unsubscribe(CallbackFunc* _callback)
 {
-	/*for (size_t i = 0; i < callbacks.size(); i++)
+	for (size_t i = 0; i < callbacks.size(); i++)
 	{
 		if (callbacks[i])
 		{
 			callbacks.erase(callbacks.begin() + i);
 			return true;
 		}
-	}*/
+	}
 	return false;
 }

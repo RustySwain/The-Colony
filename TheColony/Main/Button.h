@@ -9,7 +9,7 @@ typedef function<void(void)> CallbackFunc;
 class Button : public Component
 {
 	const unsigned int id = 15;
-	vector<CallbackFunc> callbacks;
+	vector<CallbackFunc*> callbacks;
 
 	bool buttonDown = false;
 
@@ -28,6 +28,6 @@ public:
 	virtual void LoadFromString(string _str) override;
 	virtual string WriteToString() const override;
 
-	void Subscribe(CallbackFunc _callback);
-	bool Unsubscribe(CallbackFunc _callback);
+	void Subscribe(CallbackFunc* _callback);
+	bool Unsubscribe(CallbackFunc* _callback);
 };

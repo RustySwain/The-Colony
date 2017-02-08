@@ -169,7 +169,6 @@
     <ClInclude Include="Macros.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshRenderer.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="TextRenderer.h" />
     <ClInclude Include="Time.h" />

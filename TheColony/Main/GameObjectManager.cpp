@@ -6,7 +6,6 @@
 #include "Time.h"
 #include "PrefabLoader.h"
 #include "UIRenderer.h"
-#include "Button.h"
 #include "Light.h"
 #include "TextRenderer.h"
 #include "Skybox.h"
@@ -21,7 +20,6 @@ GameObjectManager::~GameObjectManager()
 
 void GameObjectManager::Start()
 {
-	
 	cube.Start();
 	cube.AddComponent<Transform>();
 	cube.AddComponent<MeshRenderer>()->LoadFromObj("../Assets/cube.obj");
@@ -40,17 +38,18 @@ void GameObjectManager::Start()
 	cam.GetComponent<Transform>()->RotateYPre(180);
 
 	button.Start();
-	button.AddComponent<Transform>()->SetLocalPosition(-0.4f, -0.7f, 0);
+	button.AddComponent<Transform>()->SetLocalPosition(-0.4f, -0.7f, 0.1f);
 	button.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
 	button.AddComponent<UIRenderer>()->SetRect(0.1f, 0.1f, 0.3f, 0.3f);
-	button.AddComponent<Button>()->Subscribe([=]() -> void { Callback(); });
+	func = [=]() -> void { Callback(); };
+	button.AddComponent<Button>()->Subscribe(&func);
 
 	text.Start();
 	text.AddComponent <Transform>();
 	text.AddComponent<MeshRenderer>();
 	text.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
 	text.GetComponent<Transform>()->ScalePost(0.0005f);
-	text.GetComponent<Transform>()->TranslatePost(XMFLOAT3(-0.3f, 0, 0));
+	text.GetComponent<Transform>()->TranslatePost(XMFLOAT3(-0.295f, 0, 0));
 	text.GetComponent<TextRenderer>()->SetText("Hello, World!");
 
 	//Lighting
@@ -78,7 +77,6 @@ void GameObjectManager::Start()
 	pointLight.GetComponent<Transform>()->SetLocalPosition(0, 0, 1);
 	pointLight.GetComponent<Light>()->SetExtra(XMFLOAT4(3, 0, 0, 1));
 	pointLight.GetComponent<Light>()->type = Light::POINT;
-
 	// Test Objects
 	teddy.AddComponent<PrefabLoader>()->Load("../Assets/Prefabs/Teddy.prefab");
 	teddy.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Teddy.dds");
