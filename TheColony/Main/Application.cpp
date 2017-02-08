@@ -13,6 +13,80 @@
 
 Application* Application::instance = nullptr;
 
+void Application::SortMeshesByDistance()
+{
+	// this will replace the meshrenderer vector
+	vector<const MeshRenderer*> newMeshes;
+	vector<const MeshRenderer*> uiMeshes;
+	for (size_t i = 0; i < renderers.size(); i++)
+	{
+		// push back all of the opaque objects first. It should be front to back to prevent pixel redraws, but this is plenty efficient for now
+		if (!renderers[i]->GetTransparent())
+		{
+			if (renderers[i]->GetType() == MeshRenderer::UI)
+			{
+				uiMeshes.push_back(renderers[i]);
+				renderers.erase(renderers.begin() + i--);
+				continue;
+			}
+			// put it in the new vector and remove from the old one
+			newMeshes.push_back(renderers[i]);
+			renderers.erase(renderers.begin() + i--);
+		}
+	}
+	// while there are still items in the vector
+	while (renderers.size())
+	{
+		unsigned int farthest = 0;
+		float distance = -FLT_MAX;
+		for (unsigned int i = 0; i < renderers.size(); i++)
+		{
+			if (renderers[i]->GetType() == MeshRenderer::UI)
+			{
+				uiMeshes.push_back(renderers[i]);
+				renderers.erase(renderers.begin() + i--);
+				continue;
+			}
+			// get distance between main camera and mesh transform
+			XMFLOAT3 camPos = Camera::mainCam->gameObject->GetComponent<Transform>()->GetWorldPosition();
+			XMFLOAT3 meshPos = renderers[i]->gameObject->GetComponent<Transform>()->GetWorldPosition();
+			XMVECTOR camVecPos = XMVectorSet(camPos.x, camPos.y, camPos.z, 1);
+			XMVECTOR meshVecPos = XMVectorSet(meshPos.x, meshPos.y, meshPos.z, 1);
+			float thisDist = XMVector3Length(meshVecPos - camVecPos).m128_f32[0];
+			// if this is farther away than the temporary farthest, this becomes the temporary farthest
+			if (thisDist > distance)
+			{
+				distance = thisDist;
+				farthest = i;
+			}
+		}
+		// put the farthest into the new vector and remove it from the old one
+		newMeshes.push_back(renderers[farthest]);
+		renderers.erase(renderers.begin() + farthest);
+	}
+	while (uiMeshes.size())
+	{
+		unsigned int farthest = 0;
+		float distance = -FLT_MAX;
+		for (unsigned int i = 0; i < uiMeshes.size(); i++)
+		{
+			// get distance between main camera and mesh transform
+			float thisDist = uiMeshes[i]->gameObject->GetComponent<Transform>()->GetWorldPosition().z;
+			// if this is farther away than the temporary farthest, this becomes the temporary farthest
+			if (thisDist > distance)
+			{
+				distance = thisDist;
+				farthest = i;
+			}
+		}
+		// put the farthest into the new vector and remove it from the old one
+		newMeshes.push_back(uiMeshes[farthest]);
+		uiMeshes.erase(uiMeshes.begin() + farthest);
+	}
+	// replace the vector
+	renderers = newMeshes;
+}
+
 void Application::CreateDevice()
 {
 	DXGI_SWAP_CHAIN_DESC swapDesc;
@@ -196,7 +270,7 @@ void Application::Update() const
 	gameObjectManager.Update();
 }
 
-void Application::Render() const
+void Application::Render()
 {
 	//Update light and camera buffers
 	Light::LightBufferType lightBuff[100];
@@ -225,8 +299,14 @@ void Application::Render() const
 	ID3D11Buffer* pixBufs[2] = { lightBuffer, camPosBuffer };
 	context->PSSetConstantBuffers(0, 2, pixBufs);
 
+	SortMeshesByDistance();
+
 	for (unsigned int i = 0; i < renderers.size(); i++)
-		renderers[i]->Render();
+		if (renderers[i]->GetType() != MeshRenderer::UI)
+			renderers[i]->Render();
+	for (unsigned int i = 0; i < renderers.size(); i++)
+		if (renderers[i]->GetType() == MeshRenderer::UI)
+			renderers[i]->Render();
 
 	swapChain->Present(0, 0);
 }

@@ -39,7 +39,7 @@ void GameObjectManager::Start()
 	cam.GetComponent<Transform>()->SetLocalPosition(0, 0, 5);
 
 	button.Start();
-	button.AddComponent<Transform>()->SetLocalPosition(-0.4f, -0.7f, 0);
+	button.AddComponent<Transform>()->SetLocalPosition(-0.4f, -0.7f, 0.1f);
 	button.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
 	button.AddComponent<UIRenderer>()->SetRect(0.1f, 0.1f, 0.3f, 0.3f);
 	button.AddComponent<Button>()->Subscribe([=]() -> void { Callback(); });
@@ -49,7 +49,7 @@ void GameObjectManager::Start()
 	text.AddComponent<MeshRenderer>();
 	text.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
 	text.GetComponent<Transform>()->ScalePost(0.0005f);
-	text.GetComponent<Transform>()->TranslatePost(XMFLOAT3(-0.3f, 0, 0));
+	text.GetComponent<Transform>()->TranslatePost(XMFLOAT3(-0.295f, 0, 0));
 	text.GetComponent<TextRenderer>()->SetText("Hello, World!");
 
 	//Lighting

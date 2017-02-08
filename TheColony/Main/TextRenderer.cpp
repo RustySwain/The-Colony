@@ -13,6 +13,7 @@ void TextRenderer::Start()
 {
 	gameObject->GetComponent<MeshRenderer>()->SetType(MeshRenderer::UI);
 	gameObject->GetComponent<MeshRenderer>()->SetDynamic(true);
+	gameObject->GetComponent<MeshRenderer>()->SetTransparent(true);
 }
 
 void TextRenderer::Update()
@@ -52,6 +53,7 @@ void TextRenderer::SetText(string _text)
 	{
 		mesh = new Mesh();
 		gameObject->GetComponent<MeshRenderer>()->SetInitialized(false);
+		gameObject->GetComponent<MeshRenderer>()->SetHasMesh(true);
 	}
 	vector<Vertex>& verts = mesh->GetVertexData();
 	vector<unsigned int>& tris = mesh->GetTris();
