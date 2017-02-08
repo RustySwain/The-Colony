@@ -32,9 +32,15 @@ void CameraController::Update()
 	newMousePos.x = (float)mP.x;
 	newMousePos.y = (float)mP.y;
 
-	float speed = Time::Delta();
+	float speed = Time::Delta() * 10;
 
+	
 	// translate based on key presses
+	
+	if (WM_MOUSEHWHEEL < 0)
+	{
+		transform->TranslatePre(XMFLOAT3(0, 0, -speed));
+	}
 	if (GetAsyncKeyState('W'))
 		transform->TranslatePre(XMFLOAT3(0, 0, -speed));
 	if (GetAsyncKeyState('S'))

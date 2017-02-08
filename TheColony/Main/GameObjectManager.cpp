@@ -36,21 +36,22 @@ void GameObjectManager::Start()
 	cam.AddComponent<Transform>();
 	cam.GetComponent<Camera>()->SetFarPlane(500);
 	cam.AddComponent<CameraController>();
-	cam.GetComponent<Transform>()->SetLocalPosition(0, 0, 5);
+	cam.GetComponent<Transform>()->SetLocalPosition(0, 10, 5);
+	cam.GetComponent<Transform>()->RotateXPre(-40);
 
-	button.Start();
+	/*button.Start();
 	button.AddComponent<Transform>()->SetLocalPosition(-0.4f, -0.7f, 0);
 	button.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
 	button.AddComponent<UIRenderer>()->SetRect(0.1f, 0.1f, 0.3f, 0.3f);
-	button.AddComponent<Button>()->Subscribe([=]() -> void { Callback(); });
+	button.AddComponent<Button>()->Subscribe([=]() -> void { Callback(); });*/
 
-	text.Start();
+	/*text.Start();
 	text.AddComponent <Transform>();
 	text.AddComponent<MeshRenderer>();
 	text.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
 	text.GetComponent<Transform>()->ScalePost(0.0005f);
 	text.GetComponent<Transform>()->TranslatePost(XMFLOAT3(-0.3f, 0, 0));
-	text.GetComponent<TextRenderer>()->SetText("Hello, World!");
+	text.GetComponent<TextRenderer>()->SetText("Hello, World!");*/
 
 	//Lighting
 	spotLight.Start();
@@ -104,10 +105,10 @@ void GameObjectManager::Update()
 		cube.GetComponent<MeshRenderer>()->RemoveInstance(id);
 	}
 	cube.Update();
-	text.Update();
+	//text.Update();
 	cam.Update();
 	prefabTest.Update();
-	button.Update();
+	//button.Update();
 	spotLight.Update();
 	dirLight.Update();
 	button.Update();
@@ -118,10 +119,10 @@ void GameObjectManager::Update()
 void GameObjectManager::OnDelete()
 {
 	cube.OnDelete();
-	text.OnDelete();
+	//text.OnDelete();
 	cam.OnDelete();
 	prefabTest.OnDelete();
-	button.OnDelete();
+	//button.OnDelete();
 	spotLight.OnDelete();
 	dirLight.OnDelete();
 	pointLight.OnDelete();

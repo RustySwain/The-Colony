@@ -30,4 +30,6 @@ public:
 	virtual void LoadFromFile(fstream &_file) override;
 	virtual void LoadFromString(string _str) override;
 	virtual string WriteToString() const override;
+
+
 };
