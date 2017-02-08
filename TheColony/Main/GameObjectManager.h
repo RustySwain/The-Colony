@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Button.h"
 
 // Dependencies: None
 class GameObjectManager : public Component
@@ -15,6 +16,7 @@ class GameObjectManager : public Component
 	GameObject button;
 	GameObject skybox;
 
+	CallbackFunc func;
 	float color = 0;
 
 public:
