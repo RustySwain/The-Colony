@@ -101,9 +101,9 @@ bool Animator::AddAnimation(const char * _path)
 		char *animName = new char[animNameLength + 1];
 		file.read(animName, animNameLength);
 
-		// Animation length
-		float animLength = 0;
-		file.read((char*)&animLength, sizeof(float));
+		// Animation duration
+		float animDuration = 0;
+		file.read((char*)&animDuration, sizeof(float));
 
 		for(int i = 0; i < numJoints; ++i)
 		{
@@ -130,6 +130,9 @@ bool Animator::AddAnimation(const char * _path)
 				// KeyFrame ID
 				file.read((char*)&keyFrame.id, sizeof(int));
 
+				// KeyFrame Duration
+				file.read((char*)&keyFrame.duration, sizeof(float));
+
 				// KeyFrame transform matrix
 				DirectX::XMFLOAT4X4 transform;
 				for (int x = 0; x < 4; ++x)
@@ -147,7 +150,7 @@ bool Animator::AddAnimation(const char * _path)
 			
 		}
 
-		animation.Init(animName, ANIM_TYPE::LOOP, animLength, joints);
+		animation.Init(animName, ANIM_TYPE::LOOP, animDuration, joints);
 		animations.push_back(animation);
 
 		delete[] animName;

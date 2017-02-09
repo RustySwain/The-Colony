@@ -5,6 +5,7 @@
 struct KeyFrame
 {
 	int id;
+	float duration;
 	DirectX::XMMATRIX transform;
 };
 
