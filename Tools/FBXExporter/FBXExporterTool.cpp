@@ -901,7 +901,6 @@ void FBXExporterTool::WriteAnimationToStream(std::ostream& inStream)
 		mSkeleton.mJoints[i].mGlobalBindposeInverse.SetT(translation);
 		mSkeleton.mJoints[i].mGlobalBindposeInverse.SetR(rotation);
 		FbxMatrix out = mSkeleton.mJoints[i].mGlobalBindposeInverse;
-
 		Utilities::WriteMatrix(inStream, out.Transpose(), true);
 		inStream << "\t\t</joint>\n";
 	}
@@ -912,6 +911,25 @@ void FBXExporterTool::WriteAnimationToStream(std::ostream& inStream)
 	{
 		inStream << "\t\t\t" << "<track id = '" << i << "' name='" << mSkeleton.mJoints[i].mName << "'>\n";
 		Keyframe* walker = mSkeleton.mJoints[i].mAnimation;
+
+		if(!walker)
+		{
+			for(int c = 0; c < mAnimationLength; ++c)
+			{
+				inStream << "\t\t\t\t" << "<frame num='" << c << "' duration='" << keyframesTime[c] << "'>\n";
+				inStream << "\t\t\t\t\t";
+				FbxVector4 translation = mSkeleton.mJoints[i].mGlobalBindposeInverse.GetT();
+				FbxVector4 rotation = mSkeleton.mJoints[i].mGlobalBindposeInverse.GetR();
+				translation.Set(translation.mData[0], translation.mData[1], -translation.mData[2]);
+				rotation.Set(-rotation.mData[0], -rotation.mData[1], rotation.mData[2]);
+				mSkeleton.mJoints[i].mGlobalBindposeInverse.SetT(translation);
+				mSkeleton.mJoints[i].mGlobalBindposeInverse.SetR(rotation);
+				FbxMatrix out = mSkeleton.mJoints[i].mGlobalBindposeInverse;
+				Utilities::WriteMatrix(inStream, out.Transpose(), true);
+				inStream << "\t\t\t\t</frame>\n";
+			}
+		}
+
 		int count = 0;
 		while(walker)
 		{
@@ -1026,7 +1044,7 @@ void FBXExporterTool::WriteAnimationToBinary(std::ostream & inStream)
 		mSkeleton.mJoints[i].mGlobalBindposeInverse.SetT(translation);
 		mSkeleton.mJoints[i].mGlobalBindposeInverse.SetR(rotation);
 		FbxMatrix out = mSkeleton.mJoints[i].mGlobalBindposeInverse;
-		Utilities::WriteMatrixBinary(inStream, out.Transpose(), true);
+		Utilities::WriteMatrixBinary(inStream, out, true);
 	}
 	// animation name
 	int animationNameLength = mAnimationName.length() + 1;
@@ -1049,6 +1067,28 @@ void FBXExporterTool::WriteAnimationToBinary(std::ostream & inStream)
 		inStream.write((char*)&totalFrames, sizeof(int));
 		// frames
 		Keyframe* walker = mSkeleton.mJoints[i].mAnimation;
+		
+		if(!walker)
+		{
+			for(int c = 0; c < mAnimationLength; ++c)
+			{
+				// frame number
+				inStream.write((char*)&c, sizeof(int));
+				// frame duration
+				float fduration = keyframesTime[c];
+				inStream.write((char*)&fduration, sizeof(float));
+				// joint position
+				FbxVector4 translation = mSkeleton.mJoints[i].mGlobalBindposeInverse.GetT();
+				FbxVector4 rotation = mSkeleton.mJoints[i].mGlobalBindposeInverse.GetR();
+				translation.Set(translation.mData[0], translation.mData[1], -translation.mData[2]);
+				rotation.Set(-rotation.mData[0], -rotation.mData[1], rotation.mData[2]);
+				mSkeleton.mJoints[i].mGlobalBindposeInverse.SetT(translation);
+				mSkeleton.mJoints[i].mGlobalBindposeInverse.SetR(rotation);
+				FbxMatrix out = mSkeleton.mJoints[i].mGlobalBindposeInverse;
+				Utilities::WriteMatrixBinary(inStream, out, true);
+			}
+		}
+
 		int count = 0;
 		while (walker)
 		{
@@ -1066,7 +1106,7 @@ void FBXExporterTool::WriteAnimationToBinary(std::ostream & inStream)
 			walker->mGlobalTransform.SetT(translation);
 			walker->mGlobalTransform.SetR(rotation);
 			FbxMatrix out = walker->mGlobalTransform;
-			Utilities::WriteMatrixBinary(inStream, out.Transpose(), true);
+			Utilities::WriteMatrixBinary(inStream, out, true);
 			walker = walker->mNext;
 			count += 1;
 		}
