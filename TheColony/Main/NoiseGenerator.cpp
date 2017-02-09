@@ -55,9 +55,9 @@ float NoiseGenerator::Noise(float _x, float _y, float _z)
 	_y -= floor(_y);
 	_z -= floor(_z);
 
-	double u = Fade(_x);
-	double v = Fade(_y);
-	double w = Fade(_z);
+	float u = Fade(_x);
+	float v = Fade(_y);
+	float w = Fade(_z);
 
 	int A = sequence[X] + Y;
 	int AA = sequence[A] + Z;
@@ -66,6 +66,6 @@ float NoiseGenerator::Noise(float _x, float _y, float _z)
 	int BA = sequence[B] + Z;
 	int BB = sequence[B + 1] + Z;
 
-	double res = Lerp(w, Lerp(v, Lerp(u, Grad(sequence[AA], _x, _y, _z), Grad(sequence[BA], _x - 1, _y, _z)), Lerp(u, Grad(sequence[AB], _x, _y - 1, _z), Grad(sequence[BB], _x - 1, _y - 1, _z))), Lerp(v, Lerp(u, Grad(sequence[AA + 1], _x, _y, _z - 1), Grad(sequence[BA + 1], _x - 1, _y, _z - 1)), Lerp(u, Grad(sequence[AB + 1], _x, _y - 1, _z - 1), Grad(sequence[BB + 1], _x - 1, _y - 1, _z - 1))));
+	float res = Lerp(w, Lerp(v, Lerp(u, Grad(sequence[AA], _x, _y, _z), Grad(sequence[BA], _x - 1, _y, _z)), Lerp(u, Grad(sequence[AB], _x, _y - 1, _z), Grad(sequence[BB], _x - 1, _y - 1, _z))), Lerp(v, Lerp(u, Grad(sequence[AA + 1], _x, _y, _z - 1), Grad(sequence[BA + 1], _x - 1, _y, _z - 1)), Lerp(u, Grad(sequence[AB + 1], _x, _y - 1, _z - 1), Grad(sequence[BB + 1], _x - 1, _y - 1, _z - 1))));
 	return (res + 1.0) / 2.0;
 }
