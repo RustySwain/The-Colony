@@ -9,13 +9,37 @@
 
 using namespace std;
 
+extern bool scrollUp;
+extern bool scrollDown;
+extern int scrollUpCount;
+extern int scrollDownCount;
+
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	short wheel_delta(0);
 	switch (message)
 	{
-	case WM_DESTROY:
+	case WM_MOUSEWHEEL:
 	{
-		PostQuitMessage(0);
+		wheel_delta = GET_WHEEL_DELTA_WPARAM(wParam);
+		//Scroll Up
+		if (wheel_delta > 0)
+		{
+			scrollDownCount = 0;
+
+			scrollUpCount++;
+			scrollUp = true;
+			scrollDown = false;
+		}
+		//Scroll Down
+		else if (wheel_delta < 0)
+		{
+			scrollUpCount = 0;
+
+			scrollDownCount++;
+			scrollDown = true;
+			scrollUp = false;
+		}
 		return 0;
 	} break;
 	}
@@ -71,36 +95,37 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hInstancePrev, LPSTR _cmdLin
 	// Update/Render Loop
 	while (msg.message != WM_QUIT)
 	{
-		// Only Render 60 FPS
-		auto endTime = chrono::high_resolution_clock::now();
-		double elapsed = chrono::duration_cast<chrono::microseconds>(endTime - startTime).count() * 1e-6;
-		if (elapsed > invFPS)
-		{
-			numFrames++;
-			Time::SetDelta((float)elapsed);
-			seconds += Time::Delta();
-			app.Update();
-			app.Render();
-			startTime = endTime;
-		}
-		// Output framerate
-		if (seconds > 1)
-		{
-			string secondsStr = to_string(numFrames);
-			numFrames = 0;
-			seconds = 0;
-			Debug::Log(("Frame Rate: " + secondsStr).c_str(), 0);
-		}
 		// Windows
-		if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+		if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE) != 0)
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+			// Only Render 60 FPS
+			auto endTime = chrono::high_resolution_clock::now();
+			double elapsed = chrono::duration_cast<chrono::microseconds>(endTime - startTime).count() * 1e-6;
+			if (elapsed > invFPS)
+			{
+				numFrames++;
+				Time::SetDelta((float)elapsed);
+				seconds += Time::Delta();
+				app.Update();
+				app.Render();
+				startTime = endTime;
+			}
+			// Output framerate
+			if (seconds > 1)
+			{
+				string secondsStr = to_string(numFrames);
+				numFrames = 0;
+				seconds = 0;
+				Debug::Log(("Frame Rate: " + secondsStr).c_str(), 0);
+			}
 
-		// TODO: Remove. This is only so I can be lazy
-		if (GetAsyncKeyState(VK_ESCAPE))
-			break;
+			// TODO: Remove. This is only so I can be lazy
+			if (GetAsyncKeyState(VK_ESCAPE))
+				msg.message = WM_QUIT;
+				//break;
 	}
 
 	// Shutdown Program

@@ -37,8 +37,8 @@ void GameObjectManager::Start()
 	cam.AddComponent<Transform>();
 	cam.GetComponent<Camera>()->SetFarPlane(500);
 	cam.AddComponent<CameraController>();
-	cam.GetComponent<Transform>()->SetLocalPosition(0, 0, -5);
-	cam.GetComponent<Transform>()->RotateYPre(180);
+	cam.GetComponent<Transform>()->SetLocalPosition(0, 10, 5);
+	cam.GetComponent<Transform>()->RotateXPre(-40);
 
 	button.Start();
 	button.AddComponent<Transform>()->SetLocalPosition(-0.95f, -0.1f, 0.1f);
