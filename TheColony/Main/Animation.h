@@ -25,18 +25,28 @@ class Animation
 	std::string name;
 	ANIM_TYPE type;
 	unsigned int numOfJoints;
-	float length;
+	float duration;
 	std::vector<Joint> joints;
 
 public:
 	Animation();
-	~Animation();
+	~Animation(){}
 
+	// Shader
+	struct JointsBuffer
+	{
+		DirectX::XMMATRIX jointOffsets[100];
+	};
+	JointsBuffer CSJointsBuffer;
+	unsigned int CSJointsCount = 0;
+	// End Shader
+
+	void Update();
 	void Init(std::string _name, ANIM_TYPE _type, float _length, std::vector<Joint> _bones);
 
 	// Accessors
 	std::string GetName() const { return name; }
-	float GetLength() const { return length; }
+	float GetLength() const { return duration; }
 	int GetTotalBones() const { return numOfJoints; }
 	std::vector<Joint>& GetBones() { return joints; }
 	ANIM_TYPE GetType() const { return type; }

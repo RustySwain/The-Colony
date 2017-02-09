@@ -1,24 +1,36 @@
 #include "Animator.h"
 #include <fstream>
+#include "Macros.h"
+#include "Application.h"
 
 Animator::Animator()
 {
-}
-
-Animator::~Animator()
-{
+	bindPose = new BindPose();
+	interpolator = new Interpolator();
+	defaultAnimation = 0;
 }
 
 void Animator::Start()
 {
+	D3D11_BUFFER_DESC bDesc;
+	ZMem(bDesc);
+	bDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	bDesc.ByteWidth = sizeof(Animation::JointsBuffer);
+
+	Application::GetInstance()->GetDevice()->CreateBuffer(&bDesc, nullptr, &jointsBuffer);
 }
 
 void Animator::Update()
 {
+
 }
 
 void Animator::OnDelete()
 {
+	delete bindPose;
+	delete interpolator;
+
+	SAFE_RELEASE(jointsBuffer);
 }
 
 void Animator::LoadFromFile(fstream & _file)
@@ -39,15 +51,8 @@ void Animator::LoadFromFile(fstream & _file)
 		AddAnimation(animPath.c_str());
 		delete[] animation;
 	}
-}
-
-void Animator::LoadFromString(string _str)
-{
-}
-
-string Animator::WriteToString() const
-{
-	return "";
+	_file.read((char*)&defaultAnimation, sizeof(int));
+	int i = 0;
 }
 
 bool Animator::AddAnimation(const char * _path)
@@ -59,6 +64,7 @@ bool Animator::AddAnimation(const char * _path)
 	{
 		Animation animation;
 		vector<Joint> joints;
+		vector<DirectX::XMMATRIX> invWorlds;
 
 		int numJoints = 0;
 		file.read((char*)&numJoints, sizeof(int));
@@ -93,7 +99,16 @@ bool Animator::AddAnimation(const char * _path)
 			joint.world = XMLoadFloat4x4(&world);
 
 			joints.push_back(joint);
+
+			// Inverse Matrix
+			DirectX::XMMATRIX world2;
+			world2 = XMLoadFloat4x4(&world);
+			DirectX::XMMATRIX invWorld;
+			invWorld = XMMatrixInverse(nullptr, world2);
+			invWorlds.push_back(invWorld);
 		}
+
+		bindPose->Init((int)invWorlds.size(), invWorlds);
 
 		// Animation name
 		int animNameLength = 0;
@@ -126,28 +141,20 @@ bool Animator::AddAnimation(const char * _path)
 			for(int f = 0; f < totalFrames; ++f)
 			{
 				KeyFrame keyFrame;
-
 				// KeyFrame ID
 				file.read((char*)&keyFrame.id, sizeof(int));
-
 				// KeyFrame Duration
 				file.read((char*)&keyFrame.duration, sizeof(float));
-
 				// KeyFrame transform matrix
 				DirectX::XMFLOAT4X4 transform;
 				for (int x = 0; x < 4; ++x)
 				{
 					for (int y = 0; y < 4; ++y)
-					{
 						file.read((char*)&transform.m[x][y], sizeof(float));
-					}
 				}
 				keyFrame.transform = XMLoadFloat4x4(&transform);
-
 				joints[i].keyFrames.push_back(keyFrame);
 			}
-
-			
 		}
 
 		animation.Init(animName, ANIM_TYPE::LOOP, animDuration, joints);
@@ -160,4 +167,52 @@ bool Animator::AddAnimation(const char * _path)
 	}
 
 	return false;
+}
+
+bool Animator::AddBindPose(BindPose * _bindPose)
+{
+	bindPose = _bindPose;
+	return true;
+}
+
+bool Animator::Play(const string _animationName)
+{
+	int index = -1;
+	for(int i = 0; i < (int)animations.size(); ++i)
+	{
+		if (animations[i].GetName() == _animationName)
+		{
+			index = i;
+			break;
+		}
+	}
+
+	if (index >= 0)
+	{
+		interpolator->SetAnimation(animations[index]);
+		return true;
+	}
+		
+	return false;
+}
+
+bool Animator::Play(int _animationIndex)
+{
+	if(_animationIndex >= 0 && _animationIndex < (int)animations.size())
+	{
+		interpolator->SetAnimation(animations[_animationIndex]);
+		return true;
+	}
+	
+	return false;
+}
+
+Animation Animator::GetAnimation(int _index)
+{
+	return animations[_index];
+}
+
+Animation Animator::GetDefaultAnimation()
+{
+	return animations[defaultAnimation];
 }

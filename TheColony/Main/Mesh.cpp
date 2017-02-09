@@ -139,6 +139,8 @@ bool Mesh::LoadFromBinary(const char * _path, string &_diffuseMapPath)
 
 			if(hasAnimation)
 			{
+				vertex.flags[0] = 1;
+
 				file.read((char*)&vertex.jointWeight[0], sizeof(float));
 				file.read((char*)&vertex.jointWeight[1], sizeof(float));
 				file.read((char*)&vertex.jointWeight[2], sizeof(float));

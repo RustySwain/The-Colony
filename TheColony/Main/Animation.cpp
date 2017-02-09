@@ -2,17 +2,20 @@
 
 Animation::Animation()
 {
+	type = LOOP;
+	numOfJoints = 0;
+	duration = 0;
 }
 
-Animation::~Animation()
+void Animation::Update()
 {
 }
 
-void Animation::Init(std::string _name, ANIM_TYPE _type, float _length, std::vector<Joint> _bones)
+void Animation::Init(std::string _name, ANIM_TYPE _type, float _duration, std::vector<Joint> _bones)
 {
 	name = _name;
 	type = _type;
-	length = _length;
-	numOfJoints = _bones.size();
+	duration = _duration;
+	numOfJoints = (unsigned int)_bones.size();
 	joints = _bones;
 }
