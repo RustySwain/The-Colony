@@ -69,8 +69,6 @@ namespace ColonyPrefabManager
             this.Camera_FarPlane_Label = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fIleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SaveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Lighting_Group = new System.Windows.Forms.GroupBox();
             this.Lighting_LightType_Input = new System.Windows.Forms.ComboBox();
             this.Lighting_LightType = new System.Windows.Forms.Label();
@@ -105,13 +103,16 @@ namespace ColonyPrefabManager
             this.label4 = new System.Windows.Forms.Label();
             this.Animator_Group = new System.Windows.Forms.GroupBox();
             this.Animator_Label1 = new System.Windows.Forms.Label();
-            this.Animator_Remove = new System.Windows.Forms.Button();
-            this.Animator_Add = new System.Windows.Forms.Button();
             this.Animator_Animations = new System.Windows.Forms.ListBox();
             this.MeshRenderer_Group = new System.Windows.Forms.GroupBox();
-            this.MeshRenderer_Mesh_Label = new System.Windows.Forms.Label();
-            this.MeshRenderer_Mesh_Input = new System.Windows.Forms.TextBox();
             this.MeshRenderer_Mesh_Browser = new System.Windows.Forms.Button();
+            this.MeshRenderer_Mesh_Input = new System.Windows.Forms.TextBox();
+            this.MeshRenderer_Mesh_Label = new System.Windows.Forms.Label();
+            this.SaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SaveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Animator_Default = new System.Windows.Forms.Button();
+            this.Animator_Remove = new System.Windows.Forms.Button();
+            this.Animator_Add = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.GameObject_ID_Input)).BeginInit();
             this.GameObject_Group.SuspendLayout();
             this.Transform_Group.SuspendLayout();
@@ -628,22 +629,6 @@ namespace ColonyPrefabManager
             this.fIleToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fIleToolStripMenuItem.Text = "File";
             // 
-            // SaveToolStripMenuItem
-            // 
-            this.SaveToolStripMenuItem.Image = global::ColonyPrefabManager.Properties.Resources.save;
-            this.SaveToolStripMenuItem.Name = "SaveToolStripMenuItem";
-            this.SaveToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.SaveToolStripMenuItem.Text = "Save";
-            this.SaveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
-            // 
-            // SaveAsToolStripMenuItem
-            // 
-            this.SaveAsToolStripMenuItem.Image = global::ColonyPrefabManager.Properties.Resources.save_as;
-            this.SaveAsToolStripMenuItem.Name = "SaveAsToolStripMenuItem";
-            this.SaveAsToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.SaveAsToolStripMenuItem.Text = "Save As";
-            this.SaveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsToolStripMenuItem_Click);
-            // 
             // Lighting_Group
             // 
             this.Lighting_Group.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1024,6 +1009,7 @@ namespace ColonyPrefabManager
             // 
             this.Animator_Group.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.Animator_Group.Controls.Add(this.Animator_Default);
             this.Animator_Group.Controls.Add(this.Animator_Label1);
             this.Animator_Group.Controls.Add(this.Animator_Remove);
             this.Animator_Group.Controls.Add(this.Animator_Add);
@@ -1045,26 +1031,6 @@ namespace ColonyPrefabManager
             this.Animator_Label1.Size = new System.Drawing.Size(71, 15);
             this.Animator_Label1.TabIndex = 3;
             this.Animator_Label1.Text = "Animations:";
-            // 
-            // Animator_Remove
-            // 
-            this.Animator_Remove.Image = global::ColonyPrefabManager.Properties.Resources.remove;
-            this.Animator_Remove.Location = new System.Drawing.Point(344, 16);
-            this.Animator_Remove.Name = "Animator_Remove";
-            this.Animator_Remove.Size = new System.Drawing.Size(25, 25);
-            this.Animator_Remove.TabIndex = 2;
-            this.Animator_Remove.UseVisualStyleBackColor = true;
-            this.Animator_Remove.Click += new System.EventHandler(this.Animator_Remove_Click);
-            // 
-            // Animator_Add
-            // 
-            this.Animator_Add.Image = global::ColonyPrefabManager.Properties.Resources.add;
-            this.Animator_Add.Location = new System.Drawing.Point(313, 16);
-            this.Animator_Add.Name = "Animator_Add";
-            this.Animator_Add.Size = new System.Drawing.Size(25, 25);
-            this.Animator_Add.TabIndex = 1;
-            this.Animator_Add.UseVisualStyleBackColor = true;
-            this.Animator_Add.Click += new System.EventHandler(this.Animator_Add_Click);
             // 
             // Animator_Animations
             // 
@@ -1091,22 +1057,6 @@ namespace ColonyPrefabManager
             this.MeshRenderer_Group.Text = "MeshRenderer";
             this.MeshRenderer_Group.Visible = false;
             // 
-            // MeshRenderer_Mesh_Label
-            // 
-            this.MeshRenderer_Mesh_Label.AutoSize = true;
-            this.MeshRenderer_Mesh_Label.Location = new System.Drawing.Point(15, 33);
-            this.MeshRenderer_Mesh_Label.Name = "MeshRenderer_Mesh_Label";
-            this.MeshRenderer_Mesh_Label.Size = new System.Drawing.Size(41, 15);
-            this.MeshRenderer_Mesh_Label.TabIndex = 0;
-            this.MeshRenderer_Mesh_Label.Text = "Mesh:";
-            // 
-            // MeshRenderer_Mesh_Input
-            // 
-            this.MeshRenderer_Mesh_Input.Location = new System.Drawing.Point(69, 31);
-            this.MeshRenderer_Mesh_Input.Name = "MeshRenderer_Mesh_Input";
-            this.MeshRenderer_Mesh_Input.Size = new System.Drawing.Size(126, 21);
-            this.MeshRenderer_Mesh_Input.TabIndex = 1;
-            // 
             // MeshRenderer_Mesh_Browser
             // 
             this.MeshRenderer_Mesh_Browser.Location = new System.Drawing.Point(195, 30);
@@ -1117,25 +1067,87 @@ namespace ColonyPrefabManager
             this.MeshRenderer_Mesh_Browser.UseVisualStyleBackColor = true;
             this.MeshRenderer_Mesh_Browser.Click += new System.EventHandler(this.MeshRenderer_Mesh_Browser_Click);
             // 
+            // MeshRenderer_Mesh_Input
+            // 
+            this.MeshRenderer_Mesh_Input.Location = new System.Drawing.Point(69, 31);
+            this.MeshRenderer_Mesh_Input.Name = "MeshRenderer_Mesh_Input";
+            this.MeshRenderer_Mesh_Input.Size = new System.Drawing.Size(126, 21);
+            this.MeshRenderer_Mesh_Input.TabIndex = 1;
+            // 
+            // MeshRenderer_Mesh_Label
+            // 
+            this.MeshRenderer_Mesh_Label.AutoSize = true;
+            this.MeshRenderer_Mesh_Label.Location = new System.Drawing.Point(15, 33);
+            this.MeshRenderer_Mesh_Label.Name = "MeshRenderer_Mesh_Label";
+            this.MeshRenderer_Mesh_Label.Size = new System.Drawing.Size(41, 15);
+            this.MeshRenderer_Mesh_Label.TabIndex = 0;
+            this.MeshRenderer_Mesh_Label.Text = "Mesh:";
+            // 
+            // SaveToolStripMenuItem
+            // 
+            this.SaveToolStripMenuItem.Image = global::ColonyPrefabManager.Properties.Resources.save;
+            this.SaveToolStripMenuItem.Name = "SaveToolStripMenuItem";
+            this.SaveToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.SaveToolStripMenuItem.Text = "Save";
+            this.SaveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
+            // 
+            // SaveAsToolStripMenuItem
+            // 
+            this.SaveAsToolStripMenuItem.Image = global::ColonyPrefabManager.Properties.Resources.save_as;
+            this.SaveAsToolStripMenuItem.Name = "SaveAsToolStripMenuItem";
+            this.SaveAsToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.SaveAsToolStripMenuItem.Text = "Save As";
+            this.SaveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsToolStripMenuItem_Click);
+            // 
+            // Animator_Default
+            // 
+            this.Animator_Default.Image = global::ColonyPrefabManager.Properties.Resources.star;
+            this.Animator_Default.Location = new System.Drawing.Point(282, 16);
+            this.Animator_Default.Name = "Animator_Default";
+            this.Animator_Default.Size = new System.Drawing.Size(25, 25);
+            this.Animator_Default.TabIndex = 4;
+            this.Animator_Default.UseVisualStyleBackColor = true;
+            this.Animator_Default.Click += new System.EventHandler(this.Animator_Default_Click);
+            // 
+            // Animator_Remove
+            // 
+            this.Animator_Remove.Image = global::ColonyPrefabManager.Properties.Resources.remove;
+            this.Animator_Remove.Location = new System.Drawing.Point(344, 16);
+            this.Animator_Remove.Name = "Animator_Remove";
+            this.Animator_Remove.Size = new System.Drawing.Size(25, 25);
+            this.Animator_Remove.TabIndex = 2;
+            this.Animator_Remove.UseVisualStyleBackColor = true;
+            this.Animator_Remove.Click += new System.EventHandler(this.Animator_Remove_Click);
+            // 
+            // Animator_Add
+            // 
+            this.Animator_Add.Image = global::ColonyPrefabManager.Properties.Resources.add;
+            this.Animator_Add.Location = new System.Drawing.Point(313, 16);
+            this.Animator_Add.Name = "Animator_Add";
+            this.Animator_Add.Size = new System.Drawing.Size(25, 25);
+            this.Animator_Add.TabIndex = 1;
+            this.Animator_Add.UseVisualStyleBackColor = true;
+            this.Animator_Add.Click += new System.EventHandler(this.Animator_Add_Click);
+            // 
             // PrefabManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(402, 434);
-            this.Controls.Add(this.MeshRenderer_Group);
             this.Controls.Add(this.RemoveComponent);
             this.Controls.Add(this.ComponentList);
             this.Controls.Add(this.AddComponent);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.Collider_Group);
-            this.Controls.Add(this.RigidBody_Group);
-            this.Controls.Add(this.GameObject_Group);
-            this.Controls.Add(this.AudioSource_Group);
             this.Controls.Add(this.Animator_Group);
             this.Controls.Add(this.Transform_Group);
             this.Controls.Add(this.Camera_Group);
             this.Controls.Add(this.Lighting_Group);
+            this.Controls.Add(this.MeshRenderer_Group);
+            this.Controls.Add(this.Collider_Group);
+            this.Controls.Add(this.RigidBody_Group);
+            this.Controls.Add(this.GameObject_Group);
+            this.Controls.Add(this.AudioSource_Group);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "PrefabManager";
@@ -1266,5 +1278,6 @@ namespace ColonyPrefabManager
         private System.Windows.Forms.Label MeshRenderer_Mesh_Label;
         private System.Windows.Forms.Button MeshRenderer_Mesh_Browser;
         private System.Windows.Forms.TextBox MeshRenderer_Mesh_Input;
+        private System.Windows.Forms.Button Animator_Default;
     }
 }

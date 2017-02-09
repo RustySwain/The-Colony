@@ -232,6 +232,7 @@ namespace ColonyPrefabManager
                     animator.SetAdded(true);
                     gameObject.m_Components.Add(animator.GetId());
                 }
+                animator.ResetAnimations();
                 foreach (string item in Animator_Animations.Items)
                     animator.AddAnimation(item);
             }
@@ -330,6 +331,11 @@ namespace ColonyPrefabManager
         private void Animator_Remove_Click(object sender, EventArgs e)
         {
             Animator_Animations.Items.Remove(Animator_Animations.SelectedItem);
+        }
+
+        private void Animator_Default_Click(object sender, EventArgs e)
+        {
+            animator.SetDefaultAnim(Animator_Animations.SelectedIndex);
         }
 
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -443,6 +449,7 @@ namespace ColonyPrefabManager
                         writer.Write(animator.GetAnimations()[i].Length);
                         writer.Write(animator.GetAnimations()[i]);
                     }
+                    writer.Write(animator.GetDefaultAnim());
                 }
 
                 // Write AudioSource -- id = 11
@@ -539,6 +546,7 @@ namespace ColonyPrefabManager
                             reader.ReadInt32();
                             animator.AddAnimation(reader.ReadString());
                         }
+                        animator.SetDefaultAnim(reader.ReadInt32());
                     }
 
                     // Load AudioSource -- id = 11
