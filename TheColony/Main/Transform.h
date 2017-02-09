@@ -51,4 +51,5 @@ public:
 	XMFLOAT3 GetWorldPosition() const;
 
 	void SetParent(Transform* _parent);
+	Transform* GetParent();
 };

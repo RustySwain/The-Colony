@@ -14,6 +14,7 @@ class GameObjectManager : public Component
 	GameObject text;
 	GameObject button;
 	GameObject skybox;
+	GameObject terrain;
 
 	// Test objects
 	GameObject teddy, box;

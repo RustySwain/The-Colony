@@ -163,3 +163,8 @@ void Transform::SetParent(Transform* _parent)
 {
 	parent = _parent;
 }
+
+Transform * Transform::GetParent()
+{
+	return parent;
+}
