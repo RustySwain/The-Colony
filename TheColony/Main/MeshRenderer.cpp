@@ -77,7 +77,7 @@ void MeshRenderer::Init()
 	sDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 	sDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	sDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	sDesc.MaxAnisotropy = 4;
+	sDesc.MaxAnisotropy = 16;
 	sDesc.MaxLOD = 100;
 	sDesc.Filter = D3D11_FILTER_ANISOTROPIC;
 	Application::GetInstance()->GetDevice()->CreateSamplerState(&sDesc, &sampler);

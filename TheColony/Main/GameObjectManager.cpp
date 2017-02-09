@@ -9,6 +9,8 @@
 #include "Light.h"
 #include "TextRenderer.h"
 #include "Skybox.h"
+#include "Terrain.h"
+#include <ctime>
 
 GameObjectManager::GameObjectManager()
 {
@@ -39,7 +41,7 @@ void GameObjectManager::Start()
 	cam.GetComponent<Transform>()->RotateYPre(180);
 
 	button.Start();
-	button.AddComponent<Transform>()->SetLocalPosition(-0.4f, -0.7f, 0.1f);
+	button.AddComponent<Transform>()->SetLocalPosition(-0.95f, -0.1f, 0.1f);
 	button.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
 	button.AddComponent<UIRenderer>()->SetRect(0.1f, 0.1f, 0.3f, 0.3f);
 	func = [=]() -> void { Callback(); };
@@ -84,6 +86,18 @@ void GameObjectManager::Start()
 	teddy.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Teddy.dds");
 	box.AddComponent<PrefabLoader>()->Load("../Assets/Prefabs/Box.prefab");
 	box.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box.dds");
+
+	// Terrain
+	terrain.Start();
+	terrain.AddComponent<Transform>()->SetLocalPosition(-20, -5, -20);
+	terrain.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/grass.dds");
+	terrain.AddComponent<Terrain>()->SetSize(100, 100);
+	terrain.GetComponent<Terrain>()->Seed((unsigned int)time(0));
+	terrain.GetComponent<Terrain>()->SetOctaves(3);
+	//terrain.GetComponent<Terrain>()->SetScale(0.3f);
+	terrain.GetComponent<Terrain>()->SetPersistance(1.5f);
+	terrain.GetComponent<Terrain>()->SetLacunarity(0.1f);
+	terrain.GetComponent<Terrain>()->Generate();
 }
 
 void GameObjectManager::Update()
@@ -117,6 +131,7 @@ void GameObjectManager::Update()
 
 	teddy.Update();
 	box.Update();
+	terrain.Update();
 }
 
 void GameObjectManager::OnDelete()
@@ -132,6 +147,7 @@ void GameObjectManager::OnDelete()
 
 	teddy.OnDelete();
 	box.OnDelete();
+	terrain.OnDelete();
 }
 
 void GameObjectManager::LoadFromFile(fstream & _file)

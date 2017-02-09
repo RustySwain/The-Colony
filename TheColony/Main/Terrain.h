@@ -10,11 +10,13 @@ class Terrain : public Component
 
 	NoiseGenerator generator;
 	unsigned int width = 0, height = 0;
-	unsigned int seed = 0;
+	unsigned int seed = 0, octaves = 0;
+	float persistance = 2.0f, lacunarity = 0.5f, scale = 1;
+	bool meshGenerated = false;
 
-	void CreateMesh() const;
+	void CreateMesh();
 	void GenerateHeights();
-	void CalculateNormals();
+	void CalculateNormals() const;
 	void GenerateTexture();
 
 public:
@@ -32,5 +34,10 @@ public:
 
 	void SetSize(unsigned int _width, unsigned int _height);
 	void Seed(unsigned int _seed);
+	void SetOctaves(unsigned int _octaves) { octaves = _octaves; };
+	void SetPersistance(float _per) { persistance = _per; };
+	void SetLacunarity(float _lac) { lacunarity = _lac; };
+	void SetScale(float _scale) { scale = _scale; };
+
 	void Generate();
 };
