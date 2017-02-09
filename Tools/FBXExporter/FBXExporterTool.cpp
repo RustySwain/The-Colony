@@ -38,6 +38,7 @@ bool FBXExporterTool::LoadScene(const char* inFileName, const char* inOutputPath
 	mExportMesh = exportMesh;
 	mExportAnim = exportAnim;
 	mExportBinary = exportBinary;
+	mAnimationName = Utilities::RemoveSuffix(Utilities::GetFileName(inFileName));
 
 	QueryPerformanceCounter(&start);
 	FbxImporter* fbxImporter = FbxImporter::Create(mFBXManager, "myImporter");
@@ -237,7 +238,7 @@ void FBXExporterTool::ProcessJointsAndAnimations(FbxNode* inNode)
 			// Now only supports one take
 			FbxAnimStack* currAnimStack = mFBXScene->GetSrcObject<FbxAnimStack>(0);
 			FbxString animStackName = currAnimStack->GetName();
-			mAnimationName = animStackName.Buffer();
+			//mAnimationName = animStackName.Buffer();
 			FbxTakeInfo* takeInfo = mFBXScene->GetTakeInfo(animStackName);
 			FbxTime start = takeInfo->mLocalTimeSpan.GetStart();
 			FbxTime end = takeInfo->mLocalTimeSpan.GetStop();
