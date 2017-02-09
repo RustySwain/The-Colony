@@ -24,6 +24,7 @@ void GameObjectManager::Start()
 	cube.AddComponent<Transform>();
 	cube.AddComponent<MeshRenderer>()->LoadFromObj("../Assets/cube.obj");
 	cube.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/crate.dds");
+
 	skybox.Start();
 	skybox.AddComponent<Transform>()->ScalePost(100);
 	skybox.AddComponent<MeshRenderer>();
@@ -48,7 +49,8 @@ void GameObjectManager::Start()
 	text.AddComponent<MeshRenderer>();
 	text.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
 	text.GetComponent<Transform>()->ScalePost(0.0005f);
-	text.GetComponent<Transform>()->TranslatePost(XMFLOAT3(-0.295f, 0, 0));
+	text.GetComponent<Transform>()->SetParent(button.GetComponent<Transform>());
+	text.GetComponent<Transform>()->SetLocalPosition(0.1f, 0.75f, -0.1f);
 	text.GetComponent<TextRenderer>()->SetText("Hello, World!");
 
 	//Lighting
@@ -108,7 +110,6 @@ void GameObjectManager::Update()
 	button.Update();
 	spotLight.Update();
 	dirLight.Update();
-	button.Update();
 	skybox.Update();
 	pointLight.Update();
 }
@@ -143,4 +144,5 @@ void GameObjectManager::Callback()
 {
 	text.GetComponent<MeshRenderer>()->SetMeshColor(XMFLOAT4(1, color, color, 1));
 	color = 1 - color;
+	//button.GetComponent<Button>()->Unsubscribe(&func);
 }

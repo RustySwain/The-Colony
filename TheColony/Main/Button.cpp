@@ -33,8 +33,8 @@ void Button::Update()
 	POINT cursorPos;
 	GetCursorPos(&cursorPos);
 	RECT winRect = Application::GetInstance()->GetWindowRect();
-	float flCursorX = ((float)cursorPos.x / winRect.right) * 2 - 1;
-	float flCursorY = ((float)cursorPos.y / winRect.bottom) * 2 - 1;
+	float flCursorX = (float)cursorPos.x / winRect.right * 2 - 1;
+	float flCursorY = (float)cursorPos.y / winRect.bottom * 2 - 1;
 	XMFLOAT4 uiRect = gameObject->GetComponent<UIRenderer>()->GetRect();
 	if (flCursorX > uiRect.y && flCursorX < uiRect.y + uiRect.w &&  -flCursorY < uiRect.x &&  -flCursorY > uiRect.x - uiRect.z)
 		OnClick();
@@ -67,7 +67,7 @@ bool Button::Unsubscribe(CallbackFunc* _callback)
 {
 	for (size_t i = 0; i < callbacks.size(); i++)
 	{
-		if (callbacks[i])
+		if (callbacks[i] == _callback)
 		{
 			callbacks.erase(callbacks.begin() + i);
 			return true;
