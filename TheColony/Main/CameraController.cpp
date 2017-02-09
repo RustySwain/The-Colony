@@ -51,19 +51,17 @@ void CameraController::Update()
 	{
 		if (scrollUpCount > 0)
 		{
-			transform->TranslatePre(XMFLOAT3(0, 0, -speed));
+			transform->TranslatePre(XMFLOAT3(0, 0, -speed* 10));
 			scrollUpCount--;
 		}
 		else
 		{
 			scrollUp = false;
 		}
-		//transform->RotateXPost(dx);
 	}
 	if (scrollDown)
 	{
 		transform->TranslatePre(XMFLOAT3(0, 0, speed * 10));
-		//transform->RotateXPre(dy);
 		scrollDown = false;
 	}
 
@@ -93,34 +91,8 @@ void CameraController::Update()
 
 	if (GetAsyncKeyState(VK_RBUTTON))
 	{
-		//float ratio = 0.1f;
-		//XMVECTOR scalePre, rotPre, posPre;
-		//XMVECTOR scalePost, rotPost, posPost;
-
-		//XMMATRIX previousMatrix = transform->GetLocalMatrix();
-		//XMMatrixDecompose(&scalePre, &rotPre, &posPre, previousMatrix);
-
-		//XMMATRIX newMatrix = previousMatrix;
-		//newMatrix *= XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 1), 15 * DEG2RAD);
-		////newMatrix *= XMMatrixTranslation(dx, 0, dy);
-
-		//XMMatrixDecompose(&scalePost, &rotPost, &posPost, newMatrix);
-
-		//XMVECTOR origin = XMLoadFloat3(&_cameraOrigin->GetWorldPosition());
-		//XMMATRIX interpolatedMat = XMMatrixAffineTransformation(XMVectorLerp(scalePre, scalePost, ratio), origin, XMQuaternionSlerp(rotPre, rotPost, ratio), XMVectorLerp(posPre, posPost, ratio));
-
-		//transform->SetLocalMatrix(interpolatedMat);
-
-		//transform->RotateYPost(dx);
-		//transform->RotateXPre(dy);
-		// put camera back to saved position
-		//transform->SetLocalPosition(pos.x, pos.y, pos.z);
-		//put cursor back in the middle of the screen
-
 		_cameraOrigin->RotateYPre((Time::Delta() * 30));
-		//transform->RotateYPost(Time::Delta() * 30);
 		SetCursorPos((int)screenMiddle.x, (int)screenMiddle.y);
-
 	}
 }
 
