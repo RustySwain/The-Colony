@@ -97,7 +97,7 @@ void Terrain::CalculateNormals() const
 
 			XMVECTOR vecA1B1 = XMVector3Normalize(vecB1 - vecA1);
 			XMVECTOR vecA1C1 = XMVector3Normalize(vecC1 - vecA1);
-			triNormals.push_back(XMVector3Cross(vecA1C1, vecA1B1));
+			triNormals.push_back(XMVector3Cross(vecA1B1, vecA1C1));
 
 			XMVECTOR vecA2C2 = XMVector3Normalize(vecC2 - vecA2);
 			XMVECTOR vecA2B2 = XMVector3Normalize(vecB2 - vecA2);
@@ -117,8 +117,7 @@ void Terrain::CalculateNormals() const
 		for (unsigned int j = 0; j < normInds[i].size(); j++)
 			normal += triNormals[normInds[i][j]];
 
-		//XMVECTOR normNormal = XMVector3Normalize(normal);
-		XMVECTOR normNormal = triNormals[normInds[i][0]];
+		XMVECTOR normNormal = XMVector3Normalize(normal);
 		verts[i].normal = XMFLOAT4(normNormal.m128_f32[0], normNormal.m128_f32[1], normNormal.m128_f32[2], normNormal.m128_f32[3]);
 	}
 }
