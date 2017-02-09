@@ -20,6 +20,8 @@ using namespace DirectX;
 		float elapsed;
 		float start = 0.0f;
 
+		GameObject cameraOrigin;
+
 	public:
 		void ThirdPerson(GameObject obj, float speed);
 

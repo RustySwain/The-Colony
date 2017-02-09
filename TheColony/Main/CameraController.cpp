@@ -20,6 +20,9 @@ CameraController::~CameraController()
 
 void CameraController::Start()
 {
+	cameraOrigin.Start();
+	gameObject->GetComponent<Transform>()->SetParent(cameraOrigin.AddComponent<Transform>());
+
 	// get middle of the screen
 	RECT winRect = Application::GetInstance()->GetWindowRect();
 	screenMiddle.x = winRect.right * 0.5f;
@@ -33,6 +36,7 @@ void CameraController::Start()
 void CameraController::Update()
 {
 	Transform* transform = gameObject->GetComponent<Transform>();
+	Transform* _cameraOrigin = transform->GetParent();
 	XMFLOAT2 newMousePos;
 	POINT mP;
 	GetCursorPos(&mP);
@@ -64,17 +68,17 @@ void CameraController::Update()
 	}
 
 	if (GetAsyncKeyState('W'))
-		transform->TranslatePre(XMFLOAT3(0, 0, -speed));
+		_cameraOrigin->TranslatePre(XMFLOAT3(0, 0, -speed));
 	if (GetAsyncKeyState('S'))
-		transform->TranslatePre(XMFLOAT3(0, 0, speed));
+		_cameraOrigin->TranslatePre(XMFLOAT3(0, 0, speed));
 	if (GetAsyncKeyState('A'))
-		transform->TranslatePre(XMFLOAT3(-speed, 0, 0));
+		_cameraOrigin->TranslatePre(XMFLOAT3(-speed, 0, 0));
 	if (GetAsyncKeyState('D'))
-		transform->TranslatePre(XMFLOAT3(speed, 0, 0));
+		_cameraOrigin->TranslatePre(XMFLOAT3(speed, 0, 0));
 	if (GetAsyncKeyState(' '))
-		transform->TranslatePre(XMFLOAT3(0, speed, 0));
+		_cameraOrigin->TranslatePre(XMFLOAT3(0, speed, 0));
 	if (GetAsyncKeyState(VK_LSHIFT))
-		transform->TranslatePre(XMFLOAT3(0, -speed, 0));
+		_cameraOrigin->TranslatePre(XMFLOAT3(0, -speed, 0));
 
 	// save position
 	XMMATRIX translated = transform->GetLocalMatrix();
@@ -89,28 +93,32 @@ void CameraController::Update()
 
 	if (GetAsyncKeyState(VK_RBUTTON))
 	{
-		float ratio = 0.1f;
-		XMVECTOR scalePre, rotPre, posPre;
-		XMVECTOR scalePost, rotPost, posPost;
+		//float ratio = 0.1f;
+		//XMVECTOR scalePre, rotPre, posPre;
+		//XMVECTOR scalePost, rotPost, posPost;
 
-		XMMATRIX previousMatrix = transform->GetLocalMatrix();
-		XMMatrixDecompose(&scalePre, &rotPre, &posPre, previousMatrix);
+		//XMMATRIX previousMatrix = transform->GetLocalMatrix();
+		//XMMatrixDecompose(&scalePre, &rotPre, &posPre, previousMatrix);
 
-		XMMATRIX newMatrix = previousMatrix;
-		newMatrix *= XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 1), 15 * DEG2RAD);
-		//newMatrix *= XMMatrixTranslation(dx, 0, dy);
+		//XMMATRIX newMatrix = previousMatrix;
+		//newMatrix *= XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 1), 15 * DEG2RAD);
+		////newMatrix *= XMMatrixTranslation(dx, 0, dy);
 
-		XMMatrixDecompose(&scalePost, &rotPost, &posPost, newMatrix);
+		//XMMatrixDecompose(&scalePost, &rotPost, &posPost, newMatrix);
 
-		XMMATRIX interpolatedMat = XMMatrixAffineTransformation(XMVectorLerp(scalePre, scalePost, ratio), XMVectorZero(), XMQuaternionSlerp(rotPre, rotPost, ratio), XMVectorLerp(posPre, posPre, ratio));
+		//XMVECTOR origin = XMLoadFloat3(&_cameraOrigin->GetWorldPosition());
+		//XMMATRIX interpolatedMat = XMMatrixAffineTransformation(XMVectorLerp(scalePre, scalePost, ratio), origin, XMQuaternionSlerp(rotPre, rotPost, ratio), XMVectorLerp(posPre, posPost, ratio));
 
-		transform->SetLocalMatrix(interpolatedMat);
+		//transform->SetLocalMatrix(interpolatedMat);
 
 		//transform->RotateYPost(dx);
 		//transform->RotateXPre(dy);
 		// put camera back to saved position
 		//transform->SetLocalPosition(pos.x, pos.y, pos.z);
 		//put cursor back in the middle of the screen
+
+		_cameraOrigin->RotateYPre((Time::Delta() * 30));
+		//transform->RotateYPost(Time::Delta() * 30);
 		SetCursorPos((int)screenMiddle.x, (int)screenMiddle.y);
 
 	}
@@ -118,6 +126,7 @@ void CameraController::Update()
 
 void CameraController::OnDelete()
 {
+	cameraOrigin.OnDelete();
 }
 
 void CameraController::LoadFromFile(fstream & _file)
