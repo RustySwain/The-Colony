@@ -18,7 +18,6 @@ void Utilities::WriteMatrixBinary(std::ostream & inStream, FbxMatrix & inMatrix,
 			inStream.write((char*)&temp, sizeof(float));
 		}
 	}
-	
 }
 
 void Utilities::PrintMatrix(FbxMatrix& inMatrix)

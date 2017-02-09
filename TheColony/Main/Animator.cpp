@@ -61,6 +61,8 @@ bool Animator::AddAnimation(const char * _path)
 		vector<Joint> joints;
 
 		int numJoints = 0;
+		file.read((char*)&numJoints, sizeof(int));
+
 		for(int i = 0; i < numJoints; ++i)
 		{
 			Joint joint;
@@ -80,7 +82,15 @@ bool Animator::AddAnimation(const char * _path)
 			file.read((char*)&joint.parentIndex, sizeof(int));
 
 			// Joint world matrix
-			// TODO: Load world matrix
+			DirectX::XMFLOAT4X4 world;
+			for (int x = 0; x < 4; ++x)
+			{
+				for (int y = 0; y < 4; ++y)
+				{
+					file.read((char*)&world.m[x][y], sizeof(float));
+				}
+			}
+			joint.world = XMLoadFloat4x4(&world);
 
 			joints.push_back(joint);
 		}
@@ -121,7 +131,15 @@ bool Animator::AddAnimation(const char * _path)
 				file.read((char*)&keyFrame.id, sizeof(int));
 
 				// KeyFrame transform matrix
-				// TODO: Load transform matrix
+				DirectX::XMFLOAT4X4 transform;
+				for (int x = 0; x < 4; ++x)
+				{
+					for (int y = 0; y < 4; ++y)
+					{
+						file.read((char*)&transform.m[x][y], sizeof(float));
+					}
+				}
+				keyFrame.transform = XMLoadFloat4x4(&transform);
 
 				joints[i].keyFrames.push_back(keyFrame);
 			}
@@ -131,6 +149,8 @@ bool Animator::AddAnimation(const char * _path)
 
 		animation.Init(animName, ANIM_TYPE::LOOP, animLength, joints);
 		animations.push_back(animation);
+
+		delete[] animName;
 
 		file.close();
 		return true;
