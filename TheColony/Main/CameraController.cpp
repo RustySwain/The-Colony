@@ -8,6 +8,7 @@ bool scrollDown = false;
 
 CameraController::CameraController()
 {
+	elapsed = 0;
 }
 
 CameraController::~CameraController()
@@ -37,17 +38,31 @@ void CameraController::Update()
 
 	float speed = Time::Delta() * 10;
 
-	
+	// rotate based on mouse movement
+	float dx = (screenMiddle.x - newMousePos.x) * 0.5f;
+	float dy = (screenMiddle.y - newMousePos.y) * 0.5f;
+
 	// translate based on key presses
-	
+
 	if (scrollUp)
 	{
-		transform->TranslatePre(XMFLOAT3(0, 0, -speed));
-		scrollUp = false;
+		float destination = -speed * 10;
+		float start = speed;
+		float alpha = 0.2f;
+		float _lerp = xLerp(speed, destination, alpha);
+
+		if (start > destination)
+		{
+			start -= 0.1f;
+			transform->TranslatePre(XMFLOAT3(0, 0, -0.1f));
+			scrollUp = false;
+		}
+		//transform->RotateXPost(dx);
 	}
 	if (scrollDown)
 	{
-		transform->TranslatePre(XMFLOAT3(0, 0, speed));
+		transform->TranslatePre(XMFLOAT3(0, 0, speed * 10));
+		//transform->RotateXPre(dy);
 		scrollDown = false;
 	}
 
@@ -70,9 +85,7 @@ void CameraController::Update()
 	XMStoreFloat4x4(&f, translated);
 	XMFLOAT3 pos(f.m[3][0], f.m[3][1], f.m[3][2]);
 
-	// rotate based on mouse movement
-	float dx = (screenMiddle.x - newMousePos.x) * 0.5f;
-	float dy = (screenMiddle.y - newMousePos.y) * 0.5f;
+
 
 	if (GetAsyncKeyState(VK_NUMPAD4))
 	{
@@ -100,6 +113,18 @@ void CameraController::LoadFromString(string _str)
 string CameraController::WriteToString() const
 {
 	return string();
+}
+
+float CameraController::lerp(float point1, float point2, float alpha)
+{
+	return point1 + alpha * (point2 - point1);
+}
+
+float CameraController::xLerp(float mMin, float mMax, float mFactor)
+{
+	ASSERT(0 <= mFactor && mFactor <= 1);
+	float a = mMax - mMin;
+	return a * sin(mFactor * XM_PI) + mMin;
 }
 
 void CameraController::ThirdPerson(GameObject obj, float speed)
