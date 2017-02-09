@@ -18,6 +18,7 @@ using namespace DirectX;
 		unsigned int _timer = 0;
 		bool _moving = false;
 		float elapsed;
+		float start = 0.0f;
 
 	public:
 		void ThirdPerson(GameObject obj, float speed);
@@ -37,5 +38,4 @@ using namespace DirectX;
 	private:
 		float lerp(float point1, float point2, float alpha);
 		float xLerp(float mMin, float mMax, float mFactor);
-		
 	};

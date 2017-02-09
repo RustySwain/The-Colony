@@ -5,6 +5,8 @@
 
 bool scrollUp = false;
 bool scrollDown = false;
+int scrollUpCount = 0;
+int scrollDownCount = 0;
 
 CameraController::CameraController()
 {
@@ -38,23 +40,17 @@ void CameraController::Update()
 
 	float speed = Time::Delta() * 10;
 
-	// rotate based on mouse movement
-	float dx = (screenMiddle.x - newMousePos.x) * 0.5f;
-	float dy = (screenMiddle.y - newMousePos.y) * 0.5f;
-
 	// translate based on key presses
 
 	if (scrollUp)
 	{
-		float destination = -speed * 10;
-		float start = speed;
-		float alpha = 0.2f;
-		float _lerp = xLerp(speed, destination, alpha);
-
-		if (start > destination)
+		if (scrollUpCount > 0)
 		{
-			start -= 0.1f;
-			transform->TranslatePre(XMFLOAT3(0, 0, -0.1f));
+			transform->TranslatePre(XMFLOAT3(0, 0, -speed));
+			scrollUpCount--;
+		}
+		else
+		{
 			scrollUp = false;
 		}
 		//transform->RotateXPost(dx);
@@ -84,17 +80,34 @@ void CameraController::Update()
 	XMFLOAT4X4 f;
 	XMStoreFloat4x4(&f, translated);
 	XMFLOAT3 pos(f.m[3][0], f.m[3][1], f.m[3][2]);
+	
 
+	// rotate based on mouse movement
+	float dx = (screenMiddle.x - newMousePos.x) * 0.5f;
+	float dy = (screenMiddle.y - newMousePos.y) * 0.5f;
 
-
-	if (GetAsyncKeyState(VK_NUMPAD4))
+	if (GetAsyncKeyState(VK_RBUTTON))
 	{
-		transform->RotateYPost(dx);
-		transform->RotateXPre(dy);
+		float ratio = 0.1f;
+		XMVECTOR scalePre, rotPre, posPre;
+		XMVECTOR scalePost, rotPost, posPost;
+		XMMATRIX previousMatrix = transform->GetWorldMatrix();
+		XMMatrixDecompose(&scalePre, &rotPre, &posPre, previousMatrix);
+		scalePost = scalePre;
+		rotPost = rotPre;
+		posPost = posPre + XMVectorSet(dx, 0, dy, 0);
+
+		XMMATRIX interpolatedMat = XMMatrixAffineTransformation(XMVectorLerp(scalePre, scalePost, ratio), XMVectorZero(), XMQuaternionSlerp(rotPre, rotPost, ratio), XMVectorLerp(posPre, posPost, ratio));
+
+		transform->SetLocalMatrix(interpolatedMat);
+
+		//transform->RotateYPost(dx);
+		//transform->RotateXPre(dy);
 		// put camera back to saved position
-		transform->SetLocalPosition(pos.x, pos.y, pos.z);
-		// put cursor back in the middle of the screen
+		//transform->SetLocalPosition(pos.x, pos.y, pos.z);
+		//put cursor back in the middle of the screen
 		SetCursorPos((int)screenMiddle.x, (int)screenMiddle.y);
+
 	}
 }
 
@@ -117,6 +130,7 @@ string CameraController::WriteToString() const
 
 float CameraController::lerp(float point1, float point2, float alpha)
 {
+
 	return point1 + alpha * (point2 - point1);
 }
 

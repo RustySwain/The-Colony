@@ -11,6 +11,8 @@ using namespace std;
 
 extern bool scrollUp;
 extern bool scrollDown;
+extern int scrollUpCount;
+extern int scrollDownCount;
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -20,13 +22,21 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	case WM_MOUSEWHEEL:
 	{
 		wheel_delta = GET_WHEEL_DELTA_WPARAM(wParam);
+		//Scroll Up
 		if (wheel_delta > 0)
 		{
+			scrollDownCount = 0;
+
+			scrollUpCount++;
 			scrollUp = true;
 			scrollDown = false;
 		}
+		//Scroll Down
 		else if (wheel_delta < 0)
 		{
+			scrollUpCount = 0;
+
+			scrollDownCount++;
 			scrollDown = true;
 			scrollUp = false;
 		}
@@ -86,7 +96,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hInstancePrev, LPSTR _cmdLin
 	while (msg.message != WM_QUIT)
 	{
 		// Windows
-		if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE) > 0)
+		if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE) != 0)
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
