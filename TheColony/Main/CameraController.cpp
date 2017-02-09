@@ -3,6 +3,9 @@
 #include "Time.h"
 #include "Application.h"
 
+bool scrollUp = false;
+bool scrollDown = false;
+
 CameraController::CameraController()
 {
 }
@@ -37,10 +40,17 @@ void CameraController::Update()
 	
 	// translate based on key presses
 	
-	if (WM_MOUSEHWHEEL < 0)
+	if (scrollUp)
 	{
 		transform->TranslatePre(XMFLOAT3(0, 0, -speed));
+		scrollUp = false;
 	}
+	if (scrollDown)
+	{
+		transform->TranslatePre(XMFLOAT3(0, 0, speed));
+		scrollDown = false;
+	}
+
 	if (GetAsyncKeyState('W'))
 		transform->TranslatePre(XMFLOAT3(0, 0, -speed));
 	if (GetAsyncKeyState('S'))

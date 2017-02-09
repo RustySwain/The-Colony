@@ -9,13 +9,27 @@
 
 using namespace std;
 
+extern bool scrollUp;
+extern bool scrollDown;
+
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	short wheel_delta(0);
 	switch (message)
 	{
 	case WM_MOUSEWHEEL:
 	{
-		//PostQuitMessage(0);
+		wheel_delta = GET_WHEEL_DELTA_WPARAM(wParam);
+		if (wheel_delta > 0)
+		{
+			scrollUp = true;
+			scrollDown = false;
+		}
+		else if (wheel_delta < 0)
+		{
+			scrollDown = true;
+			scrollUp = false;
+		}
 		return 0;
 	} break;
 	}
