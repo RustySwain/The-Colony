@@ -2,6 +2,7 @@
 #include "Transform.h"
 #include "Time.h"
 #include "Application.h"
+#include "Defines.h"
 
 bool scrollUp = false;
 bool scrollDown = false;
@@ -91,13 +92,17 @@ void CameraController::Update()
 		float ratio = 0.1f;
 		XMVECTOR scalePre, rotPre, posPre;
 		XMVECTOR scalePost, rotPost, posPost;
-		XMMATRIX previousMatrix = transform->GetWorldMatrix();
-		XMMatrixDecompose(&scalePre, &rotPre, &posPre, previousMatrix);
-		scalePost = scalePre;
-		rotPost = rotPre;
-		posPost = posPre + XMVectorSet(dx, 0, dy, 0);
 
-		XMMATRIX interpolatedMat = XMMatrixAffineTransformation(XMVectorLerp(scalePre, scalePost, ratio), XMVectorZero(), XMQuaternionSlerp(rotPre, rotPost, ratio), XMVectorLerp(posPre, posPost, ratio));
+		XMMATRIX previousMatrix = transform->GetLocalMatrix();
+		XMMatrixDecompose(&scalePre, &rotPre, &posPre, previousMatrix);
+
+		XMMATRIX newMatrix = previousMatrix;
+		newMatrix *= XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 1), 15 * DEG2RAD);
+		//newMatrix *= XMMatrixTranslation(dx, 0, dy);
+
+		XMMatrixDecompose(&scalePost, &rotPost, &posPost, newMatrix);
+
+		XMMATRIX interpolatedMat = XMMatrixAffineTransformation(XMVectorLerp(scalePre, scalePost, ratio), XMVectorZero(), XMQuaternionSlerp(rotPre, rotPost, ratio), XMVectorLerp(posPre, posPre, ratio));
 
 		transform->SetLocalMatrix(interpolatedMat);
 
