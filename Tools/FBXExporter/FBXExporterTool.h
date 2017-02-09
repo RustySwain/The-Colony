@@ -32,6 +32,8 @@ private:
 	std::string mAnimationName;
 	LARGE_INTEGER mCPUFreq;
 
+	std::vector<float> keyframesTime;
+
 private:
 	void ProcessGeometry(FbxNode* inNode);
 	void ProcessSkeletonHierarchy(FbxNode* inRootNode);

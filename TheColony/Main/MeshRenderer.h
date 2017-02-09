@@ -77,6 +77,9 @@ public:
 	bool GetInitialized() const { return (flags & INIT) == 1; };
 	void SetInitialized(const bool& _init) { flags ^= (-(_init ? 1 : 0) ^ flags) & INIT; };
 
+	bool GetHasMesh() const { return (flags & HAS_MESH) == 1; };
+	void SetHasMesh(const bool& _init) { flags ^= (-(_init ? 1 : 0) ^ flags) & HAS_MESH; };
+
 	Mesh*& GetMesh() { return mesh; }
 
 	// Instances

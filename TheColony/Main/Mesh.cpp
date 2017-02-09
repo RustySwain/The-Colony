@@ -134,13 +134,8 @@ bool Mesh::LoadFromBinary(const char * _path, string &_diffuseMapPath)
 		for(int i = 0; i < numVerts; ++i)
 		{
 			Vertex vertex;
-			file.read((char*)&vertex.position.x, sizeof(float));
-			file.read((char*)&vertex.position.y, sizeof(float));
-			file.read((char*)&vertex.position.z, sizeof(float));
-
-			file.read((char*)&vertex.normal.x, sizeof(float));
-			file.read((char*)&vertex.normal.y, sizeof(float));
-			file.read((char*)&vertex.normal.z, sizeof(float));
+			file.read((char*)&vertex.position, sizeof(XMFLOAT4));
+			file.read((char*)&vertex.normal, sizeof(XMFLOAT4));
 
 			if(hasAnimation)
 			{
@@ -155,8 +150,7 @@ bool Mesh::LoadFromBinary(const char * _path, string &_diffuseMapPath)
 				file.read((char*)&vertex.jointIndex[3], sizeof(float));
 			}
 
-			file.read((char*)&vertex.uv.x, sizeof(float));
-			file.read((char*)&vertex.uv.y, sizeof(float));
+			file.read((char*)&vertex.uv, sizeof(XMFLOAT4));
 
 			vertices.push_back(vertex);
 		}

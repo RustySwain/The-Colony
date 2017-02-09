@@ -26,6 +26,8 @@ void Transform::OnDelete()
 
 void Transform::LoadFromFile(fstream &_file)
 {
+	localMatrix = XMMatrixIdentity();
+
 	float xPos, yPos, zPos;
 	_file.read((char*)&xPos, sizeof(float));
 	_file.read((char*)&yPos, sizeof(float));

@@ -7,6 +7,7 @@
 #include "MeshRenderer.h"
 #include "CameraController.h"
 #include "Light.h"
+#include "Animator.h"
 
 PrefabLoader::PrefabLoader()
 {
@@ -117,7 +118,7 @@ void PrefabLoader::Load(string _path)
 				//gameObject->AddComponent<Skybox>()->LoadFromFile(inFile);
 				break;
 			case _Animator:
-				//gameObject->AddComponent<Animator>()->LoadFromFile(inFile);
+				gameObject->AddComponent<Animator>()->LoadFromFile(inFile);
 				break;
 			case _AudioSource:
 				//gameObject->AddComponent<AudioSource>()->LoadFromFile(inFile);

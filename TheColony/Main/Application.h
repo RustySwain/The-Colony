@@ -42,6 +42,8 @@ class Application
 	vector<const MeshRenderer*> renderers;
 	vector<const Light*> lights;
 
+	void SortMeshesByDistance();
+
 	void CreateDevice();
 	void CreateRenderTarget();
 	void CreateLayout();
@@ -77,6 +79,6 @@ public:
 
 	void Init(HWND& _window);
 	void Update() const;
-	void Render() const;
+	void Render();
 	void Shutdown();
 };

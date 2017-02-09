@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Button.h"
 
 // Dependencies: None
 class GameObjectManager : public Component
@@ -10,10 +11,15 @@ class GameObjectManager : public Component
 	GameObject spotLight;
 	GameObject dirLight;
 	GameObject pointLight;
-	GameObject prefabTest;
 	GameObject text;
 	GameObject button;
 	GameObject skybox;
+	GameObject terrain;
+
+	// Test objects
+	GameObject teddy, box;
+
+	CallbackFunc func;
 
 	float color = 0;
 

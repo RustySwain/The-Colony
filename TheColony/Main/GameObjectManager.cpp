@@ -6,10 +6,11 @@
 #include "Time.h"
 #include "PrefabLoader.h"
 #include "UIRenderer.h"
-#include "Button.h"
 #include "Light.h"
 #include "TextRenderer.h"
 #include "Skybox.h"
+#include "Terrain.h"
+#include <ctime>
 
 GameObjectManager::GameObjectManager()
 {
@@ -21,11 +22,11 @@ GameObjectManager::~GameObjectManager()
 
 void GameObjectManager::Start()
 {
-	
 	cube.Start();
 	cube.AddComponent<Transform>();
 	cube.AddComponent<MeshRenderer>()->LoadFromObj("../Assets/cube.obj");
 	cube.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/crate.dds");
+
 	skybox.Start();
 	skybox.AddComponent<Transform>()->ScalePost(100);
 	skybox.AddComponent<MeshRenderer>();
@@ -40,17 +41,19 @@ void GameObjectManager::Start()
 	cam.GetComponent<Transform>()->RotateXPre(-40);
 
 	/*button.Start();
-	button.AddComponent<Transform>()->SetLocalPosition(-0.4f, -0.7f, 0);
+	button.AddComponent<Transform>()->SetLocalPosition(-0.95f, -0.1f, 0.1f);
 	button.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
 	button.AddComponent<UIRenderer>()->SetRect(0.1f, 0.1f, 0.3f, 0.3f);
-	button.AddComponent<Button>()->Subscribe([=]() -> void { Callback(); });*/
+	func = [=]() -> void { Callback(); };
+	button.AddComponent<Button>()->Subscribe(&func);
 
 	/*text.Start();
 	text.AddComponent <Transform>();
 	text.AddComponent<MeshRenderer>();
 	text.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
 	text.GetComponent<Transform>()->ScalePost(0.0005f);
-	text.GetComponent<Transform>()->TranslatePost(XMFLOAT3(-0.3f, 0, 0));
+	text.GetComponent<Transform>()->SetParent(button.GetComponent<Transform>());
+	text.GetComponent<Transform>()->SetLocalPosition(0.1f, 0.75f, -0.1f);
 	text.GetComponent<TextRenderer>()->SetText("Hello, World!");*/
 
 	//Lighting
@@ -65,23 +68,36 @@ void GameObjectManager::Start()
 	spotLight.GetComponent<Light>()->SetExtra(XMFLOAT4(100, 0.97f, 0, 1));
 
 	dirLight.Start();
-	dirLight.AddComponent<Light>()->SetColor(XMFLOAT4(0, 0, 1, 1));
+	dirLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, 1, 1, 1));
 	dirLight.AddComponent<Transform>();
 	dirLight.GetComponent<Transform>()->RotateXPre(50);
 	dirLight.GetComponent<Transform>()->RotateZPre(-15);
 	dirLight.GetComponent<Transform>()->SetLocalPosition(4, 3, -2);
 	dirLight.GetComponent<Light>()->type = Light::DIRECTIONAL;
 
-	prefabTest.AddComponent<PrefabLoader>()->Load("../Assets/Box.prefab");
-	prefabTest.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box.dds");
-
 	pointLight.Start();
-	pointLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, 1, 0, 1));
+	pointLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, 1, 1, 1));
 	pointLight.AddComponent<Transform>();
 	pointLight.GetComponent<Transform>()->SetLocalPosition(0, 0, 1);
 	pointLight.GetComponent<Light>()->SetExtra(XMFLOAT4(3, 0, 0, 1));
 	pointLight.GetComponent<Light>()->type = Light::POINT;
+	// Test Objects
+	teddy.AddComponent<PrefabLoader>()->Load("../Assets/Prefabs/Teddy.prefab");
+	teddy.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Teddy.dds");
+	box.AddComponent<PrefabLoader>()->Load("../Assets/Prefabs/Box.prefab");
+	box.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box.dds");
 
+	// Terrain
+	terrain.Start();
+	terrain.AddComponent<Transform>()->SetLocalPosition(-20, -5, -20);
+	terrain.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/grass.dds");
+	terrain.AddComponent<Terrain>()->SetSize(100, 100);
+	terrain.GetComponent<Terrain>()->Seed((unsigned int)time(0));
+	terrain.GetComponent<Terrain>()->SetOctaves(3);
+	//terrain.GetComponent<Terrain>()->SetScale(0.3f);
+	terrain.GetComponent<Terrain>()->SetPersistance(1.5f);
+	terrain.GetComponent<Terrain>()->SetLacunarity(0.1f);
+	terrain.GetComponent<Terrain>()->Generate();
 }
 
 void GameObjectManager::Update()
@@ -107,13 +123,15 @@ void GameObjectManager::Update()
 	cube.Update();
 	//text.Update();
 	cam.Update();
-	prefabTest.Update();
 	//button.Update();
 	spotLight.Update();
 	dirLight.Update();
-	button.Update();
 	skybox.Update();
 	pointLight.Update();
+
+	teddy.Update();
+	box.Update();
+	terrain.Update();
 }
 
 void GameObjectManager::OnDelete()
@@ -121,12 +139,15 @@ void GameObjectManager::OnDelete()
 	cube.OnDelete();
 	//text.OnDelete();
 	cam.OnDelete();
-	prefabTest.OnDelete();
 	//button.OnDelete();
 	spotLight.OnDelete();
 	dirLight.OnDelete();
 	pointLight.OnDelete();
 	skybox.OnDelete();
+
+	teddy.OnDelete();
+	box.OnDelete();
+	terrain.OnDelete();
 }
 
 void GameObjectManager::LoadFromFile(fstream & _file)
@@ -146,4 +167,5 @@ void GameObjectManager::Callback()
 {
 	text.GetComponent<MeshRenderer>()->SetMeshColor(XMFLOAT4(1, color, color, 1));
 	color = 1 - color;
+	//button.GetComponent<Button>()->Unsubscribe(&func);
 }
