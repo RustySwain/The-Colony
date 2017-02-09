@@ -11,12 +11,15 @@ class GameObjectManager : public Component
 	GameObject spotLight;
 	GameObject dirLight;
 	GameObject pointLight;
-	GameObject prefabTest;
 	GameObject text;
 	GameObject button;
 	GameObject skybox;
 
+	// Test objects
+	GameObject teddy, box;
+
 	CallbackFunc func;
+
 	float color = 0;
 
 public:

@@ -35,7 +35,8 @@ void GameObjectManager::Start()
 	cam.AddComponent<Transform>();
 	cam.GetComponent<Camera>()->SetFarPlane(500);
 	cam.AddComponent<CameraController>();
-	cam.GetComponent<Transform>()->SetLocalPosition(0, 0, 5);
+	cam.GetComponent<Transform>()->SetLocalPosition(0, 0, -5);
+	cam.GetComponent<Transform>()->RotateYPre(180);
 
 	button.Start();
 	button.AddComponent<Transform>()->SetLocalPosition(-0.4f, -0.7f, 0.1f);
@@ -65,22 +66,24 @@ void GameObjectManager::Start()
 	spotLight.GetComponent<Light>()->SetExtra(XMFLOAT4(100, 0.97f, 0, 1));
 
 	dirLight.Start();
-	dirLight.AddComponent<Light>()->SetColor(XMFLOAT4(0, 0, 1, 1));
+	dirLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, 1, 1, 1));
 	dirLight.AddComponent<Transform>();
 	dirLight.GetComponent<Transform>()->RotateXPre(50);
 	dirLight.GetComponent<Transform>()->RotateZPre(-15);
 	dirLight.GetComponent<Transform>()->SetLocalPosition(4, 3, -2);
 	dirLight.GetComponent<Light>()->type = Light::DIRECTIONAL;
 
-	prefabTest.AddComponent<PrefabLoader>()->Load("../Assets/Box.prefab");
-	prefabTest.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box.dds");
-
 	pointLight.Start();
-	pointLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, 1, 0, 1));
+	pointLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, 1, 1, 1));
 	pointLight.AddComponent<Transform>();
 	pointLight.GetComponent<Transform>()->SetLocalPosition(0, 0, 1);
 	pointLight.GetComponent<Light>()->SetExtra(XMFLOAT4(3, 0, 0, 1));
 	pointLight.GetComponent<Light>()->type = Light::POINT;
+	// Test Objects
+	teddy.AddComponent<PrefabLoader>()->Load("../Assets/Prefabs/Teddy.prefab");
+	teddy.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Teddy.dds");
+	box.AddComponent<PrefabLoader>()->Load("../Assets/Prefabs/Box.prefab");
+	box.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box.dds");
 }
 
 void GameObjectManager::Update()
@@ -106,12 +109,14 @@ void GameObjectManager::Update()
 	cube.Update();
 	text.Update();
 	cam.Update();
-	prefabTest.Update();
 	button.Update();
 	spotLight.Update();
 	dirLight.Update();
 	skybox.Update();
 	pointLight.Update();
+
+	teddy.Update();
+	box.Update();
 }
 
 void GameObjectManager::OnDelete()
@@ -119,12 +124,14 @@ void GameObjectManager::OnDelete()
 	cube.OnDelete();
 	text.OnDelete();
 	cam.OnDelete();
-	prefabTest.OnDelete();
 	button.OnDelete();
 	spotLight.OnDelete();
 	dirLight.OnDelete();
 	pointLight.OnDelete();
 	skybox.OnDelete();
+
+	teddy.OnDelete();
+	box.OnDelete();
 }
 
 void GameObjectManager::LoadFromFile(fstream & _file)
