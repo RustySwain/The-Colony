@@ -22,15 +22,6 @@ void CameraController::Start()
 {
 	cameraOrigin.Start();
 	gameObject->GetComponent<Transform>()->SetParent(cameraOrigin.AddComponent<Transform>());
-
-	// get middle of the screen
-	RECT winRect = Application::GetInstance()->GetWindowRect();
-	screenMiddle.x = winRect.right * 0.5f;
-	screenMiddle.y = winRect.bottom * 0.5f;
-	// invisible cursor
-	//ShowCursor(false);
-	// put cursor in the middle of the screen
-	SetCursorPos((int)screenMiddle.x, (int)screenMiddle.y);
 }
 
 void CameraController::Update()
@@ -73,10 +64,6 @@ void CameraController::Update()
 		_cameraOrigin->TranslatePre(XMFLOAT3(-speed, 0, 0));
 	if (GetAsyncKeyState('D'))
 		_cameraOrigin->TranslatePre(XMFLOAT3(speed, 0, 0));
-	if (GetAsyncKeyState(' '))
-		_cameraOrigin->TranslatePre(XMFLOAT3(0, speed, 0));
-	if (GetAsyncKeyState(VK_LSHIFT))
-		_cameraOrigin->TranslatePre(XMFLOAT3(0, -speed, 0));
 
 	// save position
 	XMMATRIX translated = transform->GetLocalMatrix();
@@ -84,22 +71,26 @@ void CameraController::Update()
 	XMStoreFloat4x4(&f, translated);
 	XMFLOAT3 pos(f.m[3][0], f.m[3][1], f.m[3][2]);
 
+
 	// rotate based on mouse movement
-	float dx = (screenMiddle.x - newMousePos.x) * 0.5f;
-	float dy = (screenMiddle.y - newMousePos.y) * 0.5f;
+	float dx = (prevFrameMousePos.x - newMousePos.x) * 0.5f;
+	float dy = (prevFrameMousePos.y - newMousePos.y) * 0.5f;
 
 	if (GetAsyncKeyState(VK_RBUTTON))
 	{
-		if (dx > 0)
+		if (dx > 0 || newMousePos.x == Application::GetInstance()->GetWindowRect().left)
 		{
-			_cameraOrigin->RotateYPre((Time::Delta() * 40));
+			_cameraOrigin->RotateYPre((Time::Delta() * 100));
 		}
-		if (dx < 0)
+		if (dx < 0 || newMousePos.x == Application::GetInstance()->GetWindowRect().right - 1)
 		{
-			_cameraOrigin->RotateYPre((Time::Delta() * -40));
+			_cameraOrigin->RotateYPre((Time::Delta() * -100));
 		}
 		//SetCursorPos((int)screenMiddle.x, (int)screenMiddle.y);
 	}
+
+	GetCursorPos(&mP);
+	prevFrameMousePos = mP;
 }
 
 void CameraController::OnDelete()
