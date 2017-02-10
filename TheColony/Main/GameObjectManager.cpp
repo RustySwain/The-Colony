@@ -29,14 +29,14 @@ void GameObjectManager::Start()
 	cube.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/crate.dds");
 
 	skybox.Start();
-	skybox.AddComponent<Transform>()->ScalePost(100);
+	skybox.AddComponent<Transform>()->ScalePost(2500);
 	skybox.AddComponent<MeshRenderer>();
 	skybox.AddComponent<Skybox>();
 
 	cam.Start();
 	cam.AddComponent<Camera>();
 	cam.AddComponent<Transform>();
-	cam.GetComponent<Camera>()->SetFarPlane(500);
+	cam.GetComponent<Camera>()->SetFarPlane(5000);
 	cam.AddComponent<CameraController>();
 	cam.GetComponent<Transform>()->SetLocalPosition(0, 10, 5);
 	cam.GetComponent<Transform>()->RotateXPre(-40);
@@ -110,7 +110,7 @@ void GameObjectManager::Update()
 	spotLight.GetComponent<Transform>()->RotateYPost(Time::Delta() * 100);
 
 	// Testing instancing stuff, feel free to remove, but it works
-	static unsigned int instanceInd = 0;
+	static unsigned int instanceInd = 1;
 	cube.GetComponent<Transform>()->RotateYPost(Time::Delta() * 90);
 	if (GetAsyncKeyState('O') & 0x1)
 	{
