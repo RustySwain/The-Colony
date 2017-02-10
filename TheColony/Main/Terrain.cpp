@@ -74,7 +74,7 @@ void Terrain::CalculateNormals() const
 	vector<Vertex>& verts = mesh->GetVertexData();
 	vector<unsigned int>& tris = mesh->GetTris();
 	vector<XMVECTOR> triNormals;
-	unsigned int normalsLength = tris.size() / 3;
+	unsigned int normalsLength = (unsigned int)tris.size() / 3;
 	triNormals.reserve(normalsLength);
 
 	for (unsigned int i = 0; i < width - 1; i++)
