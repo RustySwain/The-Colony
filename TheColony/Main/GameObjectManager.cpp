@@ -9,6 +9,7 @@
 #include "Light.h"
 #include "TextRenderer.h"
 #include "Skybox.h"
+#include "Animator.h"
 #include "Terrain.h"
 #include <ctime>
 
@@ -81,11 +82,13 @@ void GameObjectManager::Start()
 	pointLight.GetComponent<Transform>()->SetLocalPosition(0, 0, 1);
 	pointLight.GetComponent<Light>()->SetExtra(XMFLOAT4(3, 0, 0, 1));
 	pointLight.GetComponent<Light>()->type = Light::POINT;
+
 	// Test Objects
 	teddy.AddComponent<PrefabLoader>()->Load("../Assets/Prefabs/Teddy.prefab");
 	teddy.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Teddy.dds");
 	box.AddComponent<PrefabLoader>()->Load("../Assets/Prefabs/Box.prefab");
 	box.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box.dds");
+	//box.GetComponent<Animator>()->Play("Box_Idle");
 
 	// Terrain
 	terrain.Start();
@@ -120,6 +123,7 @@ void GameObjectManager::Update()
 		unsigned int id = rand() % instanceInd;
 		cube.GetComponent<MeshRenderer>()->RemoveInstance(id);
 	}
+
 	cube.Update();
 	text.Update();
 	cam.Update();
