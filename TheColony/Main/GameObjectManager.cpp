@@ -69,7 +69,7 @@ void GameObjectManager::Start()
 	spotLight.GetComponent<Light>()->SetExtra(XMFLOAT4(100, 0.97f, 0, 1));
 
 	dirLight.Start();
-	dirLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, 0, 0, 1));
+	dirLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, 1, 1, 1));
 	dirLight.AddComponent<Transform>();
 	dirLight.GetComponent<Transform>()->RotateXPre(50);
 	dirLight.GetComponent<Transform>()->RotateZPre(-15);
