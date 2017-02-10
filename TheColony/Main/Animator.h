@@ -15,6 +15,9 @@ class Animator : public Component
 	ID3D11Buffer *jointsBuffer = nullptr;
 	Interpolator *interpolator;
 
+	// Debug
+	vector<GameObject*> spheres;
+
 public:
 	Animator();
 	~Animator(){}
@@ -32,6 +35,7 @@ public:
 	bool AddBindPose(BindPose * _bindPose);
 	bool Play(const string _animationName);
 	bool Play(int _animationIndex);
+	void LoadSpheres();
 
 	// Accessors
 	Animation GetAnimation(int _index);
