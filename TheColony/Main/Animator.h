@@ -16,6 +16,8 @@ class Animator : public Component
 	Interpolator *interpolator;
 
 	// Debug
+	int currKeyframe = 3;
+	int currAnimation = 0;
 	vector<GameObject*> spheres;
 
 public:
@@ -36,6 +38,8 @@ public:
 	bool Play(const string _animationName);
 	bool Play(int _animationIndex);
 	void LoadSpheres();
+	void NextFrame();
+	void PreviousFrame();
 
 	// Accessors
 	Animation GetAnimation(int _index);

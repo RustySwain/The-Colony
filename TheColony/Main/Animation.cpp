@@ -7,10 +7,6 @@ Animation::Animation()
 	duration = 0;
 }
 
-void Animation::Update()
-{
-}
-
 void Animation::Init(std::string _name, ANIM_TYPE _type, float _duration, std::vector<Joint> _bones)
 {
 	name = _name;
