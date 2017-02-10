@@ -87,7 +87,8 @@ void GameObjectManager::Start()
 	teddy.AddComponent<PrefabLoader>()->Load("../Assets/Prefabs/Teddy.prefab");
 	teddy.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Teddy.dds");
 	box.AddComponent<PrefabLoader>()->Load("../Assets/Prefabs/Box.prefab");
-	box.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box.dds");
+	box.GetComponent<MeshRenderer>()->SetTransparent(true);
+	box.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/BoxTransparent.dds");
 	//box.GetComponent<Animator>()->Play("Box_Idle");
 
 	// Terrain
