@@ -23,7 +23,13 @@ void Animator::Start()
 void Animator::Update()
 {
 	for (int i = 0; i < (int)spheres.size(); ++i)
+	{
+		XMMATRIX newPosition = animations[currAnimation].GetBones()[i].keyFrames[currKeyframe].transform;
+		spheres[i]->GetComponent<Transform>()->SetLocalMatrix(newPosition);
+		spheres[i]->GetComponent<Transform>()->ScalePre(0.3f);
+
 		spheres[i]->Update();
+	}
 }
 
 void Animator::OnDelete()
@@ -59,7 +65,7 @@ void Animator::LoadFromFile(fstream & _file)
 		delete[] animation;
 	}
 	_file.read((char*)&defaultAnimation, sizeof(int));
-	LoadSpheres();
+	//LoadSpheres();
 	int i = 0;
 }
 
@@ -221,15 +227,30 @@ void Animator::LoadSpheres()
 	for(int i = 0; i < totalJoints; ++i)
 	{
 		GameObject* sphere = new GameObject();
-		//sphere->AddComponent<MeshRenderer>()->LoadFromObj("../Assets/sphere.obj");
 		sphere->AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/sphere.mesh");
 		sphere->GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/SphereTex.dds");
-		//sphere->GetComponent<MeshRenderer>()->SetDynamic(true);
+		sphere->GetComponent<MeshRenderer>()->SetDynamic(true);
 		sphere->AddComponent<Transform>()->SetLocalMatrix(bindPose->GetBindPose()[i]);
 		sphere->GetComponent<Transform>()->SetParent(gameObject->GetComponent<Transform>());
 		sphere->GetComponent<Transform>()->ScalePre(0.3f);
 		spheres.push_back(sphere);
 	}
+}
+
+void Animator::NextFrame()
+{
+	if (currKeyframe == animations[currAnimation].GetBones()[0].keyFrames.size() - 1)
+		currKeyframe = 3;
+	else
+		currKeyframe += 1;
+}
+
+void Animator::PreviousFrame()
+{
+	if (currKeyframe == 3)
+		currKeyframe = animations[currAnimation].GetBones()[0].keyFrames.size() - 1;
+	else
+		currKeyframe -= 1;
 }
 
 Animation Animator::GetAnimation(int _index)

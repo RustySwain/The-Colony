@@ -84,11 +84,11 @@ void GameObjectManager::Start()
 	pointLight.GetComponent<Light>()->type = Light::POINT;
 
 	// Test Objects
-	teddy.AddComponent<PrefabLoader>()->Load("../Assets/Prefabs/Teddy.prefab");
-	teddy.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Teddy.dds");
+	//teddy.AddComponent<PrefabLoader>()->Load("../Assets/Prefabs/Teddy.prefab");
+	//teddy.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Teddy.dds");
 	box.AddComponent<PrefabLoader>()->Load("../Assets/Prefabs/Box.prefab");
-	box.GetComponent<MeshRenderer>()->SetTransparent(true);
-	box.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/BoxTransparent.dds");
+	//box.GetComponent<MeshRenderer>()->SetTransparent(true);
+	box.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box.dds");
 	//box.GetComponent<Animator>()->Play("Box_Idle");
 
 	// Terrain
@@ -126,6 +126,11 @@ void GameObjectManager::Update()
 	}
 	if (GetAsyncKeyState('L'))
 		dirLight.GetComponent<Transform>()->RotateYPost(Time::Delta() * 180.0f);
+
+	if (GetAsyncKeyState(VK_RIGHT) & 0x1)
+		box.GetComponent<Animator>()->NextFrame();
+	if (GetAsyncKeyState(VK_LEFT) & 0x1)
+		box.GetComponent<Animator>()->PreviousFrame();
 
 	cube.Update();
 	text.Update();
