@@ -124,6 +124,8 @@ void GameObjectManager::Update()
 		unsigned int id = rand() % instanceInd;
 		cube.GetComponent<MeshRenderer>()->RemoveInstance(id);
 	}
+	if (GetAsyncKeyState('L'))
+		dirLight.GetComponent<Transform>()->RotateYPost(Time::Delta() * 180.0f);
 
 	cube.Update();
 	text.Update();
