@@ -65,7 +65,7 @@ void Animator::LoadFromFile(fstream & _file)
 		delete[] animation;
 	}
 	_file.read((char*)&defaultAnimation, sizeof(int));
-	LoadSpheres();
+	//LoadSpheres();
 	int i = 0;
 }
 

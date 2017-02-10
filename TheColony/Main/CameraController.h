@@ -12,13 +12,13 @@ using namespace DirectX;
 	class CameraController : public Component
 	{
 		const unsigned int id = 7;
-		XMFLOAT2 screenMiddle;
 		bool _keyPressed = false;
 		bool _thirdPerson = false;
 		unsigned int _timer = 0;
 		bool _moving = false;
 		float elapsed;
 		float start = 0.0f;
+		POINT prevFrameMousePos;
 
 		GameObject cameraOrigin;
 
