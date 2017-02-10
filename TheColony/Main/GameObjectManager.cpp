@@ -59,7 +59,7 @@ void GameObjectManager::Start()
 
 	//Lighting
 	spotLight.Start();
-	spotLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, 1, 1, 1));
+	spotLight.AddComponent<Light>()->SetColor(XMFLOAT4(0, 0, 1, 1));
 	spotLight.AddComponent<Transform>();
 	spotLight.GetComponent<Transform>()->RotateYPre(180);
 	spotLight.GetComponent<Transform>()->RotateXPre(-50);
@@ -69,7 +69,7 @@ void GameObjectManager::Start()
 	spotLight.GetComponent<Light>()->SetExtra(XMFLOAT4(100, 0.97f, 0, 1));
 
 	dirLight.Start();
-	dirLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, 1, 1, 1));
+	dirLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, 0, 0, 1));
 	dirLight.AddComponent<Transform>();
 	dirLight.GetComponent<Transform>()->RotateXPre(50);
 	dirLight.GetComponent<Transform>()->RotateZPre(-15);
@@ -106,7 +106,7 @@ void GameObjectManager::Start()
 void GameObjectManager::Update()
 {
 	//Rotate light
-	//spotLight.GetComponent<Transform>()->RotateYPost(Time::Delta() * 100);
+	spotLight.GetComponent<Transform>()->RotateYPost(Time::Delta() * 100);
 
 	// Testing instancing stuff, feel free to remove, but it works
 	static unsigned int instanceInd = 0;
