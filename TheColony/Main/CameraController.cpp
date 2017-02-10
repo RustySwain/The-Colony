@@ -83,7 +83,6 @@ void CameraController::Update()
 	XMFLOAT4X4 f;
 	XMStoreFloat4x4(&f, translated);
 	XMFLOAT3 pos(f.m[3][0], f.m[3][1], f.m[3][2]);
-	
 
 	// rotate based on mouse movement
 	float dx = (screenMiddle.x - newMousePos.x) * 0.5f;
@@ -91,8 +90,15 @@ void CameraController::Update()
 
 	if (GetAsyncKeyState(VK_RBUTTON))
 	{
-		_cameraOrigin->RotateYPre((Time::Delta() * 30));
-		SetCursorPos((int)screenMiddle.x, (int)screenMiddle.y);
+		if (dx > 0)
+		{
+			_cameraOrigin->RotateYPre((Time::Delta() * 40));
+		}
+		if (dx < 0)
+		{
+			_cameraOrigin->RotateYPre((Time::Delta() * -40));
+		}
+		//SetCursorPos((int)screenMiddle.x, (int)screenMiddle.y);
 	}
 }
 
