@@ -129,6 +129,8 @@ void Terrain::CalculateNormals() const
 
 void Terrain::GenerateTexture() const
 {
+	vector<Vertex>& verts = gameObject->GetComponent<MeshRenderer>()->GetMesh()->GetVertexData();
+
 	// Read grass and water textures
 	unsigned int texWidth = 3000;
 	unsigned int texHeight = 3000;
@@ -152,12 +154,44 @@ void Terrain::GenerateTexture() const
 	memcpy_s(grassData, sizeof(unsigned int) * grassSize, subResource.pData, subResource.DepthPitch);
 	context->Unmap(grass, 0);
 
+	context->Map(water, 0, D3D11_MAP_READ_WRITE, 0, &subResource);
+	unsigned int waterSize = subResource.DepthPitch / sizeof(unsigned int);
+	unsigned int waterHeight = waterSize / (subResource.RowPitch / sizeof(unsigned int));
+	unsigned int waterWidth = waterSize / waterHeight;
+	unsigned int* waterData = new unsigned int[waterSize] {};
+	memcpy_s(waterData, sizeof(unsigned int) * waterSize, subResource.pData, subResource.DepthPitch);
+	context->Unmap(water, 0);
+
 	// Tile new array into final array
 	for (unsigned int i = 0; i < texWidth; i++)
 	{
 		for (unsigned int j = 0; j < texHeight; j++)
 		{
-			colorData[j * texHeight + i] = grassData[((j % grassHeight) * grassHeight) + (i % grassWidth)];
+			// Find adjacent vert heights
+			unsigned int vertWidth = (unsigned int)((float)i / texWidth * width);
+			unsigned int vertHeight = (unsigned int)((float)j / texHeight * height);
+
+			unsigned int vi1 = vertWidth * height + vertHeight;
+			unsigned int vi2 = ((vertWidth + 1) % width) * height + vertHeight;
+			unsigned int vi3 = vertWidth * height + (vertHeight + 1) % height;
+			unsigned int vi4 = ((vertWidth + 1) % width) * height + (vertHeight + 1) % height;
+			float y1 = verts[vi1].position.y;
+			float y2 = verts[vi2].position.y;
+			float y3 = verts[vi3].position.y;
+			float y4 = verts[vi4].position.y;
+
+			// Bilinear Filtering for smoother results
+			float horizontalRatio = (((float)i / texWidth) * width) - vertWidth;
+			float verticalRatio = (((float)j / texHeight) * height) - vertHeight;
+			float y13 = Lerp(y1, y3, verticalRatio);
+			float y24 = Lerp(y2, y4, verticalRatio);
+			float y = Lerp(y13, y24, horizontalRatio);
+
+			// Is it grass or water?
+			if (y < 2.2f)
+				colorData[j * texHeight + i] = waterData[j % waterHeight * waterHeight + i % waterWidth];
+			else
+				colorData[j * texHeight + i] = grassData[j % grassHeight * grassHeight + i % grassWidth];
 		}
 	}
 
@@ -167,7 +201,7 @@ void Terrain::GenerateTexture() const
 	ZMem(texDesc);
 	texDesc.ArraySize = 1;
 	texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	texDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 	texDesc.Height = texHeight;
 	texDesc.Width = texWidth;
 	texDesc.MipLevels = 1;
@@ -185,12 +219,21 @@ void Terrain::GenerateTexture() const
 	// Cleanup
 	delete[] colorData;
 	delete[] grassData;
+	delete[] waterData;
 	SAFE_RELEASE(grass);
 	SAFE_RELEASE(water);
 	SAFE_RELEASE(nuTexture);
 
 	// Set new texture
 	gameObject->GetComponent<MeshRenderer>()->SetDiffuseMap(out);
+}
+
+float Terrain::Lerp(float _a, float _b, float _val)
+{
+	assert(_val <= 1 && _val >= 0);
+	if (_a < _b)
+		return _a + _val * (_b - _a);
+	return _b + (1 - _val) * (_a - _b);
 }
 
 Terrain::Terrain()

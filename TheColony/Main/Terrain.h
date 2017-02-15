@@ -19,7 +19,7 @@ class Terrain : public Component
 	void CalculateNormals() const;
 	void GenerateTexture() const;
 
-	static float Lerp(float _a, float _b, float _val) { return _a + _val * (_b - _a); };
+	static float Lerp(float _a, float _b, float _val);
 
 public:
 	Terrain();
