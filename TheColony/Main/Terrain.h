@@ -9,7 +9,7 @@ class Terrain : public Component
 	const unsigned int id = 16;
 
 	NoiseGenerator generator;
-	unsigned int width = 0, height = 0;
+	unsigned int width = 0, height = 0, texWidth = 0, texHeight = 0;
 	unsigned int seed = 0, octaves = 0;
 	float persistance = 2.0f, lacunarity = 0.5f, scale = 1;
 	bool meshGenerated = false;
@@ -20,6 +20,7 @@ class Terrain : public Component
 	void GenerateTexture() const;
 
 	static float Lerp(float _a, float _b, float _val);
+	static unsigned int ColorLerp(unsigned int _a, unsigned int _b, float _ratio);
 
 public:
 	Terrain();
@@ -35,6 +36,7 @@ public:
 	virtual string WriteToString() const override;
 
 	void SetSize(unsigned int _width, unsigned int _height);
+	void SetTextureSize(unsigned int _width, unsigned int _height);
 	void Seed(unsigned int _seed);
 	void SetOctaves(unsigned int _octaves) { octaves = _octaves; };
 	void SetPersistance(float _per) { persistance = _per; };

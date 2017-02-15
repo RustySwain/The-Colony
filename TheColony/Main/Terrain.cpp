@@ -132,35 +132,58 @@ void Terrain::GenerateTexture() const
 	vector<Vertex>& verts = gameObject->GetComponent<MeshRenderer>()->GetMesh()->GetVertexData();
 
 	// Read grass and water textures
-	unsigned int texWidth = 3000;
-	unsigned int texHeight = 3000;
 	unsigned int textureSize = texWidth * texHeight;
 	ID3D11Resource* grass = nullptr;
 	ID3D11Resource* water = nullptr;
+	ID3D11Resource* rock = nullptr;
 	ID3D11ShaderResourceView* out = nullptr;
 	CreateDDSTextureFromFile(Application::GetInstance()->GetDevice(), L"../Assets/grass.dds", &grass, 0, 0, 0);
 	CreateDDSTextureFromFile(Application::GetInstance()->GetDevice(), L"../Assets/water.dds", &water, 0, 0, 0);
+	CreateDDSTextureFromFile(Application::GetInstance()->GetDevice(), L"../Assets/rock.dds", &rock, 0, 0, 0);
 	unsigned int* colorData = new unsigned int[textureSize] {};
 
 	// Copy old texture into new array
+	unsigned int offset;
 	auto context = Application::GetInstance()->GetContext();
-	D3D11_MAPPED_SUBRESOURCE subResource;
-	ZMem(subResource);
-	context->Map(grass, 0, D3D11_MAP_READ_WRITE, 0, &subResource);
-	unsigned int grassSize = subResource.DepthPitch / sizeof(unsigned int);
-	unsigned int grassHeight = grassSize / (subResource.RowPitch / sizeof(unsigned int));
-	unsigned int grassWidth = grassSize / grassHeight;
+
+	// grass
+	D3D11_MAPPED_SUBRESOURCE grassSubresource;
+	ZMem(grassSubresource);
+	context->Map(grass, 0, D3D11_MAP_READ_WRITE, 0, &grassSubresource);
+	unsigned int grassSize = grassSubresource.DepthPitch / sizeof(unsigned int);
+	unsigned int grassHeight = grassSize / (grassSubresource.RowPitch / sizeof(unsigned int));
+	unsigned int grassWidth = grassSubresource.DepthPitch / grassSubresource.RowPitch;
 	unsigned int* grassData = new unsigned int[grassSize] {};
-	memcpy_s(grassData, sizeof(unsigned int) * grassSize, subResource.pData, subResource.DepthPitch);
+	grassSize = grassWidth * grassHeight;
+	offset = grassSubresource.DepthPitch - (grassSize * 4);
+	memcpy_s(grassData, sizeof(unsigned int) * grassSize, &((char*)grassSubresource.pData)[0], grassSubresource.DepthPitch - offset);
 	context->Unmap(grass, 0);
 
-	context->Map(water, 0, D3D11_MAP_READ_WRITE, 0, &subResource);
-	unsigned int waterSize = subResource.DepthPitch / sizeof(unsigned int);
-	unsigned int waterHeight = waterSize / (subResource.RowPitch / sizeof(unsigned int));
-	unsigned int waterWidth = waterSize / waterHeight;
+	// water
+	D3D11_MAPPED_SUBRESOURCE waterSubresource;
+	ZMem(waterSubresource);
+	context->Map(water, 0, D3D11_MAP_READ_WRITE, 0, &waterSubresource);
+	unsigned int waterSize = waterSubresource.DepthPitch / sizeof(unsigned int);
+	unsigned int waterHeight = waterSize / (waterSubresource.RowPitch / sizeof(unsigned int));
+	unsigned int waterWidth = waterSubresource.DepthPitch / waterSubresource.RowPitch;
 	unsigned int* waterData = new unsigned int[waterSize] {};
-	memcpy_s(waterData, sizeof(unsigned int) * waterSize, subResource.pData, subResource.DepthPitch);
+	waterSize = waterWidth * waterHeight;
+	offset = waterSubresource.DepthPitch - (waterSize * 4);
+	memcpy_s(waterData, sizeof(unsigned int) * waterSize, &((char*)waterSubresource.pData)[0], waterSubresource.DepthPitch - offset);
 	context->Unmap(water, 0);
+
+	// rock
+	D3D11_MAPPED_SUBRESOURCE rockSubresource;
+	ZMem(rockSubresource);
+	context->Map(rock, 0, D3D11_MAP_READ_WRITE, 0, &rockSubresource);
+	unsigned int rockSize = rockSubresource.DepthPitch / sizeof(unsigned int);
+	unsigned int rockHeight = rockSize / (rockSubresource.RowPitch / sizeof(unsigned int));
+	unsigned int rockWidth = rockSubresource.DepthPitch / rockSubresource.RowPitch;
+	unsigned int* rockData = new unsigned int[rockSize] {};
+	rockSize = rockWidth * rockHeight;
+	offset = rockSubresource.DepthPitch - (rockSize * 4);
+	memcpy_s(rockData, sizeof(unsigned int) * rockSize, &((char*)rockSubresource.pData)[0], rockSubresource.DepthPitch - offset);
+	context->Unmap(rock, 0);
 
 	// Tile new array into final array
 	for (unsigned int i = 0; i < texWidth; i++)
@@ -189,9 +212,16 @@ void Terrain::GenerateTexture() const
 
 			// Is it grass or water?
 			if (y < 2.2f)
+			{
 				colorData[j * texHeight + i] = waterData[j % waterHeight * waterHeight + i % waterWidth];
+			}
 			else
-				colorData[j * texHeight + i] = grassData[j % grassHeight * grassHeight + i % grassWidth];
+			{
+				float ratio = (y - 2.5f) / (3.0f - 2.5f);
+				if (ratio > 1) ratio = 1;
+				if (ratio < 0) ratio = 0;
+				colorData[j * texHeight + i] = ColorLerp(grassData[j % grassHeight * grassHeight + i % grassWidth], rockData[j % rockHeight * rockHeight + i % rockWidth], ratio);
+			}
 		}
 	}
 
@@ -220,8 +250,10 @@ void Terrain::GenerateTexture() const
 	delete[] colorData;
 	delete[] grassData;
 	delete[] waterData;
+	delete[] rockData;
 	SAFE_RELEASE(grass);
 	SAFE_RELEASE(water);
+	SAFE_RELEASE(rock);
 	SAFE_RELEASE(nuTexture);
 
 	// Set new texture
@@ -234,6 +266,22 @@ float Terrain::Lerp(float _a, float _b, float _val)
 	if (_a < _b)
 		return _a + _val * (_b - _a);
 	return _b + (1 - _val) * (_a - _b);
+}
+
+unsigned int Terrain::ColorLerp(unsigned int _a, unsigned int _b, float _ratio)
+{
+	assert(_ratio <= 1 && _ratio >= 0);
+
+	unsigned char* bgra_a = (unsigned char*)&_a;
+	unsigned char* bgra_b = (unsigned char*)&_b;
+	unsigned char bgra_ret[4];
+
+	for (unsigned int i = 0; i < 4; i++)
+	{
+		bgra_ret[i] = Lerp(bgra_a[i], bgra_b[i], _ratio);
+	}
+	unsigned int* ret = (unsigned int*)&bgra_ret;
+	return *ret;
 }
 
 Terrain::Terrain()
@@ -273,6 +321,12 @@ void Terrain::SetSize(unsigned int _width, unsigned int _height)
 {
 	width = _width;
 	height = _height;
+}
+
+void Terrain::SetTextureSize(unsigned _width, unsigned _height)
+{
+	texWidth = _width;
+	texHeight = _height;
 }
 
 void Terrain::Seed(unsigned int _seed)

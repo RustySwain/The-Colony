@@ -94,8 +94,9 @@ void GameObjectManager::Start()
 	// Terrain
 	terrain.Start();
 	terrain.AddComponent<Transform>()->SetLocalPosition(-20, -5, -20);
-	terrain.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/grass.dds");
+	terrain.AddComponent<MeshRenderer>();// ->LoadDiffuseMap(L"../Assets/rock.dds");
 	terrain.AddComponent<Terrain>()->SetSize(100, 100);
+	terrain.GetComponent<Terrain>()->SetTextureSize(1000, 1000);
 	terrain.GetComponent<Terrain>()->Seed((unsigned int)time(0));
 	terrain.GetComponent<Terrain>()->SetOctaves(3);
 	//terrain.GetComponent<Terrain>()->SetScale(0.3f);

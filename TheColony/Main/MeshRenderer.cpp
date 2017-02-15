@@ -343,6 +343,7 @@ void MeshRenderer::SetDiffuseMap(ID3D11ShaderResourceView* _diffuse)
 {
 	SAFE_RELEASE(diffuseMap);
 	diffuseMap = _diffuse;
+	flags |= DIFFUSE;
 }
 
 void MeshRenderer::SetMeshColor(XMFLOAT4 _rgba) const
