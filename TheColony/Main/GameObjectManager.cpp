@@ -179,5 +179,4 @@ void GameObjectManager::Callback()
 {
 	text.GetComponent<MeshRenderer>()->SetMeshColor(XMFLOAT4(1, color, color, 1));
 	color = 1 - color;
-	//button.GetComponent<Button>()->Unsubscribe(&func);
 }

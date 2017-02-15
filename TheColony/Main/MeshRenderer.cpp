@@ -339,6 +339,12 @@ void MeshRenderer::LoadEmissiveMap(const wchar_t* _path)
 	flags |= EMISSIVE;
 }
 
+void MeshRenderer::SetDiffuseMap(ID3D11ShaderResourceView* _diffuse)
+{
+	SAFE_RELEASE(diffuseMap);
+	diffuseMap = _diffuse;
+}
+
 void MeshRenderer::SetMeshColor(XMFLOAT4 _rgba) const
 {
 	vector<Vertex>& verts = mesh->GetVertexData();

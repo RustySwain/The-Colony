@@ -71,6 +71,9 @@ public:
 	ID3D11VertexShader* GetVSMesh() const { return vsMesh; };
 	ID3D11VertexShader* GetVSUI() const { return vsUI; };
 
+	unsigned int GetSampleCount() const { return msCount; };
+	unsigned int GetSampleQuality() const { return msQuality; };
+
 	void RegisterMeshRenderer(const MeshRenderer* _mr);
 	void UnRegisterMeshRenderer(const MeshRenderer* _mr);
 

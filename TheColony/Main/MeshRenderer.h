@@ -94,6 +94,7 @@ public:
 	void LoadNormalMap(const wchar_t* _path);
 	void LoadSpecularMap(const wchar_t* _path);
 	void LoadEmissiveMap(const wchar_t* _path);
+	void SetDiffuseMap(ID3D11ShaderResourceView* _diffuse);
 	void SetMeshColor(XMFLOAT4 _rgba) const;
 	void Render() const;
 

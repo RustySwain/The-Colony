@@ -1,5 +1,8 @@
 #include "Terrain.h"
 #include "MeshRenderer.h"
+#include "DDSTextureLoader.h"
+#include "Application.h"
+#include "Macros.h"
 
 void Terrain::CreateMesh()
 {
@@ -18,13 +21,15 @@ void Terrain::CreateMesh()
 	vector<Vertex>& verts = mesh->GetVertexData();
 	vector<unsigned int>& tris = mesh->GetTris();
 
+	float invWidth = 1.0f / width;
+	float invHeight = 1.0f / height;
 	for (unsigned int i = 0; i < width; i++)
 	{
 		for (unsigned int j = 0; j < height; j++)
 		{
 			Vertex v;
 			v.position = XMFLOAT4((float)i, 0, (float)j, 1);
-			v.uv = XMFLOAT4((float)i, (float)j, 0, 1);
+			v.uv = XMFLOAT4((float)i * invWidth, (float)j * invHeight, 0, 1);
 			verts.push_back(v);
 		}
 	}
@@ -122,11 +127,70 @@ void Terrain::CalculateNormals() const
 	}
 }
 
-void Terrain::GenerateTexture()
+void Terrain::GenerateTexture() const
 {
-	Mesh*& mesh = gameObject->GetComponent<MeshRenderer>()->GetMesh();
-	vector<Vertex>& verts = mesh->GetVertexData();
-	vector<unsigned int>& tris = mesh->GetTris();
+	// Read grass and water textures
+	unsigned int texWidth = 3000;
+	unsigned int texHeight = 3000;
+	unsigned int textureSize = texWidth * texHeight;
+	ID3D11Resource* grass = nullptr;
+	ID3D11Resource* water = nullptr;
+	ID3D11ShaderResourceView* out = nullptr;
+	CreateDDSTextureFromFile(Application::GetInstance()->GetDevice(), L"../Assets/grass.dds", &grass, 0, 0, 0);
+	CreateDDSTextureFromFile(Application::GetInstance()->GetDevice(), L"../Assets/water.dds", &water, 0, 0, 0);
+	unsigned int* colorData = new unsigned int[textureSize] {};
+
+	// Copy old texture into new array
+	auto context = Application::GetInstance()->GetContext();
+	D3D11_MAPPED_SUBRESOURCE subResource;
+	ZMem(subResource);
+	context->Map(grass, 0, D3D11_MAP_READ_WRITE, 0, &subResource);
+	unsigned int grassSize = subResource.DepthPitch / sizeof(unsigned int);
+	unsigned int grassHeight = grassSize / (subResource.RowPitch / sizeof(unsigned int));
+	unsigned int grassWidth = grassSize / grassHeight;
+	unsigned int* grassData = new unsigned int[grassSize] {};
+	memcpy_s(grassData, sizeof(unsigned int) * grassSize, subResource.pData, subResource.DepthPitch);
+	context->Unmap(grass, 0);
+
+	// Tile new array into final array
+	for (unsigned int i = 0; i < texWidth; i++)
+	{
+		for (unsigned int j = 0; j < texHeight; j++)
+		{
+			colorData[j * texHeight + i] = grassData[((j % grassHeight) * grassHeight) + (i % grassWidth)];
+		}
+	}
+
+	// Create new texture
+	ID3D11Texture2D* nuTexture = nullptr;
+	D3D11_TEXTURE2D_DESC texDesc;
+	ZMem(texDesc);
+	texDesc.ArraySize = 1;
+	texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	texDesc.Height = texHeight;
+	texDesc.Width = texWidth;
+	texDesc.MipLevels = 1;
+	texDesc.SampleDesc.Count = 1;
+	texDesc.Usage = D3D11_USAGE_DEFAULT;
+
+	D3D11_SUBRESOURCE_DATA texColorData;
+	ZMem(texColorData);
+	texColorData.pSysMem = colorData;
+	texColorData.SysMemPitch = sizeof(unsigned int) * texWidth;
+
+	Application::GetInstance()->GetDevice()->CreateTexture2D(&texDesc, &texColorData, &nuTexture);
+	Application::GetInstance()->GetDevice()->CreateShaderResourceView(nuTexture, 0, &out);
+
+	// Cleanup
+	delete[] colorData;
+	delete[] grassData;
+	SAFE_RELEASE(grass);
+	SAFE_RELEASE(water);
+	SAFE_RELEASE(nuTexture);
+
+	// Set new texture
+	gameObject->GetComponent<MeshRenderer>()->SetDiffuseMap(out);
 }
 
 Terrain::Terrain()
@@ -178,6 +242,6 @@ void Terrain::Generate()
 {
 	CreateMesh();
 	GenerateHeights();
-	CalculateNormals();
 	GenerateTexture();
+	CalculateNormals();
 }
