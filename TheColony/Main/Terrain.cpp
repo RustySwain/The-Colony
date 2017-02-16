@@ -278,7 +278,7 @@ unsigned int Terrain::ColorLerp(unsigned int _a, unsigned int _b, float _ratio)
 
 	for (unsigned int i = 0; i < 4; i++)
 	{
-		bgra_ret[i] = Lerp(bgra_a[i], bgra_b[i], _ratio);
+		bgra_ret[i] = (unsigned char)round(Lerp(bgra_a[i], bgra_b[i], _ratio));
 	}
 	unsigned int* ret = (unsigned int*)&bgra_ret;
 	return *ret;

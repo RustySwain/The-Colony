@@ -20,6 +20,17 @@ void Application::SortMeshesByDistance()
 	vector<const MeshRenderer*> uiMeshes;
 	for (size_t i = 0; i < renderers.size(); i++)
 	{
+		// find the skybox
+		if (renderers[i]->GetType() == MeshRenderer::SKYBOX)
+		{
+			// put it in the new vector and remove from the old one
+			newMeshes.push_back(renderers[i]);
+			renderers.erase(renderers.begin() + i);
+			break;
+		}
+	}
+	for (size_t i = 0; i < renderers.size(); i++)
+	{
 		// push back all of the opaque objects first. It should be front to back to prevent pixel redraws, but this is plenty efficient for now
 		if (!renderers[i]->GetTransparent())
 		{
@@ -308,7 +319,7 @@ void Application::Render()
 		if (renderers[i]->GetType() == MeshRenderer::UI)
 			renderers[i]->Render();
 
-	swapChain->Present(0, 0);
+	swapChain->Present(1, 0);
 }
 
 void Application::Shutdown()

@@ -12,6 +12,7 @@
 #include "Animator.h"
 #include "Terrain.h"
 #include <ctime>
+#include "ProgressBar.h"
 
 GameObjectManager::GameObjectManager()
 {
@@ -47,6 +48,7 @@ void GameObjectManager::Start()
 	button.AddComponent<UIRenderer>()->SetRect(0.1f, 0.1f, 0.3f, 0.3f);
 	func = [=]() -> void { Callback(); };
 	button.AddComponent<Button>()->Subscribe(&func);
+	button.AddComponent<ProgressBar>()->SetMode(ProgressBar::FILL | ProgressBar::HORIZONTAL | ProgressBar::POSITIVE);
 
 	text.Start();
 	text.AddComponent <Transform>();
@@ -97,7 +99,7 @@ void GameObjectManager::Start()
 	terrain.AddComponent<MeshRenderer>();// ->LoadDiffuseMap(L"../Assets/rock.dds");
 	terrain.AddComponent<Terrain>()->SetSize(100, 100);
 	terrain.GetComponent<Terrain>()->SetTextureSize(1000, 1000);
-	terrain.GetComponent<Terrain>()->Seed((unsigned int)time(0));
+	terrain.GetComponent<Terrain>()->Seed(0);// (unsigned int)time(0));
 	terrain.GetComponent<Terrain>()->SetOctaves(3);
 	//terrain.GetComponent<Terrain>()->SetScale(0.3f);
 	terrain.GetComponent<Terrain>()->SetPersistance(1.5f);
@@ -107,6 +109,7 @@ void GameObjectManager::Start()
 
 void GameObjectManager::Update()
 {
+	totalTime += Time::Delta();
 	//Rotate light
 	spotLight.GetComponent<Transform>()->RotateYPost(Time::Delta() * 100);
 
@@ -132,6 +135,9 @@ void GameObjectManager::Update()
 		box.GetComponent<Animator>()->NextFrame();
 	if (GetAsyncKeyState(VK_LEFT) & 0x1)
 		box.GetComponent<Animator>()->PreviousFrame();
+
+	// Uncomment the next line for a sweet progress  bar
+	//button.GetComponent<ProgressBar>()->SetRatio(totalTime * 0.1f);
 
 	cube.Update();
 	text.Update();

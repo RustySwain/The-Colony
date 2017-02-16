@@ -22,6 +22,7 @@ class GameObjectManager : public Component
 	CallbackFunc func;
 
 	float color = 0;
+	float totalTime = 0;
 
 public:
 	GameObjectManager();
