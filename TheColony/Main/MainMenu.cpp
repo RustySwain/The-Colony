@@ -4,11 +4,14 @@
 #include "MeshRenderer.h"
 #include "Button.h"
 #include "TextRenderer.h"
+#include "GameScene.h"
+#include "SceneManager.h"
 
 void MainMenu::PlayClick()
 {
 	playButtonText.GetComponent<MeshRenderer>()->SetMeshColor(XMFLOAT4(1, color[0], color[0], 1));
 	color[0] = 1 - color[0];
+	gameObject->GetComponent<SceneManager>()->LoadScene<GameScene>();
 }
 
 void MainMenu::OptionsClick()
@@ -33,8 +36,6 @@ MainMenu::~MainMenu()
 
 void MainMenu::Start()
 {
-	SceneManager::Start();
-
 	// Play
 	playButton.Start();
 	playButton.AddComponent<Transform>()->SetLocalPosition(0, 0, 0.1f);
@@ -44,6 +45,7 @@ void MainMenu::Start()
 	playButton.AddComponent<Button>()->Subscribe(&playClick);
 
 	playButtonText.Start();
+	playButtonText.SetTag("Text");
 	playButtonText.AddComponent <Transform>();
 	playButtonText.AddComponent<MeshRenderer>();
 	playButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
@@ -103,7 +105,6 @@ void MainMenu::OnDelete()
 {
 	playButton.OnDelete();
 	playButtonText.OnDelete();
-
 	optionsButton.OnDelete();
 	optionsButtonText.OnDelete();
 

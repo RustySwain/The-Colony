@@ -116,6 +116,7 @@ void MeshRenderer::OnDelete()
 {
 	if (mesh) delete mesh;
 	mesh = nullptr;
+	Application::GetInstance()->UnRegisterMeshRenderer(this);
 	SAFE_RELEASE(vertBuffer);
 	SAFE_RELEASE(indexBuffer);
 	SAFE_RELEASE(constantBuffer);

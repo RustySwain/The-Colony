@@ -1,6 +1,9 @@
 #pragma once
-#include "SceneManager.h"
-class MainMenu : public SceneManager
+#include "SceneABC.h"
+#include "Application.h"
+#include "Button.h"
+
+class MainMenu : public SceneABC
 {
 	GameObject playButton;
 	GameObject playButtonText;
