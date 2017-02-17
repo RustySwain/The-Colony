@@ -18,7 +18,7 @@ void MainMenu::Start()
 	SceneManager::Start();
 
 	playButton.Start();
-	playButton.AddComponent<Transform>()->SetLocalPosition(0.95f, 0.1f, 0.1f);
+	playButton.AddComponent<Transform>()->SetLocalPosition(0.5f, 0.1f, 0.1f);
 	playButton.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
 	playButton.AddComponent<UIRenderer>()->SetRect(0.1f, 0.1f, 0.3f, 0.3f);
 	func = [=]() -> void { Callback(); };

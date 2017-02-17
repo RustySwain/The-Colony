@@ -26,7 +26,8 @@ GameObjectManager::~GameObjectManager()
 
 void GameObjectManager::Start()
 {
-	//scene.AddComponent<MainMenu>();
+	scene.Start();
+	scene.AddComponent<MainMenu>();
 
 	cube.SetId(0);
 	cube.SetTag("Untagged");
@@ -159,7 +160,7 @@ void GameObjectManager::Update()
 	// Uncomment the next line for a sweet progress  bar
 	//button.GetComponent<ProgressBar>()->SetRatio(totalTime * 0.1f);
 
-	//scene.Update();
+	scene.Update();
 	box.Update();
 
 	cube.Update();
@@ -181,7 +182,7 @@ void GameObjectManager::OnDelete()
 		delete gameObjects[i];
 	}
 
-	//scene.OnDelete();
+	scene.OnDelete();
 	box.OnDelete();
 
 	cube.OnDelete();
