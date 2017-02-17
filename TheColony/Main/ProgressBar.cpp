@@ -93,12 +93,3 @@ void ProgressBar::OnDelete()
 void ProgressBar::LoadFromFile(fstream& _file)
 {
 }
-
-void ProgressBar::LoadFromString(string _str)
-{
-}
-
-string ProgressBar::WriteToString() const
-{
-	return "";
-}

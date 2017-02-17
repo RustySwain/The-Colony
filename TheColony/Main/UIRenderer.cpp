@@ -40,15 +40,6 @@ void UIRenderer::LoadFromFile(fstream& _file)
 	_file.read((char*)&width, sizeof(float));
 }
 
-void UIRenderer::LoadFromString(string _str)
-{
-}
-
-string UIRenderer::WriteToString() const
-{
-	return "";
-}
-
 void UIRenderer::SetRect(float _top, float _left, float _height, float _width)
 {
 	top = 1 - _top;

@@ -49,15 +49,6 @@ void Button::LoadFromFile(fstream& _file)
 {
 }
 
-void Button::LoadFromString(string _str)
-{
-}
-
-string Button::WriteToString() const
-{
-	return "";
-}
-
 void Button::Subscribe(CallbackFunc* _callback)
 {
 	callbacks.push_back(_callback);

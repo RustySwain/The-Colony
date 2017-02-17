@@ -33,15 +33,6 @@ void PrefabLoader::LoadFromFile(fstream &_file)
 {
 }
 
-void PrefabLoader::LoadFromString(string _str)
-{
-}
-
-string PrefabLoader::WriteToString() const
-{
-	return "";
-}
-
 void PrefabLoader::Load(string _path)
 {
 	fstream inFile;

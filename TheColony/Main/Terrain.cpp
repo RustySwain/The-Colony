@@ -4,10 +4,8 @@
 #include "Application.h"
 #include "Macros.h"
 
-void Terrain::CreateMesh()
+void Terrain::CreateMesh() const
 {
-	if (meshGenerated) return;
-	meshGenerated = true;
 	Mesh*& mesh = gameObject->GetComponent<MeshRenderer>()->GetMesh();
 	if (mesh)
 	{
@@ -306,15 +304,6 @@ void Terrain::OnDelete()
 
 void Terrain::LoadFromFile(fstream& _file)
 {
-}
-
-void Terrain::LoadFromString(string _str)
-{
-}
-
-string Terrain::WriteToString() const
-{
-	return "";
 }
 
 void Terrain::SetSize(unsigned int _width, unsigned int _height)

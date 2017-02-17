@@ -101,15 +101,6 @@ void CameraController::LoadFromFile(fstream & _file)
 {
 }
 
-void CameraController::LoadFromString(string _str)
-{
-}
-
-string CameraController::WriteToString() const
-{
-	return string();
-}
-
 float CameraController::lerp(float point1, float point2, float alpha)
 {
 	return point1 + alpha * (point2 - point1);

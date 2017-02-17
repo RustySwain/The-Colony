@@ -108,6 +108,7 @@ void GameObjectManager::Start()
 	// Test Objects
 	box.SetId(8);
 	box.SetTag("Untagged");
+	box.Start();
 	box.AddComponent<PrefabLoader>()->Load("../Assets/Prefabs/Box.prefab");
 	//box.GetComponent<MeshRenderer>()->SetTransparent(true);
 	box.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box.dds");
@@ -174,7 +175,7 @@ void GameObjectManager::Update()
 
 void GameObjectManager::OnDelete()
 {
-	for(int i = 0; i < (int)gameObjects.size(); ++i)
+	for (int i = 0; i < (int)gameObjects.size(); ++i)
 	{
 		gameObjects[i]->OnDelete();
 		delete gameObjects[i];
@@ -196,15 +197,6 @@ void GameObjectManager::OnDelete()
 
 void GameObjectManager::LoadFromFile(fstream & _file)
 {
-}
-
-void GameObjectManager::LoadFromString(string _str)
-{
-}
-
-string GameObjectManager::WriteToString() const
-{
-	return "";
 }
 
 void GameObjectManager::Callback()

@@ -14,7 +14,7 @@ class Terrain : public Component
 	float persistance = 2.0f, lacunarity = 0.5f, scale = 1;
 	bool meshGenerated = false;
 
-	void CreateMesh();
+	void CreateMesh() const;
 	void GenerateHeights();
 	void CalculateNormals() const;
 	void GenerateTexture() const;
@@ -32,8 +32,6 @@ public:
 	virtual void OnDelete() override;
 	virtual const unsigned int GetId() const override { return id; };
 	virtual void LoadFromFile(fstream &_file) override;
-	virtual void LoadFromString(string _str) override;
-	virtual string WriteToString() const override;
 
 	void SetSize(unsigned int _width, unsigned int _height);
 	void SetTextureSize(unsigned int _width, unsigned int _height);

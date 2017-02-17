@@ -74,15 +74,6 @@ void Light::LoadFromFile(fstream & _file)
 	type = lType;
 }
 
-void Light::LoadFromString(string _str)
-{
-}
-
-string Light::WriteToString() const
-{
-	return string();
-}
-
 void Light::SetColor(XMFLOAT4 _color)
 {
 	lightBuffType.diffuseColor = _color;

@@ -26,8 +26,6 @@ public:
 	virtual void Update() override;
 	virtual void OnDelete() override;
 	virtual void LoadFromFile(fstream &_file) override;
-	virtual void LoadFromString(string _str) override;
-	virtual string WriteToString() const override;
 
 	void SetRatio(float _ratio) { ratio = _ratio; ResetVerts(); };
 	float GetRatio() const { return ratio; };
