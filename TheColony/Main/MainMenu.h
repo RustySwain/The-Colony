@@ -1,9 +1,13 @@
 #pragma once
-#include "SceneManager.h"
-class MainMenu : public SceneManager
+#include "SceneABC.h"
+#include "Application.h"
+
+class MainMenu : public SceneABC
 {
 	GameObject playButton;
 	GameObject playButtonText;
+
+	CallbackFunc func;
 
 	float color = 0;
 
@@ -15,5 +19,6 @@ public:
 	virtual void Start() override;
 	virtual void Update() override;
 	virtual void OnDelete() override;
-	virtual void Callback() override;
+
+	void Callback();
 };

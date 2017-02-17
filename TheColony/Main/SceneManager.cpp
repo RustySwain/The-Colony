@@ -1,4 +1,5 @@
 #include "SceneManager.h"
+#include "SceneABC.h"
 
 SceneManager::SceneManager()
 {
@@ -14,12 +15,13 @@ void SceneManager::Start()
 
 void SceneManager::Update()
 {
+	if(flag)
+	{
+		gameObject->RemoveComponent<SceneABC>();
+		flag = false;
+	}
 }
 
 void SceneManager::OnDelete()
-{
-}
-
-void SceneManager::Callback()
 {
 }

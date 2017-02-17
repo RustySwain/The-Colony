@@ -144,6 +144,7 @@
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
+    <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="Interpolator.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
@@ -151,6 +152,7 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="NoiseGenerator.cpp" />
+    <ClCompile Include="SceneABC.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ProgressBar.cpp" />
     <ClCompile Include="Skybox.cpp" />
@@ -175,6 +177,7 @@
     <ClInclude Include="Font.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectManager.h" />
+    <ClInclude Include="GameScene.h" />
     <ClInclude Include="Interpolator.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Macros.h" />
@@ -182,6 +185,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="NoiseGenerator.h" />
+    <ClInclude Include="SceneABC.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="ProgressBar.h" />
     <ClInclude Include="Skybox.h" />

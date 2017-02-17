@@ -5,24 +5,27 @@
 class SceneManager : public Component
 {
 	const unsigned int id = 18;
-
-protected:
-	vector<GameObject*> gameObjects;
-	CallbackFunc func;
+	bool flag = false;
 
 public:
 	SceneManager();
 	~SceneManager();
 
 	// Component
-	virtual const unsigned int GetId() const override { return id; };
-	virtual void Start() override;
-	virtual void Update() override;
-	virtual void OnDelete() override;
-	virtual void LoadFromFile(fstream &_file) override {}
+	const unsigned int GetId() const override { return id; };
+	void Start() override;
+	void Update() override;
+	void OnDelete() override;
+	void LoadFromFile(fstream &_file) override {}
 
-	virtual void Callback();
-
-	// Accessors
-	vector<GameObject*> GetGameObjects() const { return gameObjects; }
+	template <typename T>
+	void LoadScene();
 };
+
+template <typename T>
+void SceneManager::LoadScene()
+{
+	//gameObject->RemoveComponent<T>();
+	gameObject->AddComponent<T>();
+	flag = true;
+}

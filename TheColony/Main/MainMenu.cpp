@@ -4,6 +4,8 @@
 #include "MeshRenderer.h"
 #include "Button.h"
 #include "TextRenderer.h"
+#include "GameScene.h"
+#include "SceneManager.h"
 
 MainMenu::MainMenu()
 {
@@ -15,16 +17,18 @@ MainMenu::~MainMenu()
 
 void MainMenu::Start()
 {
-	SceneManager::Start();
+	SceneABC::Start();
 
 	playButton.Start();
-	playButton.AddComponent<Transform>()->SetLocalPosition(0.5f, 0.1f, 0.1f);
+	playButton.SetTag("Untagged");
+	playButton.AddComponent<Transform>()->SetLocalPosition(-0.25f, -1.3f, 0.1f);
 	playButton.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
 	playButton.AddComponent<UIRenderer>()->SetRect(0.1f, 0.1f, 0.3f, 0.3f);
 	func = [=]() -> void { Callback(); };
 	playButton.AddComponent<Button>()->Subscribe(&func);
 
 	playButtonText.Start();
+	playButtonText.SetTag("Text");
 	playButtonText.AddComponent <Transform>();
 	playButtonText.AddComponent<MeshRenderer>();
 	playButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
@@ -36,18 +40,19 @@ void MainMenu::Start()
 
 void MainMenu::Update()
 {
+	SceneABC::Update();
 	playButton.Update();
 	playButtonText.Update();
 }
 
 void MainMenu::OnDelete()
 {
+	SceneABC::OnDelete();
 	playButton.OnDelete();
 	playButtonText.OnDelete();
 }
 
 void MainMenu::Callback()
 {
-	playButtonText.GetComponent<MeshRenderer>()->SetMeshColor(XMFLOAT4(1, color, color, 1));
-	color = 1 - color;
+	gameObject->GetComponent<SceneManager>()->LoadScene<GameScene>();
 }
