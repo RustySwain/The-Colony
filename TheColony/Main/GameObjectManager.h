@@ -17,11 +17,13 @@ class GameObjectManager : public Component
 	GameObject button;
 	GameObject skybox;
 	GameObject terrain;
-	GameObject scene;
+	//GameObject scene;
+	GameObject box;
 
 	CallbackFunc func;
 
 	float color = 0;
+	float totalTime = 0;
 
 public:
 	GameObjectManager();

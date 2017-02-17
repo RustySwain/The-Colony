@@ -2,6 +2,7 @@
 #include <map>
 #include <vector>
 #include "assert.h"
+#include "fstream"
 
 using namespace std;
 
@@ -15,6 +16,12 @@ class GameObject
 
 	bool started = false;
 	map<unsigned int, vector<Component*>> components;
+
+	static map<unsigned int, GameObject*> gameObjectIds;
+	static map<string, vector<GameObject*>> gameObjectTags;
+
+	static void RegisterMe(GameObject* _go);
+	static void UnRegisterMe(GameObject* _go);
 
 public:
 	GameObject();
@@ -45,6 +52,7 @@ public:
 	bool RemoveComponent();
 
 	static GameObject* FindFromId(unsigned int _id);
+	static vector<GameObject*> FindFromTag(string _str);
 };
 
 template <typename T>

@@ -801,7 +801,8 @@ static HRESULT CreateD3DResources(_In_ ID3D11Device* d3dDevice,
 	_In_ bool isCubeMap,
 	_In_reads_(mipCount*arraySize) D3D11_SUBRESOURCE_DATA* initData,
 	_Out_opt_ ID3D11Resource** texture,
-	_Out_opt_ ID3D11ShaderResourceView** textureView)
+	_Out_opt_ ID3D11ShaderResourceView** textureView,
+	_In_ bool flags)
 {
 	if (!d3dDevice || !initData)
 		return E_POINTER;
@@ -885,9 +886,18 @@ static HRESULT CreateD3DResources(_In_ ID3D11Device* d3dDevice,
 		desc.Format = format;
 		desc.SampleDesc.Count = 1;
 		desc.SampleDesc.Quality = 0;
-		desc.Usage = D3D11_USAGE_DEFAULT;
-		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-		desc.CPUAccessFlags = 0;
+		if (flags)
+			desc.Usage = D3D11_USAGE_DEFAULT;
+		else
+			desc.Usage = D3D11_USAGE_STAGING;
+		if (flags)
+			desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		else
+			desc.BindFlags = 0;
+		if (flags)
+			desc.CPUAccessFlags = 0;
+		else
+			desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
 		desc.MiscFlags = (isCubeMap) ? D3D11_RESOURCE_MISC_TEXTURECUBE : 0;
 
 		ID3D11Texture2D* tex = nullptr;
@@ -1027,7 +1037,8 @@ static HRESULT CreateTextureFromDDS(_In_ ID3D11Device* d3dDevice,
 	_In_ size_t bitSize,
 	_Out_opt_ ID3D11Resource** texture,
 	_Out_opt_ ID3D11ShaderResourceView** textureView,
-	_In_ size_t maxsize)
+	_In_ size_t maxsize,
+	_In_ bool flags)
 {
 	HRESULT hr = S_OK;
 
@@ -1200,7 +1211,7 @@ static HRESULT CreateTextureFromDDS(_In_ ID3D11Device* d3dDevice,
 
 	if (SUCCEEDED(hr))
 	{
-		hr = CreateD3DResources(d3dDevice, resDim, twidth, theight, tdepth, mipCount - skipMip, arraySize, format, isCubeMap, initData.get(), texture, textureView);
+		hr = CreateD3DResources(d3dDevice, resDim, twidth, theight, tdepth, mipCount - skipMip, arraySize, format, isCubeMap, initData.get(), texture, textureView, flags);
 
 		if (FAILED(hr) && !maxsize && (mipCount > 1))
 		{
@@ -1238,7 +1249,7 @@ static HRESULT CreateTextureFromDDS(_In_ ID3D11Device* d3dDevice,
 				twidth, theight, tdepth, skipMip, initData.get());
 			if (SUCCEEDED(hr))
 			{
-				hr = CreateD3DResources(d3dDevice, resDim, twidth, theight, tdepth, mipCount - skipMip, arraySize, format, isCubeMap, initData.get(), texture, textureView);
+				hr = CreateD3DResources(d3dDevice, resDim, twidth, theight, tdepth, mipCount - skipMip, arraySize, format, isCubeMap, initData.get(), texture, textureView, flags);
 			}
 		}
 	}
@@ -1252,7 +1263,8 @@ HRESULT CreateDDSTextureFromMemory(_In_ ID3D11Device* d3dDevice,
 	_In_ size_t ddsDataSize,
 	_Out_opt_ ID3D11Resource** texture,
 	_Out_opt_ ID3D11ShaderResourceView** textureView,
-	_In_ size_t maxsize)
+	_In_ size_t maxsize,
+	_In_ bool flags)
 {
 	if (!d3dDevice || !ddsData || (!texture && !textureView))
 	{
@@ -1304,7 +1316,8 @@ HRESULT CreateDDSTextureFromMemory(_In_ ID3D11Device* d3dDevice,
 		ddsDataSize - offset,
 		texture,
 		textureView,
-		maxsize
+		maxsize,
+		flags
 	);
 
 #if defined(DEBUG) || defined(PROFILE)
@@ -1333,7 +1346,8 @@ HRESULT CreateDDSTextureFromFile(_In_ ID3D11Device* d3dDevice,
 	_In_z_ const wchar_t* fileName,
 	_Out_opt_ ID3D11Resource** texture,
 	_Out_opt_ ID3D11ShaderResourceView** textureView,
-	_In_ size_t maxsize)
+	_In_ size_t maxsize,
+	bool flags)
 {
 	if (!d3dDevice || !fileName || (!texture && !textureView))
 	{
@@ -1362,7 +1376,8 @@ HRESULT CreateDDSTextureFromFile(_In_ ID3D11Device* d3dDevice,
 		bitSize,
 		texture,
 		textureView,
-		maxsize
+		maxsize,
+		flags
 	);
 
 #if defined(DEBUG) || defined(PROFILE)

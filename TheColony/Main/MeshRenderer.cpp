@@ -206,7 +206,7 @@ string MeshRenderer::WriteToString() const
 {
 	string ret = "";
 
-	ret.append(&flags, 0, 1);
+	ret.append((char*)&flags, 0, 1);
 	char* t = (char*)&type;
 	ret.append(t, 0, sizeof(type));
 
@@ -337,6 +337,13 @@ void MeshRenderer::LoadEmissiveMap(const wchar_t* _path)
 	wcstombs_s(&len, tmp, _path, INT_MAX);
 	memcpy_s(&diffusePath[0], 256, tmp, len);
 	flags |= EMISSIVE;
+}
+
+void MeshRenderer::SetDiffuseMap(ID3D11ShaderResourceView* _diffuse)
+{
+	SAFE_RELEASE(diffuseMap);
+	diffuseMap = _diffuse;
+	flags |= DIFFUSE;
 }
 
 void MeshRenderer::SetMeshColor(XMFLOAT4 _rgba) const

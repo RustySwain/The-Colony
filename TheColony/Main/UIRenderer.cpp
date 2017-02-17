@@ -34,6 +34,10 @@ void UIRenderer::OnDelete()
 
 void UIRenderer::LoadFromFile(fstream& _file)
 {
+	_file.read((char*)&top, sizeof(float));
+	_file.read((char*)&left, sizeof(float));
+	_file.read((char*)&height, sizeof(float));
+	_file.read((char*)&width, sizeof(float));
 }
 
 void UIRenderer::LoadFromString(string _str)

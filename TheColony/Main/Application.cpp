@@ -19,6 +19,17 @@ void Application::SortMeshesByDistance()
 	vector<const MeshRenderer*> uiMeshes;
 	for (size_t i = 0; i < renderers.size(); i++)
 	{
+		// find the skybox
+		if (renderers[i]->GetType() == MeshRenderer::SKYBOX)
+		{
+			// put it in the new vector and remove from the old one
+			newMeshes.push_back(renderers[i]);
+			renderers.erase(renderers.begin() + i);
+			break;
+		}
+	}
+	for (size_t i = 0; i < renderers.size(); i++)
+	{
 		// push back all of the opaque objects first. It should be front to back to prevent pixel redraws, but this is plenty efficient for now
 		if (!renderers[i]->GetTransparent())
 		{
@@ -210,15 +221,9 @@ void Application::RegisterMeshRenderer(const MeshRenderer* _mr)
 
 void Application::UnRegisterMeshRenderer(const MeshRenderer* _mr)
 {
-	// this doesn't seem very efficient, but in practice, it works fine
-	for (unsigned int i = 0; i < renderers.size(); i++)
-	{
-		if (renderers[i] == _mr)
-		{
-			renderers.erase(renderers.begin() + i);
-			break;
-		}
-	}
+	auto iter = find(renderers.begin(), renderers.end(), _mr);
+	if (iter != renderers.end())
+		renderers.erase(iter);
 }
 
 void Application::RegisterLight(const Light *_light)
@@ -228,14 +233,9 @@ void Application::RegisterLight(const Light *_light)
 
 void Application::UnregisterLight(const Light *_light)
 {
-	for (size_t i = 0; i < lights.size(); i++)
-	{
-		if (lights[i] == _light)
-		{
-			lights.erase(lights.begin() + i);
-			break;
-		}
-	}
+	auto iter = find(lights.begin(), lights.end(), _light);
+	if (iter != lights.end())
+		lights.erase(iter);
 }
 
 void Application::LoadLevel(const char * _name)
@@ -311,7 +311,7 @@ void Application::Render()
 		if (renderers[i]->GetType() == MeshRenderer::UI)
 			renderers[i]->Render();
 
-	swapChain->Present(0, 0);
+	swapChain->Present(1, 0);
 }
 
 void Application::Shutdown()
