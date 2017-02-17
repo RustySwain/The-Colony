@@ -80,13 +80,13 @@ void CameraController::Update()
 	{
 		if (dx > 0 || newMousePos.x == Application::GetInstance()->GetWindowRect().left)
 		{
-			_cameraOrigin->RotateYPre((Time::Delta() * 100));
-		}
-		if (dx < 0 || newMousePos.x == Application::GetInstance()->GetWindowRect().right - 1)
-		{
 			_cameraOrigin->RotateYPre((Time::Delta() * -100));
 		}
-		//SetCursorPos((int)screenMiddle.x, (int)screenMiddle.y);
+		else if (dx < 0 || newMousePos.x == Application::GetInstance()->GetWindowRect().right - 1)
+		{
+			_cameraOrigin->RotateYPre((Time::Delta() * 100));
+		}
+
 	}
 
 	GetCursorPos(&mP);

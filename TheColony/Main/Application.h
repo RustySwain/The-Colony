@@ -10,11 +10,11 @@
 class Application
 {
 	static Application* instance;
-
+	
 	// Windows
 	HWND* window = nullptr;
 	RECT windowRect;
-
+	
 	// DirectX
 	ID3D11Device* device = nullptr;
 	ID3D11DeviceContext* context = nullptr;
@@ -37,7 +37,7 @@ class Application
 	float backBufferColor[4] = { 0, 1, 1, 1 };
 	unsigned int msCount = 8;
 	unsigned int msQuality = D3D11_STANDARD_MULTISAMPLE_PATTERN;
-
+	XMMATRIX tmp;
 	GameObject gameObjectManager;
 	vector<const MeshRenderer*> renderers;
 	vector<const Light*> lights;

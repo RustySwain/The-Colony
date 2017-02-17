@@ -12,7 +12,7 @@ class GameObject
 	unsigned int id;
 	string name;
 	string tag;
-
+	
 	bool started = false;
 	map<unsigned int, vector<Component*>> components;
 
