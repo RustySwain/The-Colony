@@ -4,8 +4,20 @@ class MainMenu : public SceneManager
 {
 	GameObject playButton;
 	GameObject playButtonText;
+	GameObject optionsButton;
+	GameObject optionsButtonText;
+	GameObject quitButton;
+	GameObject quitButtonText;
 
-	float color = 0;
+	CallbackFunc playClick;
+	CallbackFunc optionsClick;
+	CallbackFunc quitClick;
+
+	float color[3] = {};
+
+	void PlayClick();
+	void OptionsClick();
+	void QuitClick();
 
 public:
 	MainMenu();
@@ -15,5 +27,4 @@ public:
 	virtual void Start() override;
 	virtual void Update() override;
 	virtual void OnDelete() override;
-	virtual void Callback() override;
 };

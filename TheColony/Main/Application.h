@@ -82,7 +82,6 @@ public:
 	void UnregisterLight(const Light* _light);
 
 	GameObjectManager* GetGameObjectManager() { return gameObjectManager.GetComponent<GameObjectManager>(); }
-	void LoadLevel(const char * _name);
 
 	void Init(HWND& _window);
 	void Update() const;

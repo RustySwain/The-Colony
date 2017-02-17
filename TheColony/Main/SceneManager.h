@@ -7,7 +7,6 @@ class SceneManager : public Component
 	const unsigned int id = 18;
 
 protected:
-	vector<GameObject*> gameObjects;
 	CallbackFunc func;
 
 public:
@@ -22,7 +21,4 @@ public:
 	virtual void LoadFromFile(fstream &_file) override {}
 
 	virtual void Callback();
-
-	// Accessors
-	vector<GameObject*> GetGameObjects() const { return gameObjects; }
 };

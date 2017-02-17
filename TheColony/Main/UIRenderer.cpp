@@ -42,7 +42,7 @@ void UIRenderer::LoadFromFile(fstream& _file)
 
 void UIRenderer::SetRect(float _top, float _left, float _height, float _width)
 {
-	top = 1 - _top;
+	top = -_top;
 	left = _left;
 	height = _height;
 	width = _width;

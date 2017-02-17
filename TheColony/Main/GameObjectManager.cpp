@@ -56,7 +56,7 @@ void GameObjectManager::Start()
 	button.SetId(3);
 	button.SetTag("Untagged");
 	button.Start();
-	button.AddComponent<Transform>()->SetLocalPosition(-0.95f, -0.1f, 0.1f);
+	button.AddComponent<Transform>()->SetLocalPosition(-1.0f, 0.8f, 0.1f);
 	button.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
 	button.AddComponent<UIRenderer>()->SetRect(0.1f, 0.1f, 0.3f, 0.3f);
 	func = [=]() -> void { Callback(); };
@@ -71,8 +71,11 @@ void GameObjectManager::Start()
 	text.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
 	text.GetComponent<Transform>()->ScalePost(0.0005f);
 	text.GetComponent<Transform>()->SetParent(button.GetComponent<Transform>());
-	text.GetComponent<Transform>()->SetLocalPosition(0.1f, 0.75f, -0.1f);
+	text.GetComponent<Transform>()->SetLocalPosition(0.105f, -0.3f, -0.1f);
 	text.GetComponent<TextRenderer>()->SetText("Hello, World!");
+
+	button.GetComponent<MeshRenderer>()->SetEnabled(false);
+	text.GetComponent<MeshRenderer>()->SetEnabled(false);
 
 	//Lighting
 	spotLight.SetId(5);
@@ -122,7 +125,7 @@ void GameObjectManager::Start()
 	terrain.AddComponent<Transform>()->SetLocalPosition(-20, -5, -20);
 	terrain.AddComponent<MeshRenderer>();// ->LoadDiffuseMap(L"../Assets/rock.dds");
 	terrain.AddComponent<Terrain>()->SetSize(100, 100);
-	terrain.GetComponent<Terrain>()->SetTextureSize(1000, 1000);
+	terrain.GetComponent<Terrain>()->SetTextureSize(10000, 10000);
 	terrain.GetComponent<Terrain>()->Seed(0);// (unsigned int)time(0));
 	terrain.GetComponent<Terrain>()->SetOctaves(3);
 	terrain.GetComponent<Terrain>()->SetPersistance(1.5f);
@@ -156,6 +159,12 @@ void GameObjectManager::Update()
 
 	for (int i = 0; i < (int)gameObjects.size(); ++i)
 		gameObjects[i]->Update();
+
+	if (GetAsyncKeyState(VK_RETURN))
+	{
+		terrain.GetComponent<Terrain>()->Seed((unsigned int)time(0));
+		terrain.GetComponent<Terrain>()->Generate();
+	}
 
 	// Uncomment the next line for a sweet progress  bar
 	//button.GetComponent<ProgressBar>()->SetRatio(totalTime * 0.1f);
