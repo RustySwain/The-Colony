@@ -222,15 +222,9 @@ void Application::RegisterMeshRenderer(const MeshRenderer* _mr)
 
 void Application::UnRegisterMeshRenderer(const MeshRenderer* _mr)
 {
-	// this doesn't seem very efficient, but in practice, it works fine
-	for (unsigned int i = 0; i < renderers.size(); i++)
-	{
-		if (renderers[i] == _mr)
-		{
-			renderers.erase(renderers.begin() + i);
-			break;
-		}
-	}
+	auto iter = find(renderers.begin(), renderers.end(), _mr);
+	if (iter != renderers.end())
+		renderers.erase(iter);
 }
 
 void Application::RegisterLight(const Light *_light)
@@ -240,14 +234,9 @@ void Application::RegisterLight(const Light *_light)
 
 void Application::UnregisterLight(const Light *_light)
 {
-	for (size_t i = 0; i < lights.size(); i++)
-	{
-		if (lights[i] == _light)
-		{
-			lights.erase(lights.begin() + i);
-			break;
-		}
-	}
+	auto iter = find(lights.begin(), lights.end(), _light);
+	if (iter != lights.end())
+		lights.erase(iter);
 }
 
 void Application::CreateBuffer(D3D11_BUFFER_DESC* _bData, D3D11_SUBRESOURCE_DATA* _subData, ID3D11Buffer** _buffer) const
