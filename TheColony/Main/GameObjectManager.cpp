@@ -12,6 +12,8 @@
 #include "Animator.h"
 #include "Terrain.h"
 #include <ctime>
+#include "SceneManager.h"
+#include "MainMenu.h"
 
 GameObjectManager::GameObjectManager()
 {
@@ -23,6 +25,8 @@ GameObjectManager::~GameObjectManager()
 
 void GameObjectManager::Start()
 {
+	scene.AddComponent<MainMenu>();
+
 	cube.Start();
 	cube.AddComponent<Transform>();
 	cube.AddComponent<MeshRenderer>()->LoadFromObj("../Assets/cube.obj");
@@ -83,14 +87,6 @@ void GameObjectManager::Start()
 	pointLight.GetComponent<Light>()->SetExtra(XMFLOAT4(3, 0, 0, 1));
 	pointLight.GetComponent<Light>()->type = Light::POINT;
 
-	// Test Objects
-	//teddy.AddComponent<PrefabLoader>()->Load("../Assets/Prefabs/Teddy.prefab");
-	//teddy.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Teddy.dds");
-	box.AddComponent<PrefabLoader>()->Load("../Assets/Prefabs/Box.prefab");
-	//box.GetComponent<MeshRenderer>()->SetTransparent(true);
-	box.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box.dds");
-	//box.GetComponent<Animator>()->Play("Box_Idle");
-
 	// Terrain
 	terrain.Start();
 	terrain.AddComponent<Transform>()->SetLocalPosition(-20, -5, -20);
@@ -98,7 +94,6 @@ void GameObjectManager::Start()
 	terrain.AddComponent<Terrain>()->SetSize(100, 100);
 	terrain.GetComponent<Terrain>()->Seed((unsigned int)time(0));
 	terrain.GetComponent<Terrain>()->SetOctaves(3);
-	//terrain.GetComponent<Terrain>()->SetScale(0.3f);
 	terrain.GetComponent<Terrain>()->SetPersistance(1.5f);
 	terrain.GetComponent<Terrain>()->SetLacunarity(0.1f);
 	terrain.GetComponent<Terrain>()->Generate();
@@ -127,10 +122,10 @@ void GameObjectManager::Update()
 	if (GetAsyncKeyState('L'))
 		dirLight.GetComponent<Transform>()->RotateYPost(Time::Delta() * 180.0f);
 
-	if (GetAsyncKeyState(VK_RIGHT) & 0x1)
-		box.GetComponent<Animator>()->NextFrame();
-	if (GetAsyncKeyState(VK_LEFT) & 0x1)
-		box.GetComponent<Animator>()->PreviousFrame();
+	for (int i = 0; i < (int)gameObjects.size(); ++i)
+		gameObjects[i]->Update();
+
+	scene.Update();
 
 	cube.Update();
 	text.Update();
@@ -140,14 +135,19 @@ void GameObjectManager::Update()
 	dirLight.Update();
 	skybox.Update();
 	pointLight.Update();
-
-	teddy.Update();
-	box.Update();
 	terrain.Update();
 }
 
 void GameObjectManager::OnDelete()
 {
+	for(int i = 0; i < (int)gameObjects.size(); ++i)
+	{
+		gameObjects[i]->OnDelete();
+		delete gameObjects[i];
+	}
+
+	scene.OnDelete();
+
 	cube.OnDelete();
 	text.OnDelete();
 	cam.OnDelete();
@@ -156,9 +156,6 @@ void GameObjectManager::OnDelete()
 	dirLight.OnDelete();
 	pointLight.OnDelete();
 	skybox.OnDelete();
-
-	teddy.OnDelete();
-	box.OnDelete();
 	terrain.OnDelete();
 }
 

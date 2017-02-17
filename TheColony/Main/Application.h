@@ -4,6 +4,7 @@
 #include "MeshRenderer.h"
 #include "Camera.h"
 #include "Light.h"
+#include "GameObjectManager.h"
 
 #pragma comment(lib, "d3d11.lib")
 
@@ -76,6 +77,9 @@ public:
 
 	void RegisterLight(const Light* _light);
 	void UnregisterLight(const Light* _light);
+
+	GameObjectManager* GetGameObjectManager() { return gameObjectManager.GetComponent<GameObjectManager>(); }
+	void LoadLevel(const char * _name);
 
 	void Init(HWND& _window);
 	void Update() const;

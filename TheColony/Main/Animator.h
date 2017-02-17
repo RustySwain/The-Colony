@@ -3,7 +3,6 @@
 #include "Animation.h"
 #include "BindPose.h"
 #include "Interpolator.h"
-#include <d3d11.h>
 
 class Animator : public Component
 {
@@ -12,13 +11,7 @@ class Animator : public Component
 	vector<Animation> animations;
 	BindPose* bindPose;
 	int defaultAnimation;
-	ID3D11Buffer *jointsBuffer = nullptr;
 	Interpolator *interpolator;
-
-	// Debug
-	int currKeyframe = 3;
-	int currAnimation = 0;
-	vector<GameObject*> spheres;
 
 public:
 	Animator();
@@ -37,9 +30,9 @@ public:
 	bool AddBindPose(BindPose * _bindPose);
 	bool Play(const string _animationName);
 	bool Play(int _animationIndex);
-	void LoadSpheres();
-	void NextFrame();
-	void PreviousFrame();
+	void LoadSpheres() const;
+	void NextFrame() const;
+	void PreviousFrame() const;
 
 	// Accessors
 	Animation GetAnimation(int _index);

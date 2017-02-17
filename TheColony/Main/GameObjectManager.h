@@ -6,6 +6,8 @@
 class GameObjectManager : public Component
 {
 	const unsigned int id = 5;
+	vector<GameObject*> gameObjects;
+
 	GameObject cube;
 	GameObject cam;
 	GameObject spotLight;
@@ -15,9 +17,7 @@ class GameObjectManager : public Component
 	GameObject button;
 	GameObject skybox;
 	GameObject terrain;
-
-	// Test objects
-	GameObject teddy, box;
+	GameObject scene;
 
 	CallbackFunc func;
 
@@ -35,6 +35,8 @@ public:
 	virtual void LoadFromFile(fstream &_file) override;
 	virtual void LoadFromString(string _str) override;
 	virtual string WriteToString() const override;
+
+	vector<GameObject*>& GameObjects() { return gameObjects; }
 
 	void Callback();
 };

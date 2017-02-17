@@ -25,9 +25,10 @@ public:
 	void OnDelete();
 
 	// Accessors
-	const unsigned int GetId() const { return id; }
-	const string GetName() const { return name; }
-	const string GetTag() const { return tag; }
+	unsigned int GetId() const { return id; }
+	string GetName() const { return name; }
+	string GetTag() const { return tag; }
+	int GetComponentsSize() const { return (int)components.size(); }
 
 	// Mutators
 	void SetId(unsigned int _id) { id = _id; }

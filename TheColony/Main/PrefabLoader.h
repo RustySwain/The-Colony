@@ -23,4 +23,5 @@ public:
 	virtual string WriteToString() const override;
 
 	void Load(string _path);
+	void LoadComponent(int _component, fstream &_file);
 };
