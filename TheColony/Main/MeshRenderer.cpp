@@ -206,7 +206,7 @@ string MeshRenderer::WriteToString() const
 {
 	string ret = "";
 
-	ret.append(&flags, 0, 1);
+	ret.append((char*)&flags, 0, 1);
 	char* t = (char*)&type;
 	ret.append(t, 0, sizeof(type));
 

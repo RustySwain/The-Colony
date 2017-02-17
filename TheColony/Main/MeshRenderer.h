@@ -22,7 +22,7 @@ class MeshRenderer : public Component
 	enum Flags { INIT = 1, TRANSPRENT = 2, DYNAMIC = 4, HAS_MESH = 8, DIFFUSE = 16, NORMAL = 32, SPECULAR = 64, EMISSIVE = 128 };
 	const unsigned int id = 6;
 
-	char flags = 0;
+	unsigned int flags = 0;
 
 	PerModelVertexData cBufferData;
 	Mesh* mesh = nullptr;
