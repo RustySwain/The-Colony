@@ -1,26 +1,32 @@
 #pragma once
 #include "Animation.h"
-#include "Time.h"
+#include "GameObject.h"
+#include <d3d11.h>
 
 class Interpolator
 {
 	Animation animation;
-	Time currTime;
+	float currTime;
 	int currFrame;
-	std::vector<Joint> world;
+	ID3D11Buffer *jointsBuffer = nullptr;
 
 public:
 	Interpolator();
 	~Interpolator(){}
 
+	void Start();
 	void Update();
+	void OnDelete();
+	int& CurrentFrame() { return currFrame; }
+
+	// Debug
+	vector<GameObject*> spheres;
 
 	// Accessors
-	Joint GetCurrentWorld(int _index);
-	Time GetTime() const { return currTime; }
-	int GetCurrFrame() const { return currFrame; }
+	float GetTime() const { return currTime; }
+	Animation GetAnimation() const { return animation; }
 
 	// Mutators
 	void SetAnimation(const Animation _animations);
-	void SetTime(Time _time);
+	void SetTime(float _time);
 };

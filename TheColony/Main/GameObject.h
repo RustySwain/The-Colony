@@ -2,6 +2,7 @@
 #include <map>
 #include <vector>
 #include "assert.h"
+#include "fstream"
 
 using namespace std;
 
@@ -16,6 +17,12 @@ class GameObject
 	bool started = false;
 	map<unsigned int, vector<Component*>> components;
 
+	static map<unsigned int, GameObject*> gameObjectIds;
+	static map<string, vector<GameObject*>> gameObjectTags;
+
+	static void RegisterMe(GameObject* _go);
+	static void UnRegisterMe(GameObject* _go);
+
 public:
 	GameObject();
 	~GameObject();
@@ -25,9 +32,10 @@ public:
 	void OnDelete();
 
 	// Accessors
-	const unsigned int GetId() const { return id; }
-	const string GetName() const { return name; }
-	const string GetTag() const { return tag; }
+	unsigned int GetId() const { return id; }
+	string GetName() const { return name; }
+	string GetTag() const { return tag; }
+	int GetComponentsSize() const { return (int)components.size(); }
 
 	// Mutators
 	void SetId(unsigned int _id) { id = _id; }
@@ -44,6 +52,7 @@ public:
 	bool RemoveComponent();
 
 	static GameObject* FindFromId(unsigned int _id);
+	static vector<GameObject*> FindFromTag(string _str);
 };
 
 template <typename T>
@@ -131,6 +140,4 @@ public:
 	virtual void Update() = 0;
 	virtual void OnDelete() = 0;
 	virtual void LoadFromFile(fstream &file) = 0;
-	virtual void LoadFromString(string _str) = 0;
-	virtual string WriteToString() const = 0;
 };

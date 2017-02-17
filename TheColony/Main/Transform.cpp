@@ -21,7 +21,6 @@ void Transform::Update()
 
 void Transform::OnDelete()
 {
-	
 }
 
 void Transform::LoadFromFile(fstream &_file)
@@ -45,20 +44,6 @@ void Transform::LoadFromFile(fstream &_file)
 	float scale;
 	_file.read((char*)&scale, sizeof(float));
 	ScalePre(scale);
-}
-
-void Transform::LoadFromString(string _str)
-{
-}
-
-string Transform::WriteToString() const
-{
-	string ret = "";
-	ret += (char*)&localMatrix;
-	unsigned int id = gameObject->GetId();
-	ret += (char*)&id;
-	ret += (char*)&scale;
-	return ret;
 }
 
 void Transform::RotateXPre(float _angle)

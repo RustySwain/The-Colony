@@ -4,6 +4,7 @@
 #include "MeshRenderer.h"
 #include "Camera.h"
 #include "Light.h"
+#include "GameObjectManager.h"
 
 #pragma comment(lib, "d3d11.lib")
 
@@ -71,11 +72,17 @@ public:
 	ID3D11VertexShader* GetVSMesh() const { return vsMesh; };
 	ID3D11VertexShader* GetVSUI() const { return vsUI; };
 
+	unsigned int GetSampleCount() const { return msCount; };
+	unsigned int GetSampleQuality() const { return msQuality; };
+
 	void RegisterMeshRenderer(const MeshRenderer* _mr);
 	void UnRegisterMeshRenderer(const MeshRenderer* _mr);
 
 	void RegisterLight(const Light* _light);
 	void UnregisterLight(const Light* _light);
+
+	GameObjectManager* GetGameObjectManager() { return gameObjectManager.GetComponent<GameObjectManager>(); }
+	void LoadLevel(const char * _name);
 
 	void Init(HWND& _window);
 	void Update() const;

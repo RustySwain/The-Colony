@@ -19,8 +19,6 @@ public:
 	virtual void Update() override;
 	virtual void OnDelete() override;
 	virtual void LoadFromFile(fstream &_file) override;
-	virtual void LoadFromString(string _str) override;
-	virtual string WriteToString() const override;
 
 	void SetRect(float _top, float _left, float _height, float _width);
 	DirectX::XMFLOAT4 GetRect() const;

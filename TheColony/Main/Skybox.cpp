@@ -31,12 +31,3 @@ void Skybox::OnDelete()
 void Skybox::LoadFromFile(fstream& _file)
 {
 }
-
-void Skybox::LoadFromString(string _str)
-{
-}
-
-string Skybox::WriteToString() const
-{
-	return "";
-}

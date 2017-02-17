@@ -78,12 +78,3 @@ void Camera::LoadFromFile(fstream &_file)
 	SetNearPlane(nearPlane);
 	SetFov(FOV);
 }
-
-void Camera::LoadFromString(string _str)
-{
-}
-
-string Camera::WriteToString() const
-{
-	return string();
-}

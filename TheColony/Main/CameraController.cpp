@@ -42,7 +42,7 @@ void CameraController::Update()
 	{
 		if (scrollUpCount > 0)
 		{
-			transform->TranslatePre(XMFLOAT3(0, 0, -speed* 10));
+			transform->TranslatePre(XMFLOAT3(0, 0, -speed * 10));
 			scrollUpCount--;
 		}
 		else
@@ -70,7 +70,6 @@ void CameraController::Update()
 	XMFLOAT4X4 f;
 	XMStoreFloat4x4(&f, translated);
 	XMFLOAT3 pos(f.m[3][0], f.m[3][1], f.m[3][2]);
-
 
 	// rotate based on mouse movement
 	float dx = (prevFrameMousePos.x - newMousePos.x) * 0.5f;
@@ -102,18 +101,8 @@ void CameraController::LoadFromFile(fstream & _file)
 {
 }
 
-void CameraController::LoadFromString(string _str)
-{
-}
-
-string CameraController::WriteToString() const
-{
-	return string();
-}
-
 float CameraController::lerp(float point1, float point2, float alpha)
 {
-
 	return point1 + alpha * (point2 - point1);
 }
 

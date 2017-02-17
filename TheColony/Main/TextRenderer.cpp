@@ -29,15 +29,6 @@ void TextRenderer::LoadFromFile(fstream & _file)
 {
 }
 
-void TextRenderer::LoadFromString(string _str)
-{
-}
-
-string TextRenderer::WriteToString() const
-{
-	return "";
-}
-
 bool TextRenderer::SetFont(const char* _sheetPath, const wchar_t* _texPath)
 {
 	if (font) delete font;

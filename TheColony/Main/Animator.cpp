@@ -12,32 +12,19 @@ Animator::Animator()
 
 void Animator::Start()
 {
-	D3D11_BUFFER_DESC bDesc;
-	ZMem(bDesc);
-	bDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	bDesc.ByteWidth = sizeof(Animation::JointsBuffer);
-
-	Application::GetInstance()->GetDevice()->CreateBuffer(&bDesc, nullptr, &jointsBuffer);
 }
 
 void Animator::Update()
 {
-	for (int i = 0; i < (int)spheres.size(); ++i)
-		spheres[i]->Update();
+	interpolator->Update();
 }
 
 void Animator::OnDelete()
 {
-	for (int i = 0; i < (int)spheres.size(); ++i)
-	{
-		spheres[i]->OnDelete();
-		delete spheres[i];
-	}
+	interpolator->OnDelete();
 
 	delete bindPose;
 	delete interpolator;
-
-	SAFE_RELEASE(jointsBuffer);
 }
 
 void Animator::LoadFromFile(fstream & _file)
@@ -60,7 +47,6 @@ void Animator::LoadFromFile(fstream & _file)
 	}
 	_file.read((char*)&defaultAnimation, sizeof(int));
 	LoadSpheres();
-	int i = 0;
 }
 
 bool Animator::AddAnimation(const char * _path)
@@ -96,7 +82,7 @@ bool Animator::AddAnimation(const char * _path)
 			file.read((char*)&joint.parentIndex, sizeof(int));
 
 			// Joint world matrix
-			DirectX::XMFLOAT4X4 world;
+			XMFLOAT4X4 world;
 			for (int x = 0; x < 4; ++x)
 			{
 				for (int y = 0; y < 4; ++y)
@@ -109,9 +95,9 @@ bool Animator::AddAnimation(const char * _path)
 			joints.push_back(joint);
 
 			// Inverse Matrix
-			DirectX::XMMATRIX world2;
+			XMMATRIX world2;
 			world2 = XMLoadFloat4x4(&world);
-			DirectX::XMMATRIX invWorld;
+			XMMATRIX invWorld;
 			invWorld = XMMatrixInverse(nullptr, world2);
 			invWorlds.push_back(invWorld);
 		}
@@ -215,21 +201,36 @@ bool Animator::Play(int _animationIndex)
 	return false;
 }
 
-void Animator::LoadSpheres()
+void Animator::LoadSpheres() const
 {
 	int totalJoints = bindPose->GetNumOfJoints();
 	for(int i = 0; i < totalJoints; ++i)
 	{
 		GameObject* sphere = new GameObject();
-		//sphere->AddComponent<MeshRenderer>()->LoadFromObj("../Assets/sphere.obj");
 		sphere->AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/sphere.mesh");
 		sphere->GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/SphereTex.dds");
-		//sphere->GetComponent<MeshRenderer>()->SetDynamic(true);
+		sphere->GetComponent<MeshRenderer>()->SetDynamic(true);
 		sphere->AddComponent<Transform>()->SetLocalMatrix(bindPose->GetBindPose()[i]);
 		sphere->GetComponent<Transform>()->SetParent(gameObject->GetComponent<Transform>());
 		sphere->GetComponent<Transform>()->ScalePre(0.3f);
-		spheres.push_back(sphere);
+		interpolator->spheres.push_back(sphere);
 	}
+}
+
+void Animator::NextFrame() const
+{
+	if (interpolator->CurrentFrame() == interpolator->GetAnimation().GetJoints()[0].keyFrames.size() - 1)
+		interpolator->CurrentFrame() = 3;
+	else
+		interpolator->CurrentFrame() += 1;
+}
+
+void Animator::PreviousFrame() const
+{
+	if (interpolator->CurrentFrame() == 3)
+		interpolator->CurrentFrame() = (int)interpolator->GetAnimation().GetJoints()[0].keyFrames.size() - 1;
+	else
+		interpolator->CurrentFrame() -= 1;
 }
 
 Animation Animator::GetAnimation(int _index)

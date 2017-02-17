@@ -139,110 +139,6 @@ void MeshRenderer::LoadFromFile(fstream & _file)
 	delete[] mesh;
 }
 
-void MeshRenderer::LoadFromString(string _str)
-{
-	unsigned int offset = 0;
-
-	// other members
-	flags = _str[offset];
-	offset += sizeof(bool);
-	char t = *(char*)&_str[offset];
-	type = (Type)t;
-	offset += sizeof(char);
-
-	unsigned int length = 0;
-
-	if (flags & MESH)
-	{
-		length = *(char*)&_str[offset];
-		offset += sizeof(char);
-		memcpy_s(meshPath, 256, &_str[offset], length);
-		offset += length;
-	}
-	if (flags & DIFFUSE)
-	{
-		length = *(char*)&_str[offset];
-		offset += sizeof(char);
-		memcpy_s(diffusePath, 256, &_str[offset], length);
-		offset += length;
-	}
-
-	if (flags & NORMAL)
-	{
-		length = *(char*)&_str[offset];
-		offset += sizeof(char);
-		memcpy_s(normalPath, 256, &_str[offset], length);
-		offset += length;
-	}
-
-	if (flags & SPECULAR)
-	{
-		length = *(char*)&_str[offset];
-		offset += sizeof(char);
-		memcpy_s(specularPath, 256, &_str[offset], length);
-		offset += length;
-	}
-
-	if (flags & EMISSIVE)
-	{
-		length = *(char*)&_str[offset];
-		offset += sizeof(char);
-		memcpy_s(emissivePath, 256, &_str[offset], length);
-	}
-
-	if (strlen(meshPath))
-		LoadFromObj(meshPath);
-	if (strlen(diffusePath))
-		LoadDiffuseMap((wchar_t*)diffusePath);
-	if (strlen(normalPath))
-		LoadNormalMap((wchar_t*)normalPath);
-	if (strlen(specularPath))
-		LoadSpecularMap((wchar_t*)specularPath);
-	if (strlen(emissivePath))
-		LoadEmissiveMap((wchar_t*)emissivePath);
-}
-
-string MeshRenderer::WriteToString() const
-{
-	string ret = "";
-
-	ret.append(&flags, 0, 1);
-	char* t = (char*)&type;
-	ret.append(t, 0, sizeof(type));
-
-	if (flags & HAS_MESH)
-	{
-		size_t length = strlen(meshPath);
-		ret.append((char*)&length);
-		ret.append(meshPath);
-	}
-	if (flags & DIFFUSE)
-	{
-		size_t length = strlen(diffusePath);
-		ret.append((char*)&length);
-		ret.append(diffusePath);
-	}
-	if (flags & NORMAL)
-	{
-		size_t length = strlen(normalPath);
-		ret.append((char*)&length);
-		ret.append(normalPath);
-	}
-	if (flags & SPECULAR)
-	{
-		size_t length = strlen(specularPath);
-		ret.append((char*)&length);
-		ret.append(specularPath);
-	}
-	if (flags & EMISSIVE)
-	{
-		size_t length = strlen(emissivePath);
-		ret.append((char*)&length);
-		ret.append(emissivePath);
-	}
-	return ret;
-}
-
 void MeshRenderer::AddInstance(XMMATRIX _mat, int _key)
 {
 	PerInstanceVertexData pivd;
@@ -337,6 +233,13 @@ void MeshRenderer::LoadEmissiveMap(const wchar_t* _path)
 	wcstombs_s(&len, tmp, _path, INT_MAX);
 	memcpy_s(&diffusePath[0], 256, tmp, len);
 	flags |= EMISSIVE;
+}
+
+void MeshRenderer::SetDiffuseMap(ID3D11ShaderResourceView* _diffuse)
+{
+	SAFE_RELEASE(diffuseMap);
+	diffuseMap = _diffuse;
+	flags |= DIFFUSE;
 }
 
 void MeshRenderer::SetMeshColor(XMFLOAT4 _rgba) const

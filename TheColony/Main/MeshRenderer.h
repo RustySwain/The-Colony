@@ -22,7 +22,7 @@ class MeshRenderer : public Component
 	enum Flags { INIT = 1, TRANSPRENT = 2, DYNAMIC = 4, HAS_MESH = 8, DIFFUSE = 16, NORMAL = 32, SPECULAR = 64, EMISSIVE = 128 };
 	const unsigned int id = 6;
 
-	char flags = 0;
+	unsigned int flags = 0;
 
 	PerModelVertexData cBufferData;
 	Mesh* mesh = nullptr;
@@ -61,8 +61,6 @@ public:
 	virtual void Update() override;
 	virtual void OnDelete() override;
 	virtual void LoadFromFile(fstream &_file) override;
-	virtual void LoadFromString(string _str) override;
-	virtual string WriteToString() const override;
 
 	// Accessors/Mutators
 	Type GetType() const { return type; };
@@ -94,6 +92,7 @@ public:
 	void LoadNormalMap(const wchar_t* _path);
 	void LoadSpecularMap(const wchar_t* _path);
 	void LoadEmissiveMap(const wchar_t* _path);
+	void SetDiffuseMap(ID3D11ShaderResourceView* _diffuse);
 	void SetMeshColor(XMFLOAT4 _rgba) const;
 	void Render() const;
 
