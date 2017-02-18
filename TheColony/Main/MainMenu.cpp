@@ -6,24 +6,109 @@
 #include "TextRenderer.h"
 #include "GameScene.h"
 #include "SceneManager.h"
+#include "Time.h"
 
 void MainMenu::PlayClick()
 {
-	playButtonText.GetComponent<MeshRenderer>()->SetMeshColor(XMFLOAT4(1, color[0], color[0], 1));
-	color[0] = 1 - color[0];
-	gameObject->GetComponent<SceneManager>()->LoadScene<GameScene>();
+	playParent.SetEnabled(true);
+	newGameButton.SetEnabled(true);
+	newGameButtonText.SetEnabled(true);
+	playBackButton.SetEnabled(true);
+	playBackButtonText.SetEnabled(true);
+	playButton.GetComponent<Button>()->SetEnabled(false);
+	optionsButton.GetComponent<Button>()->SetEnabled(false);
+	quitButton.GetComponent<Button>()->SetEnabled(false);
+	Gray(&playButton);
+	Gray(&playButtonText);
+	Gray(&optionsButton);
+	Gray(&optionsButtonText);
+	Gray(&quitButton);
+	Gray(&quitButtonText);
 }
 
 void MainMenu::OptionsClick()
 {
-	optionsButtonText.GetComponent<MeshRenderer>()->SetMeshColor(XMFLOAT4(1, color[1], color[1], 1));
-	color[1] = 1 - color[1];
+	optionsParent.SetEnabled(true);
+	graphicsButton.SetEnabled(true);
+	graphicsButtonText.SetEnabled(true);
+	audioButton.SetEnabled(true);
+	audioButtonText.SetEnabled(true);
+	optionsBackButton.SetEnabled(true);
+	optionsBackButtonText.SetEnabled(true);
+	playButton.GetComponent<Button>()->SetEnabled(false);
+	optionsButton.GetComponent<Button>()->SetEnabled(false);
+	quitButton.GetComponent<Button>()->SetEnabled(false);
+	Gray(&playButton);
+	Gray(&playButtonText);
+	Gray(&optionsButton);
+	Gray(&optionsButtonText);
+	Gray(&quitButton);
+	Gray(&quitButtonText);
 }
 
 void MainMenu::QuitClick()
 {
-	quitButtonText.GetComponent<MeshRenderer>()->SetMeshColor(XMFLOAT4(1, color[2], color[2], 1));
-	color[2] = 1 - color[2];
+}
+
+void MainMenu::NewGameClick()
+{
+	gameObject->GetComponent<SceneManager>()->LoadScene<GameScene>();
+}
+
+void MainMenu::PlayBackClick()
+{
+	playParent.SetEnabled(false);
+	newGameButton.SetEnabled(false);
+	newGameButtonText.SetEnabled(false);
+	playBackButton.SetEnabled(false);
+	playBackButtonText.SetEnabled(false);
+	playButton.GetComponent<Button>()->SetEnabled(true);
+	optionsButton.GetComponent<Button>()->SetEnabled(true);
+	quitButton.GetComponent<Button>()->SetEnabled(true);
+	White(&playButton);
+	White(&playButtonText);
+	White(&optionsButton);
+	White(&optionsButtonText);
+	White(&quitButton);
+	White(&quitButtonText);
+}
+
+void MainMenu::GraphicsClick()
+{
+}
+
+void MainMenu::AudioClick()
+{
+}
+
+void MainMenu::OptionsBackClick()
+{
+	optionsParent.SetEnabled(false);
+	graphicsButton.SetEnabled(false);
+	graphicsButtonText.SetEnabled(false);
+	audioButton.SetEnabled(false);
+	audioButtonText.SetEnabled(false);
+	optionsBackButton.SetEnabled(false);
+	optionsBackButtonText.SetEnabled(false);
+	playButton.GetComponent<Button>()->SetEnabled(true);
+	optionsButton.GetComponent<Button>()->SetEnabled(true);
+	quitButton.GetComponent<Button>()->SetEnabled(true);
+	White(&playButton);
+	White(&playButtonText);
+	White(&optionsButton);
+	White(&optionsButtonText);
+	White(&quitButton);
+	White(&quitButtonText);
+}
+
+void MainMenu::White(GameObject* _go)
+{
+	_go->GetComponent<MeshRenderer>()->SetMeshColor(XMFLOAT4(1, 1, 1, 1));
+}
+
+void MainMenu::Gray(GameObject* _go)
+{
+	_go->GetComponent<MeshRenderer>()->SetMeshColor(XMFLOAT4(0.5f, 0.5f, 0.5f, 1));
 }
 
 MainMenu::MainMenu()
@@ -36,9 +121,16 @@ MainMenu::~MainMenu()
 
 void MainMenu::Start()
 {
+	// Main Parent
+	mainParent.Start();
+	mainParent.AddComponent<Transform>()->SetLocalPosition(-0.75f, 0, 0.5f);
+	mainParent.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/frame.dds");
+	mainParent.AddComponent<UIRenderer>()->SetRect(0.1f, -0.3f, 0.9f, 0.6f);
+
 	// Play
 	playButton.Start();
-	playButton.AddComponent<Transform>()->SetLocalPosition(0, 0, 0.1f);
+	playButton.AddComponent<Transform>()->SetLocalPosition(0, 0, -0.1f);
+	playButton.GetComponent<Transform>()->SetParent(mainParent.GetComponent<Transform>());
 	playButton.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
 	playButton.AddComponent<UIRenderer>()->SetRect(0.2f, -0.2f, 0.2f, 0.4f);
 	playClick = [=]() -> void { PlayClick(); };
@@ -56,7 +148,8 @@ void MainMenu::Start()
 
 	// Options
 	optionsButton.Start();
-	optionsButton.AddComponent<Transform>()->SetLocalPosition(0, -0.25f, 0.1f);
+	optionsButton.AddComponent<Transform>()->SetLocalPosition(0, -0.25f, -0.1f);
+	optionsButton.GetComponent<Transform>()->SetParent(mainParent.GetComponent<Transform>());
 	optionsButton.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
 	optionsButton.AddComponent<UIRenderer>()->SetRect(0.2f, -0.2f, 0.2f, 0.4f);
 	optionsClick = [=]() -> void { OptionsClick(); };
@@ -73,7 +166,8 @@ void MainMenu::Start()
 
 	// Quit
 	quitButton.Start();
-	quitButton.AddComponent<Transform>()->SetLocalPosition(0, -0.5f, 0.1f);
+	quitButton.AddComponent<Transform>()->SetLocalPosition(0, -0.5f, -0.1f);
+	quitButton.GetComponent<Transform>()->SetParent(mainParent.GetComponent<Transform>());
 	quitButton.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
 	quitButton.AddComponent<UIRenderer>()->SetRect(0.2f, -0.2f, 0.2f, 0.4f);
 	quitClick = [=]() -> void { QuitClick(); };
@@ -87,27 +181,179 @@ void MainMenu::Start()
 	quitButtonText.GetComponent<Transform>()->SetParent(quitButton.GetComponent<Transform>());
 	quitButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.35f, -0.1f);
 	quitButtonText.GetComponent<TextRenderer>()->SetText("Quit");
+
+	// Play Parent
+	playParent.Start();
+	playParent.AddComponent<Transform>()->SetLocalPosition(0.75f, 0, 0.5f);
+	playParent.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/frame.dds");
+	playParent.AddComponent<UIRenderer>()->SetRect(0.1f, -0.3f, 0.9f, 0.6f);
+	playParent.SetEnabled(false);
+
+	// New Game
+	newGameButton.Start();
+	newGameButton.AddComponent<Transform>()->SetLocalPosition(0, 0, -0.1f);
+	newGameButton.GetComponent<Transform>()->SetParent(playParent.GetComponent<Transform>());
+	newGameButton.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
+	newGameButton.AddComponent<UIRenderer>()->SetRect(0.2f, -0.2f, 0.2f, 0.4f);
+	newGameClick = [=]() -> void { NewGameClick(); };
+	newGameButton.AddComponent<Button>()->Subscribe(&newGameClick);
+	newGameButton.SetEnabled(false);
+
+	newGameButtonText.Start();
+	newGameButtonText.SetTag("Text");
+	newGameButtonText.AddComponent <Transform>();
+	newGameButtonText.AddComponent<MeshRenderer>();
+	newGameButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
+	newGameButtonText.GetComponent<Transform>()->ScalePost(0.0005f);
+	newGameButtonText.GetComponent<Transform>()->SetParent(newGameButton.GetComponent<Transform>());
+	newGameButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.35f, -0.1f);
+	newGameButtonText.GetComponent<TextRenderer>()->SetText("New Game");
+	newGameButtonText.SetEnabled(false);
+
+	// Play Back
+	playBackButton.Start();
+	playBackButton.AddComponent<Transform>()->SetLocalPosition(0, -0.25f, -0.1f);
+	playBackButton.GetComponent<Transform>()->SetParent(playParent.GetComponent<Transform>());
+	playBackButton.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
+	playBackButton.AddComponent<UIRenderer>()->SetRect(0.2f, -0.2f, 0.2f, 0.4f);
+	playBackClick = [=]() -> void { PlayBackClick(); };
+	playBackButton.AddComponent<Button>()->Subscribe(&playBackClick);
+	playBackButton.SetEnabled(false);
+
+	playBackButtonText.Start();
+	playBackButtonText.SetTag("Text");
+	playBackButtonText.AddComponent <Transform>();
+	playBackButtonText.AddComponent<MeshRenderer>();
+	playBackButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
+	playBackButtonText.GetComponent<Transform>()->ScalePost(0.0005f);
+	playBackButtonText.GetComponent<Transform>()->SetParent(playBackButton.GetComponent<Transform>());
+	playBackButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.35f, -0.1f);
+	playBackButtonText.GetComponent<TextRenderer>()->SetText("Back");
+	playBackButtonText.SetEnabled(false);
+
+	// Options Parent
+	optionsParent.Start();
+	optionsParent.AddComponent<Transform>()->SetLocalPosition(0.75f, 0, 0.5f);
+	optionsParent.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/frame.dds");
+	optionsParent.AddComponent<UIRenderer>()->SetRect(0.1f, -0.3f, 0.9f, 0.6f);
+	optionsParent.SetEnabled(false);
+
+	// Graphics
+	graphicsButton.Start();
+	graphicsButton.AddComponent<Transform>()->SetLocalPosition(0, 0, -0.1f);
+	graphicsButton.GetComponent<Transform>()->SetParent(optionsParent.GetComponent<Transform>());
+	graphicsButton.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
+	graphicsButton.AddComponent<UIRenderer>()->SetRect(0.2f, -0.2f, 0.2f, 0.4f);
+	graphicsClick = [=]() -> void { GraphicsClick(); };
+	graphicsButton.AddComponent<Button>()->Subscribe(&graphicsClick);
+	graphicsButton.SetEnabled(false);
+
+	graphicsButtonText.Start();
+	graphicsButtonText.SetTag("Text");
+	graphicsButtonText.AddComponent <Transform>();
+	graphicsButtonText.AddComponent<MeshRenderer>();
+	graphicsButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
+	graphicsButtonText.GetComponent<Transform>()->ScalePost(0.0005f);
+	graphicsButtonText.GetComponent<Transform>()->SetParent(graphicsButton.GetComponent<Transform>());
+	graphicsButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.35f, -0.1f);
+	graphicsButtonText.GetComponent<TextRenderer>()->SetText("Graphics");
+	graphicsButtonText.SetEnabled(false);
+
+	// Audio
+	audioButton.Start();
+	audioButton.AddComponent<Transform>()->SetLocalPosition(0, -0.25f, -0.1f);
+	audioButton.GetComponent<Transform>()->SetParent(optionsParent.GetComponent<Transform>());
+	audioButton.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
+	audioButton.AddComponent<UIRenderer>()->SetRect(0.2f, -0.2f, 0.2f, 0.4f);
+	audioClick = [=]() -> void { AudioClick(); };
+	audioButton.AddComponent<Button>()->Subscribe(&audioClick);
+	audioButton.SetEnabled(false);
+
+	audioButtonText.Start();
+	audioButtonText.SetTag("Text");
+	audioButtonText.AddComponent <Transform>();
+	audioButtonText.AddComponent<MeshRenderer>();
+	audioButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
+	audioButtonText.GetComponent<Transform>()->ScalePost(0.0005f);
+	audioButtonText.GetComponent<Transform>()->SetParent(audioButton.GetComponent<Transform>());
+	audioButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.35f, -0.1f);
+	audioButtonText.GetComponent<TextRenderer>()->SetText("Audio");
+	audioButtonText.SetEnabled(false);
+
+	// Options Back
+	optionsBackButton.Start();
+	optionsBackButton.AddComponent<Transform>()->SetLocalPosition(0, -0.5f, -0.1f);
+	optionsBackButton.GetComponent<Transform>()->SetParent(optionsParent.GetComponent<Transform>());
+	optionsBackButton.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
+	optionsBackButton.AddComponent<UIRenderer>()->SetRect(0.2f, -0.2f, 0.2f, 0.4f);
+	optionsBackClick = [=]() -> void { OptionsBackClick(); };
+	optionsBackButton.AddComponent<Button>()->Subscribe(&optionsBackClick);
+	optionsBackButton.SetEnabled(false);
+
+	optionsBackButtonText.Start();
+	optionsBackButtonText.SetTag("Text");
+	optionsBackButtonText.AddComponent <Transform>();
+	optionsBackButtonText.AddComponent<MeshRenderer>();
+	optionsBackButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
+	optionsBackButtonText.GetComponent<Transform>()->ScalePost(0.0005f);
+	optionsBackButtonText.GetComponent<Transform>()->SetParent(optionsBackButton.GetComponent<Transform>());
+	optionsBackButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.35f, -0.1f);
+	optionsBackButtonText.GetComponent<TextRenderer>()->SetText("Back");
+	optionsBackButtonText.SetEnabled(false);
 }
 
 void MainMenu::Update()
 {
+	// Main
+	mainParent.Update();
 	playButton.Update();
 	playButtonText.Update();
-
 	optionsButton.Update();
 	optionsButtonText.Update();
-
 	quitButton.Update();
 	quitButtonText.Update();
+
+	// Play
+	playParent.Update();
+	newGameButton.Update();
+	newGameButtonText.Update();
+	playBackButton.Update();
+	playBackButtonText.Update();
+
+	// Options
+	optionsParent.Update();
+	graphicsButton.Update();
+	graphicsButtonText.Update();
+	audioButton.Update();
+	audioButtonText.Update();
+	optionsBackButton.Update();
+	optionsBackButtonText.Update();
 }
 
 void MainMenu::OnDelete()
 {
+	// Main
+	mainParent.OnDelete();
 	playButton.OnDelete();
 	playButtonText.OnDelete();
 	optionsButton.OnDelete();
 	optionsButtonText.OnDelete();
-
 	quitButton.OnDelete();
 	quitButtonText.OnDelete();
+
+	// Play
+	playParent.OnDelete();
+	newGameButton.OnDelete();
+	newGameButtonText.OnDelete();
+	playBackButton.OnDelete();
+	playBackButtonText.OnDelete();
+
+	// Options
+	optionsParent.OnDelete();
+	graphicsButton.OnDelete();
+	graphicsButtonText.OnDelete();
+	audioButton.OnDelete();
+	audioButtonText.OnDelete();
+	optionsBackButton.OnDelete();
+	optionsBackButtonText.OnDelete();
 }

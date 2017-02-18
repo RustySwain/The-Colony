@@ -15,6 +15,7 @@ class GameObject
 	string tag;
 
 	bool started = false;
+	bool enabled = true;
 	map<unsigned int, vector<Component*>> components;
 
 	static map<unsigned int, GameObject*> gameObjectIds;
@@ -35,12 +36,14 @@ public:
 	unsigned int GetId() const { return id; }
 	string GetName() const { return name; }
 	string GetTag() const { return tag; }
+	bool GetEnabled() const { return enabled; };
 	int GetComponentsSize() const { return (int)components.size(); }
 
 	// Mutators
 	void SetId(unsigned int _id) { id = _id; }
 	void SetName(string _name) { name = _name; }
 	void SetTag(string _tag) { tag = _tag; }
+	void SetEnabled(bool _enabled) { enabled = _enabled; };
 
 	template <typename T>
 	T* AddComponent();
@@ -132,7 +135,7 @@ public:
 	Component() {};
 	virtual ~Component() {};
 
-	bool GetEnabled() const { return enabled; };
+	bool GetEnabled() const { return enabled && gameObject->GetEnabled(); };
 	void SetEnabled(const bool _enabled) { enabled = _enabled; };
 
 	virtual const unsigned int GetId() const = 0;

@@ -276,7 +276,8 @@ void Application::Render()
 
 	for (size_t i = 0; i < lights.size(); i++)
 	{
-		lightBuff[i] = lights[i]->GetLightBuffType();
+		if (lights[i]->GetEnabled())
+			lightBuff[i] = lights[i]->GetLightBuffType();
 	}
 
 	context->UpdateSubresource(lightBuffer, 0, 0, lightBuff, 0, 0);
@@ -301,10 +302,10 @@ void Application::Render()
 	SortMeshesByDistance();
 
 	for (unsigned int i = 0; i < renderers.size(); i++)
-		if (renderers[i]->GetType() != MeshRenderer::UI)
+		if (renderers[i]->GetType() != MeshRenderer::UI && renderers[i]->GetEnabled())
 			renderers[i]->Render();
 	for (unsigned int i = 0; i < renderers.size(); i++)
-		if (renderers[i]->GetType() == MeshRenderer::UI)
+		if (renderers[i]->GetType() == MeshRenderer::UI && renderers[i]->GetEnabled())
 			renderers[i]->Render();
 
 	swapChain->Present(1, 0);
