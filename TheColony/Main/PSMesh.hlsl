@@ -79,7 +79,9 @@ float4 spotLight(float4 _position, float4 _worldPos, float4 _direction, float _c
 
 float4 main(Input _in) : SV_TARGET
 {
-	float4 textureColor = diffuse.Sample(sam, _in.uv.xy);
+	float4 newuv = _in.uv;
+	newuv.x = 1.0f - _in.uv.x;
+	float4 textureColor = diffuse.Sample(sam, newuv.xy);
 	float alpha = textureColor.w;
 	float3 lightDir;
 
