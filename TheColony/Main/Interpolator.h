@@ -11,7 +11,7 @@ class Interpolator
 	ID3D11Buffer *jointsBuffer = nullptr;
 
 public:
-	Interpolator();
+	Interpolator(){}
 	~Interpolator(){}
 
 	void Start();
@@ -19,14 +19,12 @@ public:
 	void OnDelete();
 	int& CurrentFrame() { return currFrame; }
 
-	// Debug
-	vector<GameObject*> spheres;
-
 	// Accessors
 	float GetTime() const { return currTime; }
 	Animation GetAnimation() const { return animation; }
 
 	// Mutators
+	void SetVSBuffer() const;
 	void SetAnimation(const Animation _animations);
 	void SetTime(float _time);
 };

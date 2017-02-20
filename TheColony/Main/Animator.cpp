@@ -5,13 +5,14 @@
 
 Animator::Animator()
 {
-	bindPose = new BindPose();
-	interpolator = new Interpolator();
-	defaultAnimation = 0;
 }
 
 void Animator::Start()
 {
+	bindPose = new BindPose();
+	interpolator = new Interpolator();
+	defaultAnimation = 0;
+	interpolator->Start();
 }
 
 void Animator::Update()
@@ -46,7 +47,7 @@ void Animator::LoadFromFile(fstream & _file)
 		delete[] animation;
 	}
 	_file.read((char*)&defaultAnimation, sizeof(int));
-	LoadSpheres();
+	//LoadSpheres();
 }
 
 bool Animator::AddAnimation(const char * _path)
@@ -203,7 +204,7 @@ bool Animator::Play(int _animationIndex)
 
 void Animator::LoadSpheres() const
 {
-	int totalJoints = bindPose->GetNumOfJoints();
+	/*int totalJoints = bindPose->GetNumOfJoints();
 	for(int i = 0; i < totalJoints; ++i)
 	{
 		GameObject* sphere = new GameObject();
@@ -214,12 +215,12 @@ void Animator::LoadSpheres() const
 		sphere->GetComponent<Transform>()->SetParent(gameObject->GetComponent<Transform>());
 		sphere->GetComponent<Transform>()->ScalePre(0.3f);
 		interpolator->spheres.push_back(sphere);
-	}
+	}*/
 }
 
 void Animator::NextFrame() const
 {
-	if (interpolator->CurrentFrame() == interpolator->GetAnimation().GetJoints()[0].keyFrames.size() - 1)
+	if (interpolator->CurrentFrame() + 1 == interpolator->GetAnimation().GetJoints()[0].keyFrames.size() - 1)
 		interpolator->CurrentFrame() = 3;
 	else
 		interpolator->CurrentFrame() += 1;
@@ -227,10 +228,15 @@ void Animator::NextFrame() const
 
 void Animator::PreviousFrame() const
 {
-	if (interpolator->CurrentFrame() == 3)
-		interpolator->CurrentFrame() = (int)interpolator->GetAnimation().GetJoints()[0].keyFrames.size() - 1;
+	if (interpolator->CurrentFrame() <= 3)
+		interpolator->CurrentFrame() = (int)interpolator->GetAnimation().GetJoints()[0].keyFrames.size() - 2;
 	else
 		interpolator->CurrentFrame() -= 1;
+}
+
+void Animator::SetVSBuffer() const
+{
+	interpolator->SetVSBuffer();
 }
 
 Animation Animator::GetAnimation(int _index)

@@ -8,6 +8,7 @@
 #include "Transform.h"
 #include "MeshRenderer.h"
 #include <ctime>
+#include "Animator.h"
 
 GameScene::GameScene()
 {
@@ -71,7 +72,8 @@ void GameScene::Start()
 	box.Start();
 	box.AddComponent<PrefabLoader>()->Load("../Assets/Prefabs/Box.prefab");
 	box.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box.dds");
-	//box.GetComponent<Animator>()->Play("Box_Idle");
+	box.GetComponent<Animator>()->Play("Box_Idle");
+	box.GetComponent<Animator>()->SetVSBuffer();
 
 	// Terrain
 	terrain.SetId(9);
@@ -116,6 +118,11 @@ void GameScene::Update()
 		terrain.GetComponent<Terrain>()->Seed((unsigned int)time(0));
 		terrain.GetComponent<Terrain>()->Generate();
 	}
+
+	if (GetAsyncKeyState(VK_RIGHT))
+		box.GetComponent<Animator>()->NextFrame();
+	if (GetAsyncKeyState(VK_LEFT))
+		box.GetComponent<Animator>()->PreviousFrame();
 
 	cube.Update();
 	spotLight.Update();
