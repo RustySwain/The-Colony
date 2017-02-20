@@ -5,6 +5,8 @@
 
 class MainMenu : public SceneABC
 {
+	// Main
+	GameObject mainParent;
 	GameObject playButton;
 	GameObject playButtonText;
 	GameObject optionsButton;
@@ -12,15 +14,67 @@ class MainMenu : public SceneABC
 	GameObject quitButton;
 	GameObject quitButtonText;
 
+	// Play
+	GameObject playParent;
+	GameObject newGameButton;
+	GameObject newGameButtonText;
+	GameObject playBackButton;
+	GameObject playBackButtonText;
+
+	// Options
+	GameObject optionsParent;
+	GameObject graphicsButton;
+	GameObject graphicsButtonText;
+	GameObject audioButton;
+	GameObject audioButtonText;
+	GameObject optionsBackButton;
+	GameObject optionsBackButtonText;
+
+	// Quit
+	GameObject quitParent;
+	GameObject confirmQuitButton;
+	GameObject confirmQuitButtonText;
+	GameObject quitBackButton;
+	GameObject quitBackButtonText;
+
+	// Main
 	CallbackFunc playClick;
 	CallbackFunc optionsClick;
 	CallbackFunc quitClick;
 
-	float color[3] = {};
+	// Play
+	CallbackFunc newGameClick;
+	CallbackFunc playBackClick;
 
+	// Options
+	CallbackFunc graphicsClick;
+	CallbackFunc audioClick;
+	CallbackFunc optionsBackClick;
+
+	// Quit
+	CallbackFunc confirmQuitClick;
+	CallbackFunc quitBackClick;
+
+	// Main
 	void PlayClick();
 	void OptionsClick();
 	void QuitClick();
+
+	// Play
+	void NewGameClick();
+	void PlayBackClick();
+
+	// Options
+	void GraphicsClick();
+	void AudioClick();
+	void OptionsBackClick();
+
+	// Quit
+	void ConfirmQuitClick();
+	void QuitBackClick();
+
+	static void White(GameObject* _go);
+	static void Gray(GameObject* _go);
 
 public:
 	MainMenu();

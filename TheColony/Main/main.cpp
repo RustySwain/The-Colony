@@ -77,7 +77,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hInstancePrev, LPSTR _cmdLin
 	const HWND desktopWindow = GetDesktopWindow();
 	GetWindowRect(desktopWindow, &monitorRect);
 
-	hWnd = CreateWindowEx(NULL, "WindowClass1", "Supersonic Acrobatic Rocket Powered Battlecars 2: Electric Boogaloo: Dawn of the Rise of the Rising Revengeance of the Brotherhood of the Dawn of the Final Day of the Reckoning of the 99 Dragons: The Presequel of Time and Space  LLC Project", WS_POPUP, 0, 0, monitorRect.right, monitorRect.bottom, NULL, NULL, _hInstance, NULL);
+	hWnd = CreateWindowEx(NULL, "WindowClass1", "The Colony", WS_POPUP, 0, 0, monitorRect.right, monitorRect.bottom, NULL, NULL, _hInstance, NULL);
 	ShowWindow(hWnd, _showCmd);
 
 	// Initialize the Game
@@ -101,31 +101,31 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hInstancePrev, LPSTR _cmdLin
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-			// Only Render 60 FPS
-			auto endTime = chrono::high_resolution_clock::now();
-			double elapsed = chrono::duration_cast<chrono::microseconds>(endTime - startTime).count() * 1e-6;
-			if (elapsed > invFPS)
-			{
-				numFrames++;
-				Time::SetDelta((float)elapsed);
-				seconds += Time::Delta();
-				app.Update();
-				app.Render();
-				startTime = endTime;
-			}
-			// Output framerate
-			if (seconds > 1)
-			{
-				string secondsStr = to_string(numFrames);
-				numFrames = 0;
-				seconds = 0;
-				Debug::Log(("Frame Rate: " + secondsStr).c_str(), 0);
-			}
+		// Only Render 60 FPS
+		auto endTime = chrono::high_resolution_clock::now();
+		double elapsed = chrono::duration_cast<chrono::microseconds>(endTime - startTime).count() * 1e-6;
+		if (elapsed > invFPS)
+		{
+			numFrames++;
+			Time::SetDelta((float)elapsed);
+			seconds += Time::Delta();
+			app.Update();
+			app.Render();
+			startTime = endTime;
+		}
+		// Output framerate
+		if (seconds > 1)
+		{
+			string secondsStr = to_string(numFrames);
+			numFrames = 0;
+			seconds = 0;
+			Debug::Log(("Frame Rate: " + secondsStr).c_str(), 0);
+		}
 
-			// TODO: Remove. This is only so I can be lazy
-			if (GetAsyncKeyState(VK_ESCAPE))
-				msg.message = WM_QUIT;
-				//break;
+		// TODO: Remove. This is only so I can be lazy
+		if (GetAsyncKeyState(VK_ESCAPE) || Application::GetInstance()->QuittingGame())
+			msg.message = WM_QUIT;
+		//break;
 	}
 
 	// Shutdown Program

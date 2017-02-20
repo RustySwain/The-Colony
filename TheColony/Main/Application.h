@@ -43,6 +43,8 @@ class Application
 	vector<const MeshRenderer*> renderers;
 	vector<const Light*> lights;
 
+	bool quitGame = false;
+
 	void SortMeshesByDistance();
 
 	void CreateDevice();
@@ -87,4 +89,7 @@ public:
 	void Update() const;
 	void Render();
 	void Shutdown();
+
+	void QuitGame() { quitGame = true; };
+	bool QuittingGame() const { return quitGame; };
 };
