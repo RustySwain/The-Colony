@@ -31,6 +31,11 @@ class MainMenu : public SceneABC
 	GameObject optionsBackButtonText;
 
 	// Quit
+	GameObject quitParent;
+	GameObject confirmQuitButton;
+	GameObject confirmQuitButtonText;
+	GameObject quitBackButton;
+	GameObject quitBackButtonText;
 
 	// Main
 	CallbackFunc playClick;
@@ -47,6 +52,8 @@ class MainMenu : public SceneABC
 	CallbackFunc optionsBackClick;
 
 	// Quit
+	CallbackFunc confirmQuitClick;
+	CallbackFunc quitBackClick;
 
 	// Main
 	void PlayClick();
@@ -63,6 +70,8 @@ class MainMenu : public SceneABC
 	void OptionsBackClick();
 
 	// Quit
+	void ConfirmQuitClick();
+	void QuitBackClick();
 
 	static void White(GameObject* _go);
 	static void Gray(GameObject* _go);

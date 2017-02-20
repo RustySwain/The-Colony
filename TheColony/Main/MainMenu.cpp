@@ -48,6 +48,20 @@ void MainMenu::OptionsClick()
 
 void MainMenu::QuitClick()
 {
+	quitParent.SetEnabled(true);
+	confirmQuitButton.SetEnabled(true);
+	confirmQuitButtonText.SetEnabled(true);
+	quitBackButton.SetEnabled(true);
+	quitBackButtonText.SetEnabled(true);
+	playButton.GetComponent<Button>()->SetEnabled(false);
+	optionsButton.GetComponent<Button>()->SetEnabled(false);
+	quitButton.GetComponent<Button>()->SetEnabled(false);
+	Gray(&playButton);
+	Gray(&playButtonText);
+	Gray(&optionsButton);
+	Gray(&optionsButtonText);
+	Gray(&quitButton);
+	Gray(&quitButtonText);
 }
 
 void MainMenu::NewGameClick()
@@ -90,6 +104,29 @@ void MainMenu::OptionsBackClick()
 	audioButtonText.SetEnabled(false);
 	optionsBackButton.SetEnabled(false);
 	optionsBackButtonText.SetEnabled(false);
+	playButton.GetComponent<Button>()->SetEnabled(true);
+	optionsButton.GetComponent<Button>()->SetEnabled(true);
+	quitButton.GetComponent<Button>()->SetEnabled(true);
+	White(&playButton);
+	White(&playButtonText);
+	White(&optionsButton);
+	White(&optionsButtonText);
+	White(&quitButton);
+	White(&quitButtonText);
+}
+
+void MainMenu::ConfirmQuitClick()
+{
+	Application::GetInstance()->QuitGame();
+}
+
+void MainMenu::QuitBackClick()
+{
+	quitParent.SetEnabled(false);
+	confirmQuitButton.SetEnabled(false);
+	confirmQuitButtonText.SetEnabled(false);
+	quitBackButton.SetEnabled(false);
+	quitBackButtonText.SetEnabled(false);
 	playButton.GetComponent<Button>()->SetEnabled(true);
 	optionsButton.GetComponent<Button>()->SetEnabled(true);
 	quitButton.GetComponent<Button>()->SetEnabled(true);
@@ -300,6 +337,55 @@ void MainMenu::Start()
 	optionsBackButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.35f, -0.1f);
 	optionsBackButtonText.GetComponent<TextRenderer>()->SetText("Back");
 	optionsBackButtonText.SetEnabled(false);
+
+	// Quit Parent
+	quitParent.Start();
+	quitParent.AddComponent<Transform>()->SetLocalPosition(0.75f, 0, 0.5f);
+	quitParent.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/frame.dds");
+	quitParent.AddComponent<UIRenderer>()->SetRect(0.1f, -0.3f, 0.9f, 0.6f);
+	quitParent.SetEnabled(false);
+
+	// Quit Confirm
+	confirmQuitButton.Start();
+	confirmQuitButton.AddComponent<Transform>()->SetLocalPosition(0, 0, -0.1f);
+	confirmQuitButton.GetComponent<Transform>()->SetParent(quitParent.GetComponent<Transform>());
+	confirmQuitButton.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
+	confirmQuitButton.AddComponent<UIRenderer>()->SetRect(0.2f, -0.2f, 0.2f, 0.4f);
+	confirmQuitClick = [=]() -> void { ConfirmQuitClick(); };
+	confirmQuitButton.AddComponent<Button>()->Subscribe(&confirmQuitClick);
+	confirmQuitButton.SetEnabled(false);
+
+	confirmQuitButtonText.Start();
+	confirmQuitButtonText.SetTag("Text");
+	confirmQuitButtonText.AddComponent <Transform>();
+	confirmQuitButtonText.AddComponent<MeshRenderer>();
+	confirmQuitButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
+	confirmQuitButtonText.GetComponent<Transform>()->ScalePost(0.0005f);
+	confirmQuitButtonText.GetComponent<Transform>()->SetParent(confirmQuitButton.GetComponent<Transform>());
+	confirmQuitButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.35f, -0.1f);
+	confirmQuitButtonText.GetComponent<TextRenderer>()->SetText("Confirm");
+	confirmQuitButtonText.SetEnabled(false);
+
+	// Quit Confirm
+	quitBackButton.Start();
+	quitBackButton.AddComponent<Transform>()->SetLocalPosition(0, -0.25f, -0.1f);
+	quitBackButton.GetComponent<Transform>()->SetParent(quitParent.GetComponent<Transform>());
+	quitBackButton.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
+	quitBackButton.AddComponent<UIRenderer>()->SetRect(0.2f, -0.2f, 0.2f, 0.4f);
+	quitBackClick = [=]() -> void { QuitBackClick(); };
+	quitBackButton.AddComponent<Button>()->Subscribe(&quitBackClick);
+	quitBackButton.SetEnabled(false);
+
+	quitBackButtonText.Start();
+	quitBackButtonText.SetTag("Text");
+	quitBackButtonText.AddComponent <Transform>();
+	quitBackButtonText.AddComponent<MeshRenderer>();
+	quitBackButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
+	quitBackButtonText.GetComponent<Transform>()->ScalePost(0.0005f);
+	quitBackButtonText.GetComponent<Transform>()->SetParent(quitBackButton.GetComponent<Transform>());
+	quitBackButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.35f, -0.1f);
+	quitBackButtonText.GetComponent<TextRenderer>()->SetText("Back");
+	quitBackButtonText.SetEnabled(false);
 }
 
 void MainMenu::Update()
@@ -328,6 +414,13 @@ void MainMenu::Update()
 	audioButtonText.Update();
 	optionsBackButton.Update();
 	optionsBackButtonText.Update();
+
+	// Quit
+	quitParent.Update();
+	confirmQuitButton.Update();
+	confirmQuitButtonText.Update();
+	quitBackButton.Update();
+	quitBackButtonText.Update();
 }
 
 void MainMenu::OnDelete()
@@ -356,4 +449,11 @@ void MainMenu::OnDelete()
 	audioButtonText.OnDelete();
 	optionsBackButton.OnDelete();
 	optionsBackButtonText.OnDelete();
+
+	// Quit
+	quitParent.OnDelete();
+	confirmQuitButton.OnDelete();
+	confirmQuitButtonText.OnDelete();
+	quitBackButton.OnDelete();
+	quitBackButtonText.OnDelete();
 }
