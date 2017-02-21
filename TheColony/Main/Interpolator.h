@@ -4,7 +4,7 @@
 
 class Interpolator
 {
-	Animation animation;
+	Animation animation, prevAnimation, defaultAnimation;
 	float currTime;
 	int currFrame;
 	ID3D11Buffer *jointsBuffer = nullptr;
@@ -24,6 +24,7 @@ public:
 
 	// Mutators
 	void SetVSBuffer() const;
-	void SetAnimation(const Animation _animations);
+	void SetAnimation(const Animation _animation);
+	void SetDefaultAnimation(const Animation _animation);
 	void SetTime(float _time);
 };

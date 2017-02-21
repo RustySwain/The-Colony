@@ -46,6 +46,7 @@ void Animator::LoadFromFile(fstream & _file)
 		delete[] animation;
 	}
 	_file.read((char*)&defaultAnimation, sizeof(int));
+	interpolator->SetDefaultAnimation(animations[defaultAnimation]);
 }
 
 bool Animator::AddAnimation(const char * _path)

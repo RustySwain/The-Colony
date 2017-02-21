@@ -20,6 +20,28 @@ void Interpolator::Start()
 
 void Interpolator::Update()
 {
+	currTime += Time::Delta();
+	while (currTime > animation.GetJoints()[0].keyFrames[currFrame].duration)
+	{
+		currFrame++;
+		if (currFrame >= animation.GetJoints()[0].keyFrames.size() - 1)
+			currTime -= animation.GetLength() - animation.GetJoints()[0].keyFrames[0].duration;
+	}
+
+
+	if (currFrame >= animation.GetJoints()[0].keyFrames.size() - 1)
+	{
+		if (animation.GetType() == RETURN_DEFAULT)
+			SetAnimation(defaultAnimation);
+		else if (animation.GetType() == RETURN_LAST)
+			SetAnimation(prevAnimation);
+		else
+		{
+			currTime = 0;
+			currFrame = 0;
+		}
+	}
+
 	animation.CSJointsCount = 0;
 	for (size_t j = 0; j < animation.GetJoints().size(); ++j)
 	{
@@ -28,27 +50,19 @@ void Interpolator::Update()
 		float nextTime = animation.GetJoints()[j].keyFrames[currFrame + 1].duration;
 		XMMATRIX nextMatrix = animation.GetJoints()[j].keyFrames[currFrame + 1].transform;
 
-		/*float ratio = 0.0f;
-		if (_ratio < -0.5f)
-			ratio = (elapsedTime - previousTime) / (nextTime - previousTime);
-		else
-			ratio = _ratio;
-
-		if (ratio < 0) ratio = 0;
-		if (ratio > 1) ratio = 1;*/
-
 		XMVECTOR scalePre, rotPre, posPre;
 		XMMatrixDecompose(&scalePre, &rotPre, &posPre, previousMatrix);
 
 		XMVECTOR scalePost, rotPost, posPost;
 		XMMatrixDecompose(&scalePost, &rotPost, &posPost, nextMatrix);
 
-		XMMATRIX interpolatedMat = XMMatrixAffineTransformation(XMVectorLerp(scalePre, scalePost, 1), XMVectorZero(), XMQuaternionSlerp(rotPre, rotPost, 1), XMVectorLerp(posPre, posPost, 1));
-		XMMATRIX newPosition = animation.GetJoints()[j].world * interpolatedMat;
+		//float ratio = (currTime - previousTime) / (nextTime - previousTime);
+		float ratio = 1;
+		XMMATRIX interpolatedMat = XMMatrixAffineTransformation(XMVectorLerp(scalePre, scalePost, ratio), XMVectorZero(), XMQuaternionSlerp(rotPre, rotPost, ratio), XMVectorLerp(posPre, posPost, ratio));
 
 		// VShader Buffer
 		XMMATRIX jointOffset = animation.GetJoints()[j].world * interpolatedMat;
-		animation.CSJointsBuffer.jointOffsets[animation.CSJointsCount] = interpolatedMat;
+		animation.CSJointsBuffer.jointOffsets[animation.CSJointsCount] = jointOffset;
 		animation.CSJointsCount += 1;
 		// End VShader
 	}
@@ -69,7 +83,13 @@ void Interpolator::SetAnimation(const Animation _animation)
 {
 	currTime = 0;
 	currFrame = 0;
+	prevAnimation = animation;
 	animation = _animation;
+}
+
+void Interpolator::SetDefaultAnimation(const Animation _animation)
+{
+	defaultAnimation = _animation;
 }
 
 void Interpolator::SetTime(float _time)

@@ -3,16 +3,14 @@
 #include "Animation.h"
 #include "BindPose.h"
 #include "Interpolator.h"
-#include <d3d11.h>
 
 class Animator : public Component
 {
 	const unsigned int id = 10;
-
-	vector<Animation> animations;
 	BindPose *bindPose;
-	int defaultAnimation;
 	Interpolator *interpolator;
+	vector<Animation> animations;
+	int defaultAnimation;
 
 public:
 	Animator();

@@ -88,7 +88,7 @@ void GameScene::Start()
 	teddy.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Teddy/Teddy_Idle.mesh");
 	teddy.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Teddy/Teddy_D.dds");
 	teddy.AddComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Idle.anim");
-	//teddy.GetComponent<Animator>()->Play("Teddy_Idle");
+	teddy.GetComponent<Animator>()->Play("Teddy_Idle");
 
 	mage.SetId(11);
 	mage.SetTag("Untagged");
@@ -100,7 +100,7 @@ void GameScene::Start()
 	mage.GetComponent<MeshRenderer>()->LoadNormalMap(L"../Assets/Mage/normal.dds");
 	mage.GetComponent<MeshRenderer>()->LoadSpecularMap(L"../Assets/Mage/specular.dds");
 	mage.AddComponent<Animator>()->AddAnimation("../Assets/Mage/Idle.anim");
-	//mage.GetComponent<Animator>()->Play("Idle");
+	mage.GetComponent<Animator>()->Play("Idle");
 
 	// Terrain
 	terrain.SetId(9);
