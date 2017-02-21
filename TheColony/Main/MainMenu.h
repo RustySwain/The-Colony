@@ -30,6 +30,23 @@ class MainMenu : public SceneABC
 	GameObject optionsBackButton;
 	GameObject optionsBackButtonText;
 
+	// Graphics
+	GameObject graphicsParent;
+	GameObject msaaButton;
+	GameObject msaaButtonText;
+	GameObject vsyncButton;
+	GameObject vsyncButtonText;
+	GameObject shadowsButton;
+	GameObject shadowsButtonText;
+	GameObject fullscreenButton;
+	GameObject fullscreenButtonText;
+	GameObject resolutionButton;
+	GameObject resolutionButtonText;
+	GameObject graphicsBackButton;
+	GameObject graphicsBackButtonText;
+
+	// Audio
+
 	// Quit
 	GameObject quitParent;
 	GameObject confirmQuitButton;
@@ -51,6 +68,10 @@ class MainMenu : public SceneABC
 	CallbackFunc audioClick;
 	CallbackFunc optionsBackClick;
 
+	// Graphics
+
+	// Audio
+
 	// Quit
 	CallbackFunc confirmQuitClick;
 	CallbackFunc quitBackClick;
@@ -68,6 +89,10 @@ class MainMenu : public SceneABC
 	void GraphicsClick();
 	void AudioClick();
 	void OptionsBackClick();
+
+	// Graphics
+
+	// Audio
 
 	// Quit
 	void ConfirmQuitClick();

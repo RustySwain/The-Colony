@@ -177,10 +177,10 @@ void MainMenu::Start()
 	playButtonText.SetTag("Text");
 	playButtonText.AddComponent <Transform>();
 	playButtonText.AddComponent<MeshRenderer>();
-	playButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
+	playButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
 	playButtonText.GetComponent<Transform>()->ScalePost(0.0005f);
 	playButtonText.GetComponent<Transform>()->SetParent(playButton.GetComponent<Transform>());
-	playButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.35f, -0.1f);
+	playButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.37f, -0.1f);
 	playButtonText.GetComponent<TextRenderer>()->SetText("Play");
 
 	// Options
@@ -195,10 +195,10 @@ void MainMenu::Start()
 	optionsButtonText.Start();
 	optionsButtonText.AddComponent <Transform>();
 	optionsButtonText.AddComponent<MeshRenderer>();
-	optionsButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
+	optionsButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
 	optionsButtonText.GetComponent<Transform>()->ScalePost(0.0005f);
 	optionsButtonText.GetComponent<Transform>()->SetParent(optionsButton.GetComponent<Transform>());
-	optionsButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.35f, -0.1f);
+	optionsButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.37f, -0.1f);
 	optionsButtonText.GetComponent<TextRenderer>()->SetText("Options");
 
 	// Quit
@@ -213,10 +213,10 @@ void MainMenu::Start()
 	quitButtonText.Start();
 	quitButtonText.AddComponent <Transform>();
 	quitButtonText.AddComponent<MeshRenderer>();
-	quitButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
+	quitButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
 	quitButtonText.GetComponent<Transform>()->ScalePost(0.0005f);
 	quitButtonText.GetComponent<Transform>()->SetParent(quitButton.GetComponent<Transform>());
-	quitButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.35f, -0.1f);
+	quitButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.37f, -0.1f);
 	quitButtonText.GetComponent<TextRenderer>()->SetText("Quit");
 
 	// Play Parent
@@ -240,10 +240,10 @@ void MainMenu::Start()
 	newGameButtonText.SetTag("Text");
 	newGameButtonText.AddComponent <Transform>();
 	newGameButtonText.AddComponent<MeshRenderer>();
-	newGameButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
+	newGameButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
 	newGameButtonText.GetComponent<Transform>()->ScalePost(0.0005f);
 	newGameButtonText.GetComponent<Transform>()->SetParent(newGameButton.GetComponent<Transform>());
-	newGameButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.35f, -0.1f);
+	newGameButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.37f, -0.1f);
 	newGameButtonText.GetComponent<TextRenderer>()->SetText("New Game");
 	newGameButtonText.SetEnabled(false);
 
@@ -261,10 +261,10 @@ void MainMenu::Start()
 	playBackButtonText.SetTag("Text");
 	playBackButtonText.AddComponent <Transform>();
 	playBackButtonText.AddComponent<MeshRenderer>();
-	playBackButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
+	playBackButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
 	playBackButtonText.GetComponent<Transform>()->ScalePost(0.0005f);
 	playBackButtonText.GetComponent<Transform>()->SetParent(playBackButton.GetComponent<Transform>());
-	playBackButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.35f, -0.1f);
+	playBackButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.37f, -0.1f);
 	playBackButtonText.GetComponent<TextRenderer>()->SetText("Back");
 	playBackButtonText.SetEnabled(false);
 
@@ -289,10 +289,10 @@ void MainMenu::Start()
 	graphicsButtonText.SetTag("Text");
 	graphicsButtonText.AddComponent <Transform>();
 	graphicsButtonText.AddComponent<MeshRenderer>();
-	graphicsButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
+	graphicsButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
 	graphicsButtonText.GetComponent<Transform>()->ScalePost(0.0005f);
 	graphicsButtonText.GetComponent<Transform>()->SetParent(graphicsButton.GetComponent<Transform>());
-	graphicsButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.35f, -0.1f);
+	graphicsButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.37f, -0.1f);
 	graphicsButtonText.GetComponent<TextRenderer>()->SetText("Graphics");
 	graphicsButtonText.SetEnabled(false);
 
@@ -310,10 +310,10 @@ void MainMenu::Start()
 	audioButtonText.SetTag("Text");
 	audioButtonText.AddComponent <Transform>();
 	audioButtonText.AddComponent<MeshRenderer>();
-	audioButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
+	audioButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
 	audioButtonText.GetComponent<Transform>()->ScalePost(0.0005f);
 	audioButtonText.GetComponent<Transform>()->SetParent(audioButton.GetComponent<Transform>());
-	audioButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.35f, -0.1f);
+	audioButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.37f, -0.1f);
 	audioButtonText.GetComponent<TextRenderer>()->SetText("Audio");
 	audioButtonText.SetEnabled(false);
 
@@ -331,10 +331,10 @@ void MainMenu::Start()
 	optionsBackButtonText.SetTag("Text");
 	optionsBackButtonText.AddComponent <Transform>();
 	optionsBackButtonText.AddComponent<MeshRenderer>();
-	optionsBackButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
+	optionsBackButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
 	optionsBackButtonText.GetComponent<Transform>()->ScalePost(0.0005f);
 	optionsBackButtonText.GetComponent<Transform>()->SetParent(optionsBackButton.GetComponent<Transform>());
-	optionsBackButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.35f, -0.1f);
+	optionsBackButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.37f, -0.1f);
 	optionsBackButtonText.GetComponent<TextRenderer>()->SetText("Back");
 	optionsBackButtonText.SetEnabled(false);
 
@@ -359,10 +359,10 @@ void MainMenu::Start()
 	confirmQuitButtonText.SetTag("Text");
 	confirmQuitButtonText.AddComponent <Transform>();
 	confirmQuitButtonText.AddComponent<MeshRenderer>();
-	confirmQuitButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
+	confirmQuitButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
 	confirmQuitButtonText.GetComponent<Transform>()->ScalePost(0.0005f);
 	confirmQuitButtonText.GetComponent<Transform>()->SetParent(confirmQuitButton.GetComponent<Transform>());
-	confirmQuitButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.35f, -0.1f);
+	confirmQuitButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.37f, -0.1f);
 	confirmQuitButtonText.GetComponent<TextRenderer>()->SetText("Confirm");
 	confirmQuitButtonText.SetEnabled(false);
 
@@ -380,10 +380,10 @@ void MainMenu::Start()
 	quitBackButtonText.SetTag("Text");
 	quitBackButtonText.AddComponent <Transform>();
 	quitBackButtonText.AddComponent<MeshRenderer>();
-	quitBackButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Font.fontsheet", L"../Assets/Fonts/Font.dds");
+	quitBackButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
 	quitBackButtonText.GetComponent<Transform>()->ScalePost(0.0005f);
 	quitBackButtonText.GetComponent<Transform>()->SetParent(quitBackButton.GetComponent<Transform>());
-	quitBackButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.35f, -0.1f);
+	quitBackButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.37f, -0.1f);
 	quitBackButtonText.GetComponent<TextRenderer>()->SetText("Back");
 	quitBackButtonText.SetEnabled(false);
 }
