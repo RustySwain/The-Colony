@@ -19,7 +19,7 @@ void GameObjectManager::Start()
 {
 	scene.Start();
 	scene.AddComponent<SceneManager>();
-	scene.AddComponent<MainMenu>();
+	scene.AddComponent<GameScene>();
 
 	cam.SetId(2);
 	cam.SetTag("Untagged");

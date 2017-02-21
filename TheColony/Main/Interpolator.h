@@ -7,6 +7,7 @@ class Interpolator
 	Animation animation, prevAnimation, defaultAnimation;
 	float currTime;
 	int currFrame;
+	float scale;
 	ID3D11Buffer *jointsBuffer = nullptr;
 
 public:
@@ -27,4 +28,5 @@ public:
 	void SetAnimation(const Animation _animation);
 	void SetDefaultAnimation(const Animation _animation);
 	void SetTime(float _time);
+	void Scale(float _scale) { scale = _scale; }
 };

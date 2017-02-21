@@ -69,6 +69,7 @@ void GameScene::Start()
 	// Test Objects
 	box.SetId(8);
 	box.SetTag("Untagged");
+	box.SetName("Box");
 	box.Start();
 	box.AddComponent<Transform>()->SetLocalPosition(5, 0, 0);
 	box.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Box/Box_Idle.mesh");
@@ -77,23 +78,25 @@ void GameScene::Start()
 	box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Attack.anim");
 	box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Jump.anim");
 	box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Walk.anim");
-	box.GetComponent<Animator>()->Play("Box_Idle");
+	box.GetComponent<Animator>()->Play("Box_Jump");
 
 	teddy.SetId(10);
 	teddy.SetTag("Untagged");
+	teddy.SetName("Teddy");
 	teddy.Start();
 	teddy.AddComponent<Transform>()->SetLocalPosition(-10, 0, 0);
-	teddy.GetComponent<Transform>()->ScalePre(0.03f);
+	teddy.GetComponent<Transform>()->ScalePre(0.05f);
 	teddy.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Teddy/Teddy_Idle.mesh");
 	teddy.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Teddy/Teddy_D.dds");
-	//teddy.AddComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Idle.anim");
-	//teddy.GetComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Attack1.anim");
-	//teddy.GetComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Attack2.anim");
-	//teddy.GetComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Run.anim");
-	//teddy.GetComponent<Animator>()->Play("Teddy_Idle");
+	teddy.AddComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Idle.anim");
+	teddy.GetComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Attack1.anim");
+	teddy.GetComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Attack2.anim");
+	teddy.GetComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Run.anim");
+	teddy.GetComponent<Animator>()->Play("Teddy_Idle");
 
 	mage.SetId(11);
 	mage.SetTag("Untagged");
+	mage.SetName("Mage");
 	mage.Start();
 	mage.AddComponent<Transform>()->SetLocalPosition(60, 0, 50);
 	mage.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Mage/Mage.mesh");
@@ -101,11 +104,11 @@ void GameScene::Start()
 	mage.GetComponent<MeshRenderer>()->LoadEmissiveMap(L"../Assets/Mage/emissive.dds");
 	mage.GetComponent<MeshRenderer>()->LoadNormalMap(L"../Assets/Mage/normal.dds");
 	mage.GetComponent<MeshRenderer>()->LoadSpecularMap(L"../Assets/Mage/specular.dds");
-	//mage.AddComponent<Animator>()->AddAnimation("../Assets/Mage/Idle.anim");
-	//mage.GetComponent<Animator>()->AddAnimation("../Assets/Mage/Death.anim");
-	//mage.GetComponent<Animator>()->AddAnimation("../Assets/Mage/Run.anim");
-	//mage.GetComponent<Animator>()->AddAnimation("../Assets/Mage/Walk.anim");
-	//mage.GetComponent<Animator>()->Play("Walk");
+	mage.AddComponent<Animator>()->AddAnimation("../Assets/Mage/Idle.anim");
+	mage.GetComponent<Animator>()->AddAnimation("../Assets/Mage/Death.anim");
+	mage.GetComponent<Animator>()->AddAnimation("../Assets/Mage/Run.anim");
+	mage.GetComponent<Animator>()->AddAnimation("../Assets/Mage/Walk.anim");
+	mage.GetComponent<Animator>()->Play("Walk");
 
 	// Terrain
 	terrain.SetId(9);
@@ -151,10 +154,6 @@ void GameScene::Update()
 		terrain.GetComponent<Terrain>()->Generate();
 	}
 
-	if (GetAsyncKeyState(VK_RIGHT) & 0x1)
-		box.GetComponent<Animator>()->NextFrame();
-	if (GetAsyncKeyState(VK_LEFT) & 0x1)
-		box.GetComponent<Animator>()->PreviousFrame();
 	if (GetAsyncKeyState(VK_F1))
 		box.GetComponent<Animator>()->Play("Box_Idle");
 	if (GetAsyncKeyState(VK_F2))
@@ -163,6 +162,15 @@ void GameScene::Update()
 		box.GetComponent<Animator>()->Play("Box_Jump");
 	if (GetAsyncKeyState(VK_F4))
 		box.GetComponent<Animator>()->Play("Box_Walk");
+
+	if (GetAsyncKeyState(VK_F5))
+		teddy.GetComponent<Animator>()->Play("Teddy_Idle");
+	if (GetAsyncKeyState(VK_F6))
+		teddy.GetComponent<Animator>()->Play("Teddy_Attack1");
+	if (GetAsyncKeyState(VK_F7))
+		teddy.GetComponent<Animator>()->Play("Teddy_Attack2");
+	if (GetAsyncKeyState(VK_F8))
+		teddy.GetComponent<Animator>()->Play("Teddy_Run");
 
 	cube.Update();
 	spotLight.Update();

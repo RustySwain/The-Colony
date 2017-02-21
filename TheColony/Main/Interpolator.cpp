@@ -28,13 +28,14 @@ void Interpolator::Update()
 			currTime -= animation.GetLength() - animation.GetJoints()[0].keyFrames[0].duration;
 	}
 
-
 	if (currFrame >= animation.GetJoints()[0].keyFrames.size() - 1)
 	{
 		if (animation.GetType() == RETURN_DEFAULT)
 			SetAnimation(defaultAnimation);
 		else if (animation.GetType() == RETURN_LAST)
 			SetAnimation(prevAnimation);
+		else if (animation.GetType() == RUN_ONCE)
+			return;
 		else
 		{
 			currTime = 0;
@@ -83,7 +84,12 @@ void Interpolator::SetAnimation(const Animation _animation)
 {
 	currTime = 0;
 	currFrame = 0;
-	prevAnimation = _animation;
+
+	//if (animation.GetName() == "")
+		prevAnimation = defaultAnimation;
+	//else
+	//	prevAnimation = animation;
+
 	animation = _animation;
 }
 
