@@ -1,18 +1,8 @@
 #include "GameObjectManager.h"
 #include "Transform.h"
-#include "MeshRenderer.h"
 #include "CameraController.h"
 #include "Camera.h"
 #include "Time.h"
-#include "PrefabLoader.h"
-#include "UIRenderer.h"
-#include "Light.h"
-#include "TextRenderer.h"
-#include "Skybox.h"
-#include "Animator.h"
-#include "Terrain.h"
-#include <ctime>
-#include "ProgressBar.h"
 #include "SceneManager.h"
 #include "MainMenu.h"
 #include "GameScene.h"
@@ -29,7 +19,7 @@ void GameObjectManager::Start()
 {
 	scene.Start();
 	scene.AddComponent<SceneManager>();
-	scene.AddComponent<MainMenu>();
+	scene.AddComponent<GameScene>();
 
 	cam.SetId(2);
 	cam.SetTag("Untagged");

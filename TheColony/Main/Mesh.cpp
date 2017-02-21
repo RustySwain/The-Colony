@@ -119,13 +119,13 @@ bool Mesh::LoadFromBinary(const char * _path, string &_diffuseMapPath)
 		file.read((char*)&numTris, sizeof(int));
 		for(int i = 0; i < numTris; ++i)
 		{
-			unsigned int tri;
-			file.read((char*)&tri, sizeof(unsigned int));
-			tris.push_back(tri);
-			file.read((char*)&tri, sizeof(unsigned int));
-			tris.push_back(tri);
-			file.read((char*)&tri, sizeof(unsigned int));
-			tris.push_back(tri);
+			unsigned int tri1, tri2, tri3;
+			file.read((char*)&tri1, sizeof(unsigned int));
+			file.read((char*)&tri3, sizeof(unsigned int));
+			file.read((char*)&tri2, sizeof(unsigned int));
+			tris.push_back(tri1);
+			tris.push_back(tri2);
+			tris.push_back(tri3);
 		}
 
 		// read vertices

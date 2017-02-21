@@ -8,6 +8,7 @@
 #include "Transform.h"
 #include "MeshRenderer.h"
 #include <ctime>
+#include "Animator.h"
 
 GameScene::GameScene()
 {
@@ -69,9 +70,37 @@ void GameScene::Start()
 	box.SetId(8);
 	box.SetTag("Untagged");
 	box.Start();
-	box.AddComponent<PrefabLoader>()->Load("../Assets/Prefabs/Box.prefab");
-	box.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box.dds");
-	//box.GetComponent<Animator>()->Play("Box_Idle");
+	box.AddComponent<Transform>()->SetLocalPosition(5, 0, 0);
+	box.GetComponent<Transform>()->ScalePre(0.5f);
+	box.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Box/Box_Idle.mesh");
+	box.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box/Box.dds");
+	box.AddComponent<Animator>()->AddAnimation("../Assets/Box/Box_Idle.anim");
+	box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Attack.anim");
+	box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Jump.anim");
+	box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Walk.anim");
+	box.GetComponent<Animator>()->Play("Box_Idle");
+
+	teddy.SetId(10);
+	teddy.SetTag("Untagged");
+	teddy.Start();
+	teddy.AddComponent<Transform>()->SetLocalPosition(-10, 0, 0);
+	teddy.GetComponent<Transform>()->ScalePre(0.03f);
+	teddy.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Teddy/Teddy_Idle.mesh");
+	teddy.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Teddy/Teddy_D.dds");
+	teddy.AddComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Idle.anim");
+	teddy.GetComponent<Animator>()->Play("Teddy_Idle");
+
+	mage.SetId(11);
+	mage.SetTag("Untagged");
+	mage.Start();
+	mage.AddComponent<Transform>()->SetLocalPosition(0, 0, -5);
+	mage.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Mage/Mage.mesh");
+	mage.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Mage/diffuse.dds");
+	mage.GetComponent<MeshRenderer>()->LoadEmissiveMap(L"../Assets/Mage/emissive.dds");
+	mage.GetComponent<MeshRenderer>()->LoadNormalMap(L"../Assets/Mage/normal.dds");
+	mage.GetComponent<MeshRenderer>()->LoadSpecularMap(L"../Assets/Mage/specular.dds");
+	mage.AddComponent<Animator>()->AddAnimation("../Assets/Mage/Idle.anim");
+	mage.GetComponent<Animator>()->Play("Idle");
 
 	// Terrain
 	terrain.SetId(9);
@@ -117,13 +146,28 @@ void GameScene::Update()
 		terrain.GetComponent<Terrain>()->Generate();
 	}
 
+	if (GetAsyncKeyState(VK_RIGHT) & 0x1)
+		box.GetComponent<Animator>()->NextFrame();
+	if (GetAsyncKeyState(VK_LEFT) & 0x1)
+		box.GetComponent<Animator>()->PreviousFrame();
+	if (GetAsyncKeyState(VK_F1))
+		box.GetComponent<Animator>()->Play("Box_Idle");
+	if (GetAsyncKeyState(VK_F2))
+		box.GetComponent<Animator>()->Play("Box_Attack");
+	if (GetAsyncKeyState(VK_F3))
+		box.GetComponent<Animator>()->Play("Box_Jump");
+	if (GetAsyncKeyState(VK_F4))
+		box.GetComponent<Animator>()->Play("Box_Walk");
+
 	cube.Update();
 	spotLight.Update();
 	dirLight.Update();
 	pointLight.Update();
 	skybox.Update();
 	terrain.Update();
+	teddy.Update();
 	box.Update();
+	mage.Update();
 }
 
 void GameScene::OnDelete()
@@ -134,5 +178,7 @@ void GameScene::OnDelete()
 	pointLight.OnDelete();
 	skybox.OnDelete();
 	terrain.OnDelete();
+	teddy.OnDelete();
 	box.OnDelete();
+	mage.OnDelete();
 }

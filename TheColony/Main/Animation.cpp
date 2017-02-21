@@ -7,10 +7,18 @@ Animation::Animation()
 	duration = 0;
 }
 
-void Animation::Init(std::string _name, ANIM_TYPE _type, float _duration, std::vector<Joint> _bones)
+void Animation::Init(std::string _name, int _type, float _duration, std::vector<Joint> _bones)
 {
+	if (0 == _type)
+		type = LOOP;
+	else if (1 == _type)
+		type = RETURN_DEFAULT;
+	else if (2 == _type)
+		type = RETURN_LAST;
+	else
+		type = RUN_ONCE;
+
 	name = _name;
-	type = _type;
 	duration = _duration;
 	numOfJoints = (unsigned int)_bones.size();
 	joints = _bones;
