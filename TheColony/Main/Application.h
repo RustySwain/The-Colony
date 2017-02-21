@@ -38,6 +38,7 @@ class Application
 	float backBufferColor[4] = { 0, 1, 1, 1 };
 	unsigned int msCount = 8;
 	unsigned int msQuality = D3D11_STANDARD_MULTISAMPLE_PATTERN;
+	unsigned int vsync = 1;
 
 	GameObject gameObjectManager;
 	vector<const MeshRenderer*> renderers;
@@ -92,4 +93,7 @@ public:
 
 	void QuitGame() { quitGame = true; };
 	bool QuittingGame() const { return quitGame; };
+
+	void SetVsync(bool _vsync) { vsync = _vsync ? 1 : 0; };
+	bool GetVsync() const { return vsync != 0; };
 };

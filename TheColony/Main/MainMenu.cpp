@@ -89,6 +89,30 @@ void MainMenu::PlayBackClick()
 
 void MainMenu::GraphicsClick()
 {
+	graphicsParent.SetEnabled(true);
+	msaaButton.SetEnabled(true);
+	msaaButtonText.SetEnabled(true);
+	vsyncButton.SetEnabled(true);
+	vsyncButtonText.SetEnabled(true);
+	graphicsBackButton.SetEnabled(true);
+	graphicsBackButtonText.SetEnabled(true);
+	graphicsButton.GetComponent<Button>()->SetEnabled(false);
+	audioButton.GetComponent<Button>()->SetEnabled(false);
+	optionsBackButton.GetComponent<Button>()->SetEnabled(false);
+	Gray(&graphicsButton);
+	Gray(&graphicsButtonText);
+	Gray(&audioButton);
+	Gray(&audioButtonText);
+	Gray(&optionsBackButton);
+	Gray(&optionsBackButtonText);
+	mainParent.SetEnabled(false);
+	playButton.SetEnabled(false);
+	playButtonText.SetEnabled(false);
+	optionsButton.SetEnabled(false);
+	optionsButtonText.SetEnabled(false);
+	quitButton.SetEnabled(false);
+	quitButtonText.SetEnabled(false);
+	SlideLeft(&optionsParent);
 }
 
 void MainMenu::AudioClick()
@@ -113,6 +137,60 @@ void MainMenu::OptionsBackClick()
 	White(&optionsButtonText);
 	White(&quitButton);
 	White(&quitButtonText);
+}
+
+void MainMenu::MsaaClick()
+{
+}
+
+void MainMenu::VsyncClick()
+{
+	bool preV = Application::GetInstance()->GetVsync();
+	if (preV)
+		vsyncButtonText.GetComponent<TextRenderer>()->SetText("VSync Off");
+	else
+		vsyncButtonText.GetComponent<TextRenderer>()->SetText("VSync On");
+	Application::GetInstance()->SetVsync(!preV);
+}
+
+void MainMenu::ShadowsClick()
+{
+}
+
+void MainMenu::FullscreenClick()
+{
+}
+
+void MainMenu::ResolutionClick()
+{
+}
+
+void MainMenu::GraphicsBackClick()
+{
+	graphicsParent.SetEnabled(false);
+	msaaButton.SetEnabled(false);
+	msaaButtonText.SetEnabled(false);
+	vsyncButton.SetEnabled(false);
+	vsyncButtonText.SetEnabled(false);
+	graphicsBackButton.SetEnabled(false);
+	graphicsBackButtonText.SetEnabled(false);
+	graphicsButton.GetComponent<Button>()->SetEnabled(true);
+	audioButton.GetComponent<Button>()->SetEnabled(true);
+	optionsBackButton.GetComponent<Button>()->SetEnabled(true);
+	White(&graphicsButton);
+	White(&graphicsButtonText);
+	White(&audioButton);
+	White(&audioButtonText);
+	White(&optionsBackButton);
+	White(&optionsBackButtonText);
+	mainParent.SetEnabled(true);
+	playButton.SetEnabled(true);
+	playButtonText.SetEnabled(true);
+	optionsButton.SetEnabled(true);
+	optionsButtonText.SetEnabled(true);
+	quitButton.SetEnabled(true);
+	quitButtonText.SetEnabled(true);
+	SlideRight(&optionsParent);
 }
 
 void MainMenu::ConfirmQuitClick()
@@ -148,6 +226,25 @@ void MainMenu::Gray(GameObject* _go)
 	_go->GetComponent<MeshRenderer>()->SetMeshColor(XMFLOAT4(0.5f, 0.5f, 0.5f, 1));
 }
 
+void MainMenu::SlideLeft(GameObject* _go)
+{
+	slideDir = -1;
+	slider = _go;
+	slideRatio = 0;
+}
+
+void MainMenu::SlideRight(GameObject* _go)
+{
+	slideDir = 1;
+	slider = _go;
+	slideRatio = 0;
+}
+
+float MainMenu::Lerp(float _min, float _max, float _ratio)
+{
+	return _min + _ratio * (_max - _min);
+}
+
 MainMenu::MainMenu()
 {
 }
@@ -160,7 +257,7 @@ void MainMenu::Start()
 {
 	// Main Parent
 	mainParent.Start();
-	mainParent.AddComponent<Transform>()->SetLocalPosition(-0.75f, 0, 0.5f);
+	mainParent.AddComponent<Transform>()->SetLocalPosition(minX, 0, 0.5f);
 	mainParent.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/frame.dds");
 	mainParent.AddComponent<UIRenderer>()->SetRect(0.1f, -0.3f, 0.9f, 0.6f);
 
@@ -174,7 +271,6 @@ void MainMenu::Start()
 	playButton.AddComponent<Button>()->Subscribe(&playClick);
 
 	playButtonText.Start();
-	playButtonText.SetTag("Text");
 	playButtonText.AddComponent <Transform>();
 	playButtonText.AddComponent<MeshRenderer>();
 	playButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
@@ -221,7 +317,7 @@ void MainMenu::Start()
 
 	// Play Parent
 	playParent.Start();
-	playParent.AddComponent<Transform>()->SetLocalPosition(0.75f, 0, 0.5f);
+	playParent.AddComponent<Transform>()->SetLocalPosition(maxX, 0, 0.5f);
 	playParent.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/frame.dds");
 	playParent.AddComponent<UIRenderer>()->SetRect(0.1f, -0.3f, 0.9f, 0.6f);
 	playParent.SetEnabled(false);
@@ -237,7 +333,6 @@ void MainMenu::Start()
 	newGameButton.SetEnabled(false);
 
 	newGameButtonText.Start();
-	newGameButtonText.SetTag("Text");
 	newGameButtonText.AddComponent <Transform>();
 	newGameButtonText.AddComponent<MeshRenderer>();
 	newGameButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
@@ -258,7 +353,6 @@ void MainMenu::Start()
 	playBackButton.SetEnabled(false);
 
 	playBackButtonText.Start();
-	playBackButtonText.SetTag("Text");
 	playBackButtonText.AddComponent <Transform>();
 	playBackButtonText.AddComponent<MeshRenderer>();
 	playBackButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
@@ -270,7 +364,7 @@ void MainMenu::Start()
 
 	// Options Parent
 	optionsParent.Start();
-	optionsParent.AddComponent<Transform>()->SetLocalPosition(0.75f, 0, 0.5f);
+	optionsParent.AddComponent<Transform>()->SetLocalPosition(maxX, 0, 0.5f);
 	optionsParent.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/frame.dds");
 	optionsParent.AddComponent<UIRenderer>()->SetRect(0.1f, -0.3f, 0.9f, 0.6f);
 	optionsParent.SetEnabled(false);
@@ -286,7 +380,6 @@ void MainMenu::Start()
 	graphicsButton.SetEnabled(false);
 
 	graphicsButtonText.Start();
-	graphicsButtonText.SetTag("Text");
 	graphicsButtonText.AddComponent <Transform>();
 	graphicsButtonText.AddComponent<MeshRenderer>();
 	graphicsButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
@@ -295,6 +388,73 @@ void MainMenu::Start()
 	graphicsButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.37f, -0.1f);
 	graphicsButtonText.GetComponent<TextRenderer>()->SetText("Graphics");
 	graphicsButtonText.SetEnabled(false);
+
+	// Graphics Parent
+	graphicsParent.Start();
+	graphicsParent.AddComponent<Transform>()->SetLocalPosition(maxX, 0, 0.5f);
+	graphicsParent.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/frame.dds");
+	graphicsParent.AddComponent<UIRenderer>()->SetRect(0.1f, -0.3f, 0.9f, 0.6f);
+	graphicsParent.SetEnabled(false);
+
+	// MSAA
+	msaaButton.Start();
+	msaaButton.AddComponent<Transform>()->SetLocalPosition(0, 0, -0.1f);
+	msaaButton.GetComponent<Transform>()->SetParent(graphicsParent.GetComponent<Transform>());
+	msaaButton.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
+	msaaButton.AddComponent<UIRenderer>()->SetRect(0.2f, -0.2f, 0.2f, 0.4f);
+	msaaClick = [=]() -> void { MsaaClick(); };
+	msaaButton.AddComponent<Button>()->Subscribe(&msaaClick);
+	msaaButton.SetEnabled(false);
+
+	msaaButtonText.Start();
+	msaaButtonText.AddComponent <Transform>();
+	msaaButtonText.AddComponent<MeshRenderer>();
+	msaaButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
+	msaaButtonText.GetComponent<Transform>()->ScalePost(0.0005f);
+	msaaButtonText.GetComponent<Transform>()->SetParent(msaaButton.GetComponent<Transform>());
+	msaaButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.37f, -0.1f);
+	msaaButtonText.GetComponent<TextRenderer>()->SetText("MSAA x8");
+	msaaButtonText.SetEnabled(false);
+
+	// VSync
+	vsyncButton.Start();
+	vsyncButton.AddComponent<Transform>()->SetLocalPosition(0, -0.25f, -0.1f);
+	vsyncButton.GetComponent<Transform>()->SetParent(graphicsParent.GetComponent<Transform>());
+	vsyncButton.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
+	vsyncButton.AddComponent<UIRenderer>()->SetRect(0.2f, -0.2f, 0.2f, 0.4f);
+	vsyncClick = [=]() -> void { VsyncClick(); };
+	vsyncButton.AddComponent<Button>()->Subscribe(&vsyncClick);
+	vsyncButton.SetEnabled(false);
+
+	vsyncButtonText.Start();
+	vsyncButtonText.AddComponent <Transform>();
+	vsyncButtonText.AddComponent<MeshRenderer>();
+	vsyncButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
+	vsyncButtonText.GetComponent<Transform>()->ScalePost(0.0005f);
+	vsyncButtonText.GetComponent<Transform>()->SetParent(vsyncButton.GetComponent<Transform>());
+	vsyncButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.37f, -0.1f);
+	vsyncButtonText.GetComponent<TextRenderer>()->SetText("VSync On");
+	vsyncButtonText.SetEnabled(false);
+
+	// Graphics Back
+	graphicsBackButton.Start();
+	graphicsBackButton.AddComponent<Transform>()->SetLocalPosition(0, -0.5f, -0.1f);
+	graphicsBackButton.GetComponent<Transform>()->SetParent(graphicsParent.GetComponent<Transform>());
+	graphicsBackButton.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/button.dds");
+	graphicsBackButton.AddComponent<UIRenderer>()->SetRect(0.2f, -0.2f, 0.2f, 0.4f);
+	graphicsBackClick = [=]() -> void { GraphicsBackClick(); };
+	graphicsBackButton.AddComponent<Button>()->Subscribe(&graphicsBackClick);
+	graphicsBackButton.SetEnabled(false);
+
+	graphicsBackButtonText.Start();
+	graphicsBackButtonText.AddComponent <Transform>();
+	graphicsBackButtonText.AddComponent<MeshRenderer>();
+	graphicsBackButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
+	graphicsBackButtonText.GetComponent<Transform>()->ScalePost(0.0005f);
+	graphicsBackButtonText.GetComponent<Transform>()->SetParent(graphicsBackButton.GetComponent<Transform>());
+	graphicsBackButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.37f, -0.1f);
+	graphicsBackButtonText.GetComponent<TextRenderer>()->SetText("Back");
+	graphicsBackButtonText.SetEnabled(false);
 
 	// Audio
 	audioButton.Start();
@@ -307,7 +467,6 @@ void MainMenu::Start()
 	audioButton.SetEnabled(false);
 
 	audioButtonText.Start();
-	audioButtonText.SetTag("Text");
 	audioButtonText.AddComponent <Transform>();
 	audioButtonText.AddComponent<MeshRenderer>();
 	audioButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
@@ -328,7 +487,6 @@ void MainMenu::Start()
 	optionsBackButton.SetEnabled(false);
 
 	optionsBackButtonText.Start();
-	optionsBackButtonText.SetTag("Text");
 	optionsBackButtonText.AddComponent <Transform>();
 	optionsBackButtonText.AddComponent<MeshRenderer>();
 	optionsBackButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
@@ -340,7 +498,7 @@ void MainMenu::Start()
 
 	// Quit Parent
 	quitParent.Start();
-	quitParent.AddComponent<Transform>()->SetLocalPosition(0.75f, 0, 0.5f);
+	quitParent.AddComponent<Transform>()->SetLocalPosition(maxX, 0, 0.5f);
 	quitParent.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/frame.dds");
 	quitParent.AddComponent<UIRenderer>()->SetRect(0.1f, -0.3f, 0.9f, 0.6f);
 	quitParent.SetEnabled(false);
@@ -356,7 +514,6 @@ void MainMenu::Start()
 	confirmQuitButton.SetEnabled(false);
 
 	confirmQuitButtonText.Start();
-	confirmQuitButtonText.SetTag("Text");
 	confirmQuitButtonText.AddComponent <Transform>();
 	confirmQuitButtonText.AddComponent<MeshRenderer>();
 	confirmQuitButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
@@ -377,7 +534,6 @@ void MainMenu::Start()
 	quitBackButton.SetEnabled(false);
 
 	quitBackButtonText.Start();
-	quitBackButtonText.SetTag("Text");
 	quitBackButtonText.AddComponent <Transform>();
 	quitBackButtonText.AddComponent<MeshRenderer>();
 	quitBackButtonText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
@@ -390,6 +546,23 @@ void MainMenu::Start()
 
 void MainMenu::Update()
 {
+	if (slider)
+	{
+		slideRatio += Time::Delta();
+		XMFLOAT3 posPre = slider->GetComponent<Transform>()->GetWorldPosition();
+		if (slideDir == -1)
+			posPre.x = -Lerp(minX, maxX, slideRatio);
+		else
+			posPre.x = Lerp(minX, maxX, slideRatio);
+		slider->GetComponent<Transform>()->SetLocalPosition(posPre.x, posPre.y, posPre.z);
+
+		if (slideRatio >= 1)
+		{
+			slider = nullptr;
+			slideDir = 0;
+		}
+	}
+
 	// Main
 	mainParent.Update();
 	playButton.Update();
@@ -414,6 +587,15 @@ void MainMenu::Update()
 	audioButtonText.Update();
 	optionsBackButton.Update();
 	optionsBackButtonText.Update();
+
+	// Graphics
+	graphicsParent.Update();
+	msaaButton.Update();
+	msaaButtonText.Update();
+	vsyncButton.Update();
+	vsyncButtonText.Update();
+	graphicsBackButton.Update();
+	graphicsBackButtonText.Update();
 
 	// Quit
 	quitParent.Update();
@@ -449,6 +631,15 @@ void MainMenu::OnDelete()
 	audioButtonText.OnDelete();
 	optionsBackButton.OnDelete();
 	optionsBackButtonText.OnDelete();
+
+	// Graphics
+	graphicsParent.OnDelete();
+	msaaButton.OnDelete();
+	msaaButtonText.OnDelete();
+	vsyncButton.OnDelete();
+	vsyncButtonText.OnDelete();
+	graphicsBackButton.OnDelete();
+	graphicsBackButtonText.OnDelete();
 
 	// Quit
 	quitParent.OnDelete();

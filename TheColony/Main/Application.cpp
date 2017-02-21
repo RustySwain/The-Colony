@@ -222,8 +222,7 @@ void Application::RegisterMeshRenderer(const MeshRenderer* _mr)
 void Application::UnRegisterMeshRenderer(const MeshRenderer* _mr)
 {
 	auto iter = find(renderers.begin(), renderers.end(), _mr);
-	if (iter != renderers.end())
-		renderers.erase(iter);
+	renderers.erase(iter);
 }
 
 void Application::RegisterLight(const Light *_light)
@@ -234,8 +233,7 @@ void Application::RegisterLight(const Light *_light)
 void Application::UnregisterLight(const Light *_light)
 {
 	auto iter = find(lights.begin(), lights.end(), _light);
-	if (iter != lights.end())
-		lights.erase(iter);
+	lights.erase(iter);
 }
 
 void Application::CreateBuffer(D3D11_BUFFER_DESC* _bData, D3D11_SUBRESOURCE_DATA* _subData, ID3D11Buffer** _buffer) const
@@ -308,7 +306,7 @@ void Application::Render()
 		if (renderers[i]->GetType() == MeshRenderer::UI && renderers[i]->GetEnabled())
 			renderers[i]->Render();
 
-	swapChain->Present(1, 0);
+	swapChain->Present(vsync, 0);
 }
 
 void Application::Shutdown()
