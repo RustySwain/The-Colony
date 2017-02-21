@@ -1,10 +1,15 @@
 #pragma once
 #include "SceneABC.h"
-#include "Application.h"
 #include "Button.h"
 
 class MainMenu : public SceneABC
 {
+	float slideRatio = 0;
+	GameObject* slider = nullptr;
+	int slideDir = 0;
+
+	float minX = -0.75f, maxX = 0.75f;
+
 	// Main
 	GameObject mainParent;
 	GameObject playButton;
@@ -69,6 +74,12 @@ class MainMenu : public SceneABC
 	CallbackFunc optionsBackClick;
 
 	// Graphics
+	CallbackFunc msaaClick;
+	CallbackFunc vsyncClick;
+	CallbackFunc shadowsClick;
+	CallbackFunc fullscreenClick;
+	CallbackFunc resolutionClick;
+	CallbackFunc graphicsBackClick;
 
 	// Audio
 
@@ -91,6 +102,12 @@ class MainMenu : public SceneABC
 	void OptionsBackClick();
 
 	// Graphics
+	void MsaaClick();
+	void VsyncClick();
+	void ShadowsClick();
+	void FullscreenClick();
+	void ResolutionClick();
+	void GraphicsBackClick();
 
 	// Audio
 
@@ -100,6 +117,11 @@ class MainMenu : public SceneABC
 
 	static void White(GameObject* _go);
 	static void Gray(GameObject* _go);
+
+	void SlideLeft(GameObject* _go);
+	void SlideRight(GameObject* _go);
+
+	static float Lerp(float _min, float _max, float _ratio);
 
 public:
 	MainMenu();
