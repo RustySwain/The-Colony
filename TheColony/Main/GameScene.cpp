@@ -71,7 +71,6 @@ void GameScene::Start()
 	box.SetTag("Untagged");
 	box.Start();
 	box.AddComponent<Transform>()->SetLocalPosition(5, 0, 0);
-	box.GetComponent<Transform>()->ScalePre(0.5f);
 	box.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Box/Box_Idle.mesh");
 	box.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box/Box.dds");
 	box.AddComponent<Animator>()->AddAnimation("../Assets/Box/Box_Idle.anim");
@@ -87,20 +86,26 @@ void GameScene::Start()
 	teddy.GetComponent<Transform>()->ScalePre(0.03f);
 	teddy.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Teddy/Teddy_Idle.mesh");
 	teddy.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Teddy/Teddy_D.dds");
-	teddy.AddComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Idle.anim");
-	teddy.GetComponent<Animator>()->Play("Teddy_Idle");
+	//teddy.AddComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Idle.anim");
+	//teddy.GetComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Attack1.anim");
+	//teddy.GetComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Attack2.anim");
+	//teddy.GetComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Run.anim");
+	//teddy.GetComponent<Animator>()->Play("Teddy_Idle");
 
 	mage.SetId(11);
 	mage.SetTag("Untagged");
 	mage.Start();
-	mage.AddComponent<Transform>()->SetLocalPosition(0, 0, -5);
+	mage.AddComponent<Transform>()->SetLocalPosition(60, 0, 50);
 	mage.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Mage/Mage.mesh");
 	mage.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Mage/diffuse.dds");
 	mage.GetComponent<MeshRenderer>()->LoadEmissiveMap(L"../Assets/Mage/emissive.dds");
 	mage.GetComponent<MeshRenderer>()->LoadNormalMap(L"../Assets/Mage/normal.dds");
 	mage.GetComponent<MeshRenderer>()->LoadSpecularMap(L"../Assets/Mage/specular.dds");
-	mage.AddComponent<Animator>()->AddAnimation("../Assets/Mage/Idle.anim");
-	mage.GetComponent<Animator>()->Play("Idle");
+	//mage.AddComponent<Animator>()->AddAnimation("../Assets/Mage/Idle.anim");
+	//mage.GetComponent<Animator>()->AddAnimation("../Assets/Mage/Death.anim");
+	//mage.GetComponent<Animator>()->AddAnimation("../Assets/Mage/Run.anim");
+	//mage.GetComponent<Animator>()->AddAnimation("../Assets/Mage/Walk.anim");
+	//mage.GetComponent<Animator>()->Play("Walk");
 
 	// Terrain
 	terrain.SetId(9);

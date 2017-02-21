@@ -83,7 +83,7 @@ void Interpolator::SetAnimation(const Animation _animation)
 {
 	currTime = 0;
 	currFrame = 0;
-	prevAnimation = animation;
+	prevAnimation = _animation;
 	animation = _animation;
 }
 
