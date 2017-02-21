@@ -29,7 +29,6 @@ public:
 	bool AddBindPose(BindPose * _bindPose);
 	bool Play(const string _animationName);
 	bool Play(int _animationIndex);
-	void LoadSpheres() const;
 	void NextFrame() const;
 	void PreviousFrame() const;
 	void SetVSBuffer() const;

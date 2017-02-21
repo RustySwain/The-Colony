@@ -41,7 +41,7 @@ public:
 	unsigned int CSJointsCount = 0;
 	// End Shader
 
-	void Init(std::string _name, ANIM_TYPE _type, float _length, std::vector<Joint> _bones);
+	void Init(std::string _name, int _type, float _length, std::vector<Joint> _bones);
 
 	// Accessors
 	std::string GetName() const { return name; }

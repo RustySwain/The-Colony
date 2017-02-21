@@ -7,8 +7,8 @@
 
 void Interpolator::Start()
 {
-	currFrame = 3;
-	currTime = Time::Delta();
+	currFrame = 0;
+	currTime = 0;
 
 	D3D11_BUFFER_DESC bDesc;
 	ZMem(bDesc);
@@ -51,24 +51,8 @@ void Interpolator::Update()
 		animation.CSJointsBuffer.jointOffsets[animation.CSJointsCount] = interpolatedMat;
 		animation.CSJointsCount += 1;
 		// End VShader
-
-		/*spheres[j]->GetComponent<Transform>()->SetLocalMatrix(newPosition);
-		spheres[j]->GetComponent<Transform>()->SetParent(gameObject->GetComponent<Transform>());
-		float invScale = 1 / gameObject->GetComponent<Transform>()->GetScale();
-		spheres[j]->GetComponent<Transform>()->ScalePre(0.3f * invScale);
-		spheres[j]->Update();*/
 	}
 	Application::GetInstance()->GetContext()->UpdateSubresource(jointsBuffer, 0, nullptr, &animation.CSJointsBuffer, 0, 0);
-
-
-	/*int totalJoints = animation.GetTotalBones();
-	for (int i = 0; i < totalJoints; ++i)
-	{
-		XMMATRIX newPosition = animation.GetJoints()[i].keyFrames[currFrame].transform;
-		spheres[i]->GetComponent<Transform>()->SetLocalMatrix(newPosition);
-		spheres[i]->GetComponent<Transform>()->ScalePre(0.3f);
-		spheres[i]->Update();
-	}*/
 }
 
 void Interpolator::OnDelete()
@@ -83,6 +67,8 @@ void Interpolator::SetVSBuffer() const
 
 void Interpolator::SetAnimation(const Animation _animation)
 {
+	currTime = 0;
+	currFrame = 0;
 	animation = _animation;
 }
 

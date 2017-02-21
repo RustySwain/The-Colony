@@ -29,7 +29,7 @@ bool FBXExporterTool::Initialize()
 	return true;
 }
 
-bool FBXExporterTool::LoadScene(const char* inFileName, const char* inOutputPath, bool exportMesh, bool exportAnim, bool exportBinary)
+bool FBXExporterTool::LoadScene(const char* inFileName, const char* inOutputPath, bool exportMesh, bool exportAnim, bool exportBinary, int animType)
 {
 	LARGE_INTEGER start;
 	LARGE_INTEGER end;
@@ -38,6 +38,7 @@ bool FBXExporterTool::LoadScene(const char* inFileName, const char* inOutputPath
 	mExportMesh = exportMesh;
 	mExportAnim = exportAnim;
 	mExportBinary = exportBinary;
+	mAnimationType = animType;
 	mAnimationName = Utilities::RemoveSuffix(Utilities::GetFileName(inFileName));
 
 	QueryPerformanceCounter(&start);
@@ -966,8 +967,8 @@ void FBXExporterTool::WriteMeshToBinary(std::ostream & inStream)
 	for(unsigned int i = 0; i < mTriangleCount; ++i)
 	{
 		inStream.write((char*)&mTriangles[i].mIndices[0], sizeof(int));
-		inStream.write((char*)&mTriangles[i].mIndices[1], sizeof(int));
 		inStream.write((char*)&mTriangles[i].mIndices[2], sizeof(int));
+		inStream.write((char*)&mTriangles[i].mIndices[1], sizeof(int));
 	}
 	// Num verts
 	int verticesSize = (int)mVertices.size();
@@ -1053,6 +1054,8 @@ void FBXExporterTool::WriteAnimationToBinary(std::ostream & inStream)
 	// animation duration
 	float duration = keyframesTime[keyframesTime.size() - 1];
 	inStream.write((char*)&duration, sizeof(float));
+	// animation type	
+	inStream.write((char*)&mAnimationType, sizeof(int));
 	// joints
 	for (unsigned int i = 0; i < mSkeleton.mJoints.size(); ++i)
 	{

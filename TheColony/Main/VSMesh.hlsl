@@ -45,7 +45,6 @@ float4 addJointInfluence(Input _in)
 	pos += mul(jointOffsets[_in.jointIndex[1]], _in.pos) * _in.jointWeight[1];
 	pos += mul(jointOffsets[_in.jointIndex[2]], _in.pos) * _in.jointWeight[2];
 	pos += mul(jointOffsets[_in.jointIndex[3]], _in.pos) * _in.jointWeight[3];
-	pos *= 0.5f;
 
 	return pos;
 }
@@ -57,6 +56,7 @@ Output main(Input _in)
 	if (_in.flags[0] == 1)
 	{
 		pos = float4(addJointInfluence(_in).xyz, 1.0f);
+		pos *= 0.5f;
 	}
 	else
 	{

@@ -47,6 +47,8 @@ namespace FBXExporter {
 	private: System::Windows::Forms::TextBox^  FileOutputPath;
 	private: System::Windows::Forms::Label^  FileOutput_Label;
 	private: System::Windows::Forms::FolderBrowserDialog^  OutputFolderDialog;
+	private: System::Windows::Forms::Label^  AnimType_Label;
+	private: System::Windows::Forms::ComboBox^  AnimType_Input;
 	public:
 	private:
 
@@ -79,6 +81,8 @@ namespace FBXExporter {
 			this->FileOutputPath = (gcnew System::Windows::Forms::TextBox());
 			this->FileOutput_Label = (gcnew System::Windows::Forms::Label());
 			this->OutputFolderDialog = (gcnew System::Windows::Forms::FolderBrowserDialog());
+			this->AnimType_Label = (gcnew System::Windows::Forms::Label());
+			this->AnimType_Input = (gcnew System::Windows::Forms::ComboBox());
 			this->SuspendLayout();
 			// 
 			// FBXFile_Label
@@ -115,10 +119,10 @@ namespace FBXExporter {
 			// 
 			// Export
 			// 
-			this->Export->Anchor = System::Windows::Forms::AnchorStyles::Top;
+			this->Export->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
 			this->Export->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->Export->Location = System::Drawing::Point(319, 300);
+			this->Export->Location = System::Drawing::Point(319, 365);
 			this->Export->Name = L"Export";
 			this->Export->Size = System::Drawing::Size(94, 30);
 			this->Export->TabIndex = 3;
@@ -156,7 +160,9 @@ namespace FBXExporter {
 			// 
 			// ResultBox
 			// 
-			this->ResultBox->Location = System::Drawing::Point(12, 180);
+			this->ResultBox->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left)
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->ResultBox->Location = System::Drawing::Point(12, 245);
 			this->ResultBox->Name = L"ResultBox";
 			this->ResultBox->ReadOnly = true;
 			this->ResultBox->Size = System::Drawing::Size(401, 114);
@@ -205,11 +211,35 @@ namespace FBXExporter {
 			this->FileOutput_Label->TabIndex = 10;
 			this->FileOutput_Label->Text = L"File Output";
 			// 
+			// AnimType_Label
+			// 
+			this->AnimType_Label->AutoSize = true;
+			this->AnimType_Label->Location = System::Drawing::Point(9, 181);
+			this->AnimType_Label->Name = L"AnimType_Label";
+			this->AnimType_Label->Size = System::Drawing::Size(80, 13);
+			this->AnimType_Label->TabIndex = 12;
+			this->AnimType_Label->Text = L"Animation Type";
+			// 
+			// AnimType_Input
+			// 
+			this->AnimType_Input->FormattingEnabled = true;
+			this->AnimType_Input->Items->AddRange(gcnew cli::array< System::Object^  >(4) {
+				L"Loop", L"Return Default", L"Return Last",
+					L"Run Once"
+			});
+			this->AnimType_Input->Location = System::Drawing::Point(12, 199);
+			this->AnimType_Input->Name = L"AnimType_Input";
+			this->AnimType_Input->Size = System::Drawing::Size(151, 21);
+			this->AnimType_Input->TabIndex = 11;
+			this->AnimType_Input->Text = L"-- Select --";
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(425, 342);
+			this->ClientSize = System::Drawing::Size(425, 406);
+			this->Controls->Add(this->AnimType_Label);
+			this->Controls->Add(this->AnimType_Input);
 			this->Controls->Add(this->FileOutput_Label);
 			this->Controls->Add(this->OutputPathBrowser);
 			this->Controls->Add(this->FileOutputPath);
@@ -257,7 +287,7 @@ namespace FBXExporter {
 		{
 			ResultBox->AppendText("\nExporting " + FBXDialog->FileName + "... ");
 			fbxexport.Initialize();
-			fbxexport.LoadScene(path, output, ExportMesh->Checked, ExportAnim->Checked, ExportAsBinary->Checked);
+			fbxexport.LoadScene(path, output, ExportMesh->Checked, ExportAnim->Checked, ExportAsBinary->Checked, AnimType_Input->SelectedIndex);
 			fbxexport.ExportFBX();
 			ResultBox->AppendText("Done!");
 		}

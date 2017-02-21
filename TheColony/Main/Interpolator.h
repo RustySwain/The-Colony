@@ -1,6 +1,5 @@
 #pragma once
 #include "Animation.h"
-#include "GameObject.h"
 #include <d3d11.h>
 
 class Interpolator

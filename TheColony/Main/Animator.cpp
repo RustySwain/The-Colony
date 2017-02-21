@@ -1,6 +1,5 @@
 #include "Animator.h"
 #include <fstream>
-#include "Macros.h"
 #include "Application.h"
 
 Animator::Animator()
@@ -47,7 +46,6 @@ void Animator::LoadFromFile(fstream & _file)
 		delete[] animation;
 	}
 	_file.read((char*)&defaultAnimation, sizeof(int));
-	//LoadSpheres();
 }
 
 bool Animator::AddAnimation(const char * _path)
@@ -59,7 +57,7 @@ bool Animator::AddAnimation(const char * _path)
 	{
 		Animation animation;
 		vector<Joint> joints;
-		vector<DirectX::XMMATRIX> invWorlds;
+		vector<XMMATRIX> invWorlds;
 
 		int numJoints = 0;
 		file.read((char*)&numJoints, sizeof(int));
@@ -115,6 +113,10 @@ bool Animator::AddAnimation(const char * _path)
 		float animDuration = 0;
 		file.read((char*)&animDuration, sizeof(float));
 
+		// Animation type
+		int animType = 0;
+		file.read((char*)&animType, sizeof(int));
+
 		for(int i = 0; i < numJoints; ++i)
 		{
 			// Joint ID
@@ -152,7 +154,7 @@ bool Animator::AddAnimation(const char * _path)
 			}
 		}
 
-		animation.Init(animName, ANIM_TYPE::LOOP, animDuration, joints);
+		animation.Init(animName, animType, animDuration, joints);
 		animations.push_back(animation);
 
 		delete[] animName;
@@ -200,22 +202,6 @@ bool Animator::Play(int _animationIndex)
 	}
 	
 	return false;
-}
-
-void Animator::LoadSpheres() const
-{
-	/*int totalJoints = bindPose->GetNumOfJoints();
-	for(int i = 0; i < totalJoints; ++i)
-	{
-		GameObject* sphere = new GameObject();
-		sphere->AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/sphere.mesh");
-		sphere->GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/SphereTex.dds");
-		sphere->GetComponent<MeshRenderer>()->SetDynamic(true);
-		sphere->AddComponent<Transform>()->SetLocalMatrix(bindPose->GetBindPose()[i]);
-		sphere->GetComponent<Transform>()->SetParent(gameObject->GetComponent<Transform>());
-		sphere->GetComponent<Transform>()->ScalePre(0.3f);
-		interpolator->spheres.push_back(sphere);
-	}*/
 }
 
 void Animator::NextFrame() const
