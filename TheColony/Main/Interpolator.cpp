@@ -24,11 +24,11 @@ void Interpolator::Update()
 	while (currTime > animation.GetJoints()[0].keyFrames[currFrame].duration)
 	{
 		currFrame++;
-		if (currFrame >= animation.GetJoints()[0].keyFrames.size() - 1)
+		if (currFrame >= (int)animation.GetJoints()[0].keyFrames.size() - 1)
 			currTime -= animation.GetLength() - animation.GetJoints()[0].keyFrames[0].duration;
 	}
 
-	if (currFrame >= animation.GetJoints()[0].keyFrames.size() - 1)
+	if (currFrame >= (int)animation.GetJoints()[0].keyFrames.size() - 1)
 	{
 		if (animation.GetType() == RETURN_DEFAULT)
 			SetAnimation(defaultAnimation);
