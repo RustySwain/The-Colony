@@ -80,35 +80,17 @@ void GameScene::Start()
 	box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Walk.anim");
 	box.GetComponent<Animator>()->Play("Box_Jump");
 
-	teddy.SetId(10);
-	teddy.SetTag("Untagged");
-	teddy.SetName("Teddy");
-	teddy.Start();
-	teddy.AddComponent<Transform>()->SetLocalPosition(-10, 0, 0);
-	teddy.GetComponent<Transform>()->ScalePre(0.05f);
-	teddy.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Teddy/Teddy_Idle.mesh");
-	teddy.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Teddy/Teddy_D.dds");
-	teddy.AddComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Idle.anim");
-	teddy.GetComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Attack1.anim");
-	teddy.GetComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Attack2.anim");
-	teddy.GetComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Run.anim");
-	teddy.GetComponent<Animator>()->Play("Teddy_Idle");
-
-	mage.SetId(11);
-	mage.SetTag("Untagged");
-	mage.SetName("Mage");
-	mage.Start();
-	mage.AddComponent<Transform>()->SetLocalPosition(60, 0, 50);
-	mage.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Mage/Mage.mesh");
-	mage.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Mage/diffuse.dds");
-	mage.GetComponent<MeshRenderer>()->LoadEmissiveMap(L"../Assets/Mage/emissive.dds");
-	mage.GetComponent<MeshRenderer>()->LoadNormalMap(L"../Assets/Mage/normal.dds");
-	mage.GetComponent<MeshRenderer>()->LoadSpecularMap(L"../Assets/Mage/specular.dds");
-	mage.AddComponent<Animator>()->AddAnimation("../Assets/Mage/Idle.anim");
-	mage.GetComponent<Animator>()->AddAnimation("../Assets/Mage/Death.anim");
-	mage.GetComponent<Animator>()->AddAnimation("../Assets/Mage/Run.anim");
-	mage.GetComponent<Animator>()->AddAnimation("../Assets/Mage/Walk.anim");
-	mage.GetComponent<Animator>()->Play("Walk");
+	bunny.SetId(10);
+	bunny.SetTag("Untagged");
+	bunny.SetName("Bunny");
+	bunny.Start();
+	bunny.AddComponent<Transform>()->SetLocalPosition(-10, 0, 0);
+	bunny.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Bunny/Bunny.mesh");
+	bunny.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Bunny/White.dds");
+	bunny.AddComponent<Animator>()->AddAnimation("../Assets/Bunny/Idle.anim");
+	bunny.GetComponent<Animator>()->AddAnimation("../Assets/Bunny/Run.anim");
+	bunny.GetComponent<Animator>()->AddAnimation("../Assets/Bunny/Attack.anim");
+	bunny.GetComponent<Animator>()->Play("Idle");
 
 	// Terrain
 	terrain.SetId(9);
@@ -164,13 +146,12 @@ void GameScene::Update()
 		box.GetComponent<Animator>()->Play("Box_Walk");
 
 	if (GetAsyncKeyState(VK_F5))
-		teddy.GetComponent<Animator>()->Play("Teddy_Idle");
+		bunny.GetComponent<Animator>()->Play("Idle");
 	if (GetAsyncKeyState(VK_F6))
-		teddy.GetComponent<Animator>()->Play("Teddy_Attack1");
+		bunny.GetComponent<Animator>()->Play("Run");
 	if (GetAsyncKeyState(VK_F7))
-		teddy.GetComponent<Animator>()->Play("Teddy_Attack2");
+		bunny.GetComponent<Animator>()->Play("Attack");
 	if (GetAsyncKeyState(VK_F8))
-		teddy.GetComponent<Animator>()->Play("Teddy_Run");
 
 	cube.Update();
 	spotLight.Update();
@@ -178,9 +159,8 @@ void GameScene::Update()
 	pointLight.Update();
 	skybox.Update();
 	terrain.Update();
-	teddy.Update();
+	bunny.Update();
 	box.Update();
-	mage.Update();
 }
 
 void GameScene::OnDelete()
@@ -191,7 +171,6 @@ void GameScene::OnDelete()
 	pointLight.OnDelete();
 	skybox.OnDelete();
 	terrain.OnDelete();
-	teddy.OnDelete();
+	bunny.OnDelete();
 	box.OnDelete();
-	mage.OnDelete();
 }

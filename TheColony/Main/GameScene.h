@@ -9,9 +9,8 @@ class GameScene : public SceneABC
 	GameObject pointLight;
 	GameObject skybox;
 	GameObject terrain;
-	GameObject teddy;
+	GameObject bunny;
 	GameObject box;
-	GameObject mage;
 
 
 public:
