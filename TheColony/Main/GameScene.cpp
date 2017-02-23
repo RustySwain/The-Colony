@@ -9,6 +9,7 @@
 #include "MeshRenderer.h"
 #include <ctime>
 #include "Animator.h"
+#include "AudioSource.h"
 
 GameScene::GameScene()
 {
@@ -92,6 +93,31 @@ void GameScene::Start()
 	bunny.GetComponent<Animator>()->AddAnimation("../Assets/Bunny/Attack.anim");
 	bunny.GetComponent<Animator>()->Play("Idle");
 
+	helicopter.SetId(11);
+	helicopter.SetTag("Untagged");
+	helicopter.SetName("Helicopter");
+	helicopter.Start();
+	helicopter.AddComponent<Transform>()->SetLocalPosition(60, 10, 30);
+	helicopter.GetComponent<Transform>()->ScalePre(0.3f);
+	helicopter.GetComponent<Transform>()->RotateZPre(15);
+	helicopter.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Helicopter/Helicopter.mesh");
+	helicopter.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Helicopter/T_Difuse_Helicopter.dds");
+	helicopter.AddComponent<AudioSource>()->AddAudioClip("../Assets/sounds/heli_sound1.wav");
+	helicopter.GetComponent<AudioSource>()->Play("heli_sound1", true);
+
+	heli_prop1.Start();
+	heli_prop1.AddComponent<Transform>()->SetParent(helicopter.GetComponent<Transform>());
+	heli_prop1.GetComponent<Transform>()->SetLocalPosition(-0.4f, 16, 0);
+	heli_prop1.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Helicopter/Helicopter_Propeller.mesh");
+	heli_prop1.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Helicopter/T_Difuse_Helicopter.dds");
+
+	heli_prop2.Start();
+	heli_prop2.AddComponent<Transform>()->SetParent(helicopter.GetComponent<Transform>());
+	heli_prop2.GetComponent<Transform>()->SetLocalPosition(35.3f, 16, 1.5);
+	heli_prop2.GetComponent<Transform>()->RotateYPre(180);
+	heli_prop2.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Helicopter/Helicopter_Propeller2.mesh");
+	heli_prop2.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Helicopter/T_Difuse_Helicopter.dds");
+
 	// Terrain
 	terrain.SetId(9);
 	terrain.SetTag("Untagged");
@@ -151,7 +177,10 @@ void GameScene::Update()
 		bunny.GetComponent<Animator>()->Play("Run");
 	if (GetAsyncKeyState(VK_F7))
 		bunny.GetComponent<Animator>()->Play("Attack");
-	if (GetAsyncKeyState(VK_F8))
+	
+	heli_prop1.GetComponent<Transform>()->RotateYPre(15);
+	heli_prop2.GetComponent<Transform>()->RotateZPre(20);
+	helicopter.GetComponent<Transform>()->TranslatePre(XMFLOAT3(-0.5f, 0.15f, 0));
 
 	cube.Update();
 	spotLight.Update();
@@ -161,6 +190,9 @@ void GameScene::Update()
 	terrain.Update();
 	bunny.Update();
 	box.Update();
+	helicopter.Update();
+	heli_prop1.Update();
+	heli_prop2.Update();
 }
 
 void GameScene::OnDelete()
@@ -173,4 +205,7 @@ void GameScene::OnDelete()
 	terrain.OnDelete();
 	bunny.OnDelete();
 	box.OnDelete();
+	helicopter.OnDelete();
+	heli_prop1.OnDelete();
+	heli_prop2.OnDelete();
 }

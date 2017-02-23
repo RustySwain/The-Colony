@@ -11,15 +11,17 @@ class GameScene : public SceneABC
 	GameObject terrain;
 	GameObject bunny;
 	GameObject box;
-
+	GameObject helicopter;
+	GameObject heli_prop1;
+	GameObject heli_prop2;
 
 public:
 	GameScene();
 	virtual ~GameScene();
 
 	// Component
-	virtual void Start() override;
-	virtual void Update() override;
-	virtual void OnDelete() override;
+	void Start() override;
+	void Update() override;
+	void OnDelete() override;
 };
 
