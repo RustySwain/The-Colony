@@ -57,7 +57,6 @@ void Interpolator::Update()
 		XMVECTOR scalePost, rotPost, posPost;
 		XMMatrixDecompose(&scalePost, &rotPost, &posPost, nextMatrix);
 
-		//float ratio = (currTime - previousTime) / (nextTime - previousTime);
 		float ratio = 1;
 		XMMATRIX interpolatedMat = XMMatrixAffineTransformation(XMVectorLerp(scalePre, scalePost, ratio), XMVectorZero(), XMQuaternionSlerp(rotPre, rotPost, ratio), XMVectorLerp(posPre, posPost, ratio));
 
