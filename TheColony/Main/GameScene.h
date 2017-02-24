@@ -13,6 +13,7 @@ class GameScene : public SceneABC
 	GameObject box;
 	GameObject mage;
 
+	//GameObject debugText;
 
 public:
 	GameScene();
@@ -23,4 +24,3 @@ public:
 	virtual void Update() override;
 	virtual void OnDelete() override;
 };
-

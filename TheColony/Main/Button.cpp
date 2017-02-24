@@ -33,10 +33,10 @@ void Button::Update()
 	POINT cursorPos;
 	GetCursorPos(&cursorPos);
 	RECT winRect = Application::GetInstance()->GetWindowRect();
-	float flCursorX = (float)cursorPos.x / winRect.right * 2 - 1;
-	float flCursorY = (float)cursorPos.y / winRect.bottom * 2 - 1;
+	float flCursorX = (float)cursorPos.x / (winRect.right - winRect.left) * 2 - 1;
+	float flCursorY = (float)cursorPos.y / (winRect.bottom - winRect.top) * 2 - 1;
 	XMFLOAT4 uiRect = gameObject->GetComponent<UIRenderer>()->GetRect();
-	if (flCursorX > uiRect.y && flCursorX < uiRect.y + uiRect.w &&  -flCursorY < uiRect.x &&  -flCursorY > uiRect.x - uiRect.z)
+	if (flCursorX > uiRect.y && flCursorX < uiRect.y + uiRect.w && -flCursorY < uiRect.x && -flCursorY > uiRect.x - uiRect.z)
 		OnClick();
 	buttonDown = true;
 }

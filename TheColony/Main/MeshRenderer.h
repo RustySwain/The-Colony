@@ -19,7 +19,7 @@ struct PerInstanceVertexData
 // Dependencies: Transform
 class MeshRenderer : public Component
 {
-	enum Flags { INIT = 1, TRANSPRENT = 2, DYNAMIC = 4, HAS_MESH = 8, DIFFUSE = 16, NORMAL = 32, SPECULAR = 64, EMISSIVE = 128 };
+	enum Flags { INIT = 1, TRANSPRENT = 2, DYNAMIC = 4, HAS_MESH = 8, DIFFUSE = 16, NORMAL = 32, SPECULAR = 64, EMISSIVE = 128, REGISTERED_TO_RENDER = 256 };
 	const unsigned int id = 6;
 
 	unsigned int flags = 0;

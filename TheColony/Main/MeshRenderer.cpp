@@ -84,7 +84,11 @@ void MeshRenderer::Init()
 	Application::GetInstance()->GetDevice()->CreateSamplerState(&sDesc, &sampler);
 
 	// sign me up to be rendered every frame
-	Application::GetInstance()->RegisterMeshRenderer(this);
+	if (!(flags & REGISTERED_TO_RENDER))
+	{
+		Application::GetInstance()->RegisterMeshRenderer(this);
+		flags |= REGISTERED_TO_RENDER;
+	}
 }
 
 MeshRenderer::MeshRenderer()
@@ -117,7 +121,7 @@ void MeshRenderer::OnDelete()
 {
 	if (mesh) delete mesh;
 	mesh = nullptr;
-	if (flags & INIT)
+	if (flags & REGISTERED_TO_RENDER)
 		Application::GetInstance()->UnRegisterMeshRenderer(this);
 	SAFE_RELEASE(vertBuffer);
 	SAFE_RELEASE(indexBuffer);

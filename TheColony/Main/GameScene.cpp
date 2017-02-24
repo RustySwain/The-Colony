@@ -9,6 +9,11 @@
 #include "MeshRenderer.h"
 #include <ctime>
 #include "Animator.h"
+#include "Collider.h"
+#include "Camera.h"
+#include "Debug.h"
+#include "TextRenderer.h"
+#include "Application.h"
 
 GameScene::GameScene()
 {
@@ -74,11 +79,11 @@ void GameScene::Start()
 	box.GetComponent<Transform>()->ScalePre(0.5f);
 	box.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Box/Box_Idle.mesh");
 	box.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box/Box.dds");
-	box.AddComponent<Animator>()->AddAnimation("../Assets/Box/Box_Idle.anim");
-	box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Attack.anim");
-	box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Jump.anim");
-	box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Walk.anim");
-	box.GetComponent<Animator>()->Play("Box_Idle");
+	//box.AddComponent<Animator>()->AddAnimation("../Assets/Box/Box_Idle.anim");
+	//box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Attack.anim");
+	//box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Jump.anim");
+	//box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Walk.anim");
+	//box.GetComponent<Animator>()->Play("Box_Idle");
 
 	teddy.SetId(10);
 	teddy.SetTag("Untagged");
@@ -87,8 +92,8 @@ void GameScene::Start()
 	teddy.GetComponent<Transform>()->ScalePre(0.03f);
 	teddy.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Teddy/Teddy_Idle.mesh");
 	teddy.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Teddy/Teddy_D.dds");
-	teddy.AddComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Idle.anim");
-	teddy.GetComponent<Animator>()->Play("Teddy_Idle");
+	//teddy.AddComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Idle.anim");
+	//teddy.GetComponent<Animator>()->Play("Teddy_Idle");
 
 	mage.SetId(11);
 	mage.SetTag("Untagged");
@@ -99,8 +104,8 @@ void GameScene::Start()
 	mage.GetComponent<MeshRenderer>()->LoadEmissiveMap(L"../Assets/Mage/emissive.dds");
 	mage.GetComponent<MeshRenderer>()->LoadNormalMap(L"../Assets/Mage/normal.dds");
 	mage.GetComponent<MeshRenderer>()->LoadSpecularMap(L"../Assets/Mage/specular.dds");
-	mage.AddComponent<Animator>()->AddAnimation("../Assets/Mage/Idle.anim");
-	mage.GetComponent<Animator>()->Play("Idle");
+	//mage.AddComponent<Animator>()->AddAnimation("../Assets/Mage/Idle.anim");
+	//mage.GetComponent<Animator>()->Play("Idle");
 
 	// Terrain
 	terrain.SetId(9);
@@ -108,13 +113,21 @@ void GameScene::Start()
 	terrain.Start();
 	terrain.AddComponent<Transform>()->SetLocalPosition(-20, -5, -20);
 	terrain.AddComponent<MeshRenderer>();// ->LoadDiffuseMap(L"../Assets/rock.dds");
-	terrain.AddComponent<Terrain>()->SetSize(100, 100);
+	terrain.AddComponent<Terrain>()->SetSize(128, 128);
 	terrain.GetComponent<Terrain>()->SetTextureSize(1000, 1000);
 	terrain.GetComponent<Terrain>()->Seed(0);// (unsigned int)time(0));
 	terrain.GetComponent<Terrain>()->SetOctaves(3);
 	terrain.GetComponent<Terrain>()->SetPersistance(1.5f);
 	terrain.GetComponent<Terrain>()->SetLacunarity(0.1f);
 	terrain.GetComponent<Terrain>()->Generate();
+	//terrain.AddComponent<Collider>()->SetMesh(terrain.GetComponent<MeshRenderer>()->GetMesh());
+
+	/*debugText.Start();
+	debugText.AddComponent<Transform>()->ScalePost(0.0005f);
+	debugText.GetComponent<Transform>()->TranslatePost(XMFLOAT3(-1, 0, 0));
+	debugText.AddComponent<MeshRenderer>();
+	debugText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
+	debugText.GetComponent<TextRenderer>()->SetText(" ");*/
 }
 
 void GameScene::Update()
@@ -168,6 +181,30 @@ void GameScene::Update()
 	teddy.Update();
 	box.Update();
 	mage.Update();
+
+	//debugText.Update();
+
+	//POINT mousePos;
+	//GetCursorPos(&mousePos);
+	//XMFLOAT3 mouseScreen((float)mousePos.x, (float)mousePos.y, 0);
+	//XMFLOAT3 nearPos = Camera::mainCam->ScreenToWorldSpace(mouseScreen);
+	//mouseScreen.z = Camera::mainCam->GetFarPlane();
+	//XMFLOAT3 farPos = Camera::mainCam->ScreenToWorldSpace(mouseScreen);
+	//XMVECTOR nearVec = XMVectorSet(nearPos.x, nearPos.y, nearPos.z, 1);
+	//XMVECTOR farVec = XMVectorSet(farPos.x, farPos.y, farPos.z, 1);
+	//XMVECTOR vecDir = XMVector3Normalize(farVec - nearVec);
+	//XMFLOAT3 flDir(vecDir.m128_f32[0], vecDir.m128_f32[1], vecDir.m128_f32[2]);
+	////if (GetAsyncKeyState(VK_LBUTTON) & 0x1)
+	//{
+	//	XMFLOAT3 outPos;
+	//	bool ray = terrain.GetComponent<Collider>()->RayCast(outPos, nearPos, flDir);
+	//	if (ray)
+	//	{
+	//		char buffer[256];
+	//		sprintf_s(buffer, "(%f, %f, %f)", outPos.x, outPos.y, outPos.z);
+	//		debugText.GetComponent<TextRenderer>()->SetText(string(buffer));
+	//	}
+	//}
 }
 
 void GameScene::OnDelete()
@@ -181,4 +218,6 @@ void GameScene::OnDelete()
 	teddy.OnDelete();
 	box.OnDelete();
 	mage.OnDelete();
+
+	//debugText.OnDelete();
 }
