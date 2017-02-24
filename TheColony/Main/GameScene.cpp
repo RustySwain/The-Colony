@@ -10,6 +10,11 @@
 #include <ctime>
 #include "Animator.h"
 #include "AudioSource.h"
+#include "Collider.h"
+#include "Camera.h"
+#include "Debug.h"
+#include "TextRenderer.h"
+#include "Application.h"
 
 GameScene::GameScene()
 {
@@ -124,13 +129,21 @@ void GameScene::Start()
 	terrain.Start();
 	terrain.AddComponent<Transform>()->SetLocalPosition(-20, -5, -20);
 	terrain.AddComponent<MeshRenderer>();// ->LoadDiffuseMap(L"../Assets/rock.dds");
-	terrain.AddComponent<Terrain>()->SetSize(100, 100);
+	terrain.AddComponent<Terrain>()->SetSize(128, 128);
 	terrain.GetComponent<Terrain>()->SetTextureSize(1000, 1000);
 	terrain.GetComponent<Terrain>()->Seed(0);// (unsigned int)time(0));
 	terrain.GetComponent<Terrain>()->SetOctaves(3);
 	terrain.GetComponent<Terrain>()->SetPersistance(1.5f);
 	terrain.GetComponent<Terrain>()->SetLacunarity(0.1f);
 	terrain.GetComponent<Terrain>()->Generate();
+	//terrain.AddComponent<Collider>()->SetMesh(terrain.GetComponent<MeshRenderer>()->GetMesh());
+
+	/*debugText.Start();
+	debugText.AddComponent<Transform>()->ScalePost(0.0005f);
+	debugText.GetComponent<Transform>()->TranslatePost(XMFLOAT3(-1, 0, 0));
+	debugText.AddComponent<MeshRenderer>();
+	debugText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
+	debugText.GetComponent<TextRenderer>()->SetText(" ");*/
 }
 
 void GameScene::Update()
@@ -193,6 +206,30 @@ void GameScene::Update()
 	helicopter.Update();
 	heli_prop1.Update();
 	heli_prop2.Update();
+
+	//debugText.Update();
+
+	//POINT mousePos;
+	//GetCursorPos(&mousePos);
+	//XMFLOAT3 mouseScreen((float)mousePos.x, (float)mousePos.y, 0);
+	//XMFLOAT3 nearPos = Camera::mainCam->ScreenToWorldSpace(mouseScreen);
+	//mouseScreen.z = Camera::mainCam->GetFarPlane();
+	//XMFLOAT3 farPos = Camera::mainCam->ScreenToWorldSpace(mouseScreen);
+	//XMVECTOR nearVec = XMVectorSet(nearPos.x, nearPos.y, nearPos.z, 1);
+	//XMVECTOR farVec = XMVectorSet(farPos.x, farPos.y, farPos.z, 1);
+	//XMVECTOR vecDir = XMVector3Normalize(farVec - nearVec);
+	//XMFLOAT3 flDir(vecDir.m128_f32[0], vecDir.m128_f32[1], vecDir.m128_f32[2]);
+	////if (GetAsyncKeyState(VK_LBUTTON) & 0x1)
+	//{
+	//	XMFLOAT3 outPos;
+	//	bool ray = terrain.GetComponent<Collider>()->RayCast(outPos, nearPos, flDir);
+	//	if (ray)
+	//	{
+	//		char buffer[256];
+	//		sprintf_s(buffer, "(%f, %f, %f)", outPos.x, outPos.y, outPos.z);
+	//		debugText.GetComponent<TextRenderer>()->SetText(string(buffer));
+	//	}
+	//}
 }
 
 void GameScene::OnDelete()
@@ -208,4 +245,6 @@ void GameScene::OnDelete()
 	helicopter.OnDelete();
 	heli_prop1.OnDelete();
 	heli_prop2.OnDelete();
+
+	//debugText.OnDelete();
 }

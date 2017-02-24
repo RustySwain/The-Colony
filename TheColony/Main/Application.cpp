@@ -271,11 +271,14 @@ void Application::Render()
 {
 	//Update light and camera buffers
 	Light::LightBufferType lightBuff[100];
-
+	vector<const Light*> lightsToAdd;
 	for (size_t i = 0; i < lights.size(); i++)
-	{
 		if (lights[i]->GetEnabled())
-			lightBuff[i] = lights[i]->GetLightBuffType();
+			lightsToAdd.push_back(lights[i]);
+
+	for (size_t i = 0; i < lightsToAdd.size(); i++)
+	{
+		lightBuff[i] = lightsToAdd[i]->GetLightBuffType();
 	}
 
 	context->UpdateSubresource(lightBuffer, 0, 0, lightBuff, 0, 0);
