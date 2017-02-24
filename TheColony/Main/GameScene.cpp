@@ -192,8 +192,8 @@ void GameScene::Update()
 	if (GetAsyncKeyState(VK_F7))
 		bunny.GetComponent<Animator>()->Play("Attack");
 	
-	heli_prop1.GetComponent<Transform>()->RotateYPre(15);
-	heli_prop2.GetComponent<Transform>()->RotateZPre(20);
+	heli_prop1.GetComponent<Transform>()->RotateYPre(Time::Delta() * 3 * 360);
+	heli_prop2.GetComponent<Transform>()->RotateZPre(Time::Delta() * 7 * 360);
 	//helicopter.GetComponent<Transform>()->TranslatePre(XMFLOAT3(-0.5f, 0.15f, 0));
 
 	cube.Update();
