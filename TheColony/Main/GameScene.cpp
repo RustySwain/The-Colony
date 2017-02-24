@@ -1,7 +1,6 @@
 #include "GameScene.h"
 #include "CameraController.h"
 #include "Skybox.h"
-#include "PrefabLoader.h"
 #include "Terrain.h"
 #include "Time.h"
 #include "Light.h"
@@ -103,10 +102,12 @@ void GameScene::Start()
 	helicopter.SetName("Helicopter");
 	helicopter.Start();
 	helicopter.AddComponent<Transform>()->SetLocalPosition(60, 10, 30);
-	helicopter.GetComponent<Transform>()->ScalePre(0.3f);
+	helicopter.GetComponent<Transform>()->ScalePre(0.5f);
 	helicopter.GetComponent<Transform>()->RotateZPre(15);
 	helicopter.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Helicopter/Helicopter.mesh");
 	helicopter.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Helicopter/T_Difuse_Helicopter.dds");
+	//helicopter.AddComponent<Animator>()->AddAnimation("../Assets/Helicopter/Helicopter_Animated.anim");
+	//helicopter.GetComponent<Animator>()->Play("Helicopter_Animated");
 	helicopter.AddComponent<AudioSource>()->AddAudioClip("../Assets/sounds/heli_sound1.wav");
 	helicopter.GetComponent<AudioSource>()->Play("heli_sound1", true);
 
@@ -191,9 +192,9 @@ void GameScene::Update()
 	if (GetAsyncKeyState(VK_F7))
 		bunny.GetComponent<Animator>()->Play("Attack");
 	
-	heli_prop1.GetComponent<Transform>()->RotateYPre(15);
-	heli_prop2.GetComponent<Transform>()->RotateZPre(20);
-	helicopter.GetComponent<Transform>()->TranslatePre(XMFLOAT3(-0.5f, 0.15f, 0));
+	heli_prop1.GetComponent<Transform>()->RotateYPre(Time::Delta() * 3 * 360);
+	heli_prop2.GetComponent<Transform>()->RotateZPre(Time::Delta() * 7 * 360);
+	//helicopter.GetComponent<Transform>()->TranslatePre(XMFLOAT3(-0.5f, 0.15f, 0));
 
 	cube.Update();
 	spotLight.Update();

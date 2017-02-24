@@ -25,9 +25,11 @@ void Interpolator::Update()
 	{
 		currFrame++;
 		if (currFrame >= (int)animation.GetJoints()[0].keyFrames.size() - 1)
+		{
 			currTime -= animation.GetLength() - animation.GetJoints()[0].keyFrames[0].duration;
+			currFrame = 0;
+		}
 	}
-
 
 	if (currFrame >= (int)animation.GetJoints()[0].keyFrames.size() - 1)
 	{
