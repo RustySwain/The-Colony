@@ -119,13 +119,13 @@ bool Mesh::LoadFromBinary(const char * _path, string &_diffuseMapPath)
 		file.read((char*)&numTris, sizeof(int));
 		for(int i = 0; i < numTris; ++i)
 		{
-			unsigned int tri;
-			file.read((char*)&tri, sizeof(unsigned int));
-			tris.push_back(tri);
-			file.read((char*)&tri, sizeof(unsigned int));
-			tris.push_back(tri);
-			file.read((char*)&tri, sizeof(unsigned int));
-			tris.push_back(tri);
+			unsigned int tri1, tri2, tri3;
+			file.read((char*)&tri1, sizeof(unsigned int));
+			file.read((char*)&tri3, sizeof(unsigned int));
+			file.read((char*)&tri2, sizeof(unsigned int));
+			tris.push_back(tri1);
+			tris.push_back(tri2);
+			tris.push_back(tri3);
 		}
 
 		// read vertices
@@ -139,8 +139,6 @@ bool Mesh::LoadFromBinary(const char * _path, string &_diffuseMapPath)
 
 			if(hasAnimation)
 			{
-				vertex.flags[0] = 1;
-
 				file.read((char*)&vertex.jointWeight[0], sizeof(float));
 				file.read((char*)&vertex.jointWeight[1], sizeof(float));
 				file.read((char*)&vertex.jointWeight[2], sizeof(float));
@@ -153,7 +151,6 @@ bool Mesh::LoadFromBinary(const char * _path, string &_diffuseMapPath)
 			}
 
 			file.read((char*)&vertex.uv, sizeof(XMFLOAT4));
-
 			vertices.push_back(vertex);
 		}
 

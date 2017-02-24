@@ -5,6 +5,7 @@
 #include "Transform.h"
 #include "TextRenderer.h"
 #include <fstream>
+#include "Animator.h"
 
 #define INSTANCE_MAX 100000
 #define VERTEX_MAX 256
@@ -116,6 +117,8 @@ void MeshRenderer::OnDelete()
 {
 	if (mesh) delete mesh;
 	mesh = nullptr;
+	if (flags & INIT)
+		Application::GetInstance()->UnRegisterMeshRenderer(this);
 	SAFE_RELEASE(vertBuffer);
 	SAFE_RELEASE(indexBuffer);
 	SAFE_RELEASE(constantBuffer);
@@ -283,8 +286,8 @@ void MeshRenderer::Render() const
 		context->VSSetShader(Application::GetInstance()->GetVSUI(), 0, 0);
 	}
 
-	/*if (gameObject->GetComponent<Animator>())
-		gameObject->GetComponent<Animator>()->SetVSBuffer();*/
+	if (gameObject->GetComponent<Animator>())
+		gameObject->GetComponent<Animator>()->SetVSBuffer();
 
 	context->DrawIndexedInstanced((UINT)mesh->GetTris().size(), (UINT)instances.size(), 0, 0, 0);
 }

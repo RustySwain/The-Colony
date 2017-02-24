@@ -25,6 +25,7 @@ bool Font::LoadFontSheet(const char* _fontName)
 			pair<char, RendereredCharacter> nuPair;
 			unsigned int left;
 			lineStream >> nuPair.first >> left >> nuPair.second.pixelWidth;
+			left -= 2;
 			unsigned int right = left + nuPair.second.pixelWidth;
 			nuPair.second.pixelHeight = charBottom - charTop;
 

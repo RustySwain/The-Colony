@@ -37,9 +37,11 @@ class Application
 	float backBufferColor[4] = { 0, 1, 1, 1 };
 	unsigned int msCount = 8;
 	unsigned int msQuality = D3D11_STANDARD_MULTISAMPLE_PATTERN;
-	GameObject gameObjectManager;
+	unsigned int vsync = 1;	GameObject gameObjectManager;
 	vector<const MeshRenderer*> renderers;
 	vector<const Light*> lights;
+
+	bool quitGame = false;
 
 	void SortMeshesByDistance();
 
@@ -76,8 +78,14 @@ public:
 	void RegisterLight(const Light* _light);
 	void UnregisterLight(const Light* _light);
 
-	void Init(HWND& _window);
+	GameObjectManager* GetGameObjectManager() { return gameObjectManager.GetComponent<GameObjectManager>(); }	void Init(HWND& _window);
 	void Update() const;
 	void Render();
 	void Shutdown();
+
+	void QuitGame() { quitGame = true; };
+	bool QuittingGame() const { return quitGame; };
+
+	void SetVsync(bool _vsync) { vsync = _vsync ? 1 : 0; };
+	bool GetVsync() const { return vsync != 0; };
 };

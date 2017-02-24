@@ -1,6 +1,6 @@
 #pragma once
-#include <DirectXMath.h>
 #include <vector>
+#include <DirectXMath.h>
 
 class BindPose
 {
@@ -8,7 +8,7 @@ class BindPose
 	std::vector<DirectX::XMMATRIX> invBindPose;
 	
 public:
-	BindPose();
+	BindPose(){}
 	~BindPose(){}
 
 	void Init(const int _joints, const std::vector<DirectX::XMMATRIX> _invBindPose);
