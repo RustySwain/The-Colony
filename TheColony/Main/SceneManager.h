@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Application.h"
+#include "Button.h"
 
 class SceneManager : public Component
 {

@@ -238,10 +238,6 @@ void Application::UnregisterLight(const Light *_light)
 		lights.erase(iter);
 }
 
-void Application::LoadLevel(const char * _name)
-{
-}
-
 void Application::CreateBuffer(D3D11_BUFFER_DESC* _bData, D3D11_SUBRESOURCE_DATA* _subData, ID3D11Buffer** _buffer) const
 {
 	device->CreateBuffer(_bData, _subData, _buffer);
