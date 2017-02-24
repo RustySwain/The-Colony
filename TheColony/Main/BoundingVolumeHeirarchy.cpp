@@ -214,7 +214,7 @@ TriangleSet BoundingVolumeHeirarchy::CreateTriangleSet(Mesh* _mesh)
 	ret.mesh = _mesh;
 	vector<Vertex> verts = _mesh->GetVertexData();
 	vector<unsigned int> tris = _mesh->GetTris();
-	unsigned int triCount = tris.size() / 3;
+	unsigned int triCount = (unsigned int)tris.size() / 3;
 	for (unsigned int i = 0; i < triCount; i++)
 	{
 		Triangle tri;
