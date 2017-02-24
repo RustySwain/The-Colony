@@ -154,9 +154,11 @@
     <ClCompile Include="AudioClip.cpp" />
     <ClCompile Include="AudioSource.cpp" />
     <ClCompile Include="BindPose.cpp" />
+    <ClCompile Include="BoundingVolumeHeirarchy.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraController.cpp" />
+    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="Font.cpp" />
@@ -187,9 +189,11 @@
     <ClInclude Include="AudioClip.h" />
     <ClInclude Include="AudioSource.h" />
     <ClInclude Include="BindPose.h" />
+    <ClInclude Include="BoundingVolumeHeirarchy.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraController.h" />
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Defines.h" />

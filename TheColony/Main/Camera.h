@@ -48,4 +48,6 @@ public:
 	void SetFov(const float& _fov) { fov = _fov; UpdateProjMat(); }
 	void SetNearPlane(const float& _dist) { nearPlane = _dist; UpdateProjMat(); };
 	void SetFarPlane(const float& _dist) { farPlane = _dist; UpdateProjMat(); };
+
+	XMFLOAT3 ScreenToWorldSpace(XMFLOAT3 _screenPos) const;
 };

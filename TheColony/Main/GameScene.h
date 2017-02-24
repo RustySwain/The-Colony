@@ -15,13 +15,14 @@ class GameScene : public SceneABC
 	GameObject heli_prop1;
 	GameObject heli_prop2;
 
+	//GameObject debugText;
+
 public:
 	GameScene();
 	virtual ~GameScene();
 
 	// Component
-	void Start() override;
-	void Update() override;
-	void OnDelete() override;
+	virtual void Start() override;
+	virtual void Update() override;
+	virtual void OnDelete() override;
 };
-
