@@ -8,10 +8,15 @@ Animator::Animator()
 
 void Animator::Start()
 {
+	// Set animation flag for VertexShader
+	for (int i = 0; i < (int)gameObject->GetComponent<MeshRenderer>()->GetMesh()->GetVertexData().size(); ++i)
+		gameObject->GetComponent<MeshRenderer>()->GetMesh()->GetVertexData()[i].flags[0] = 1;
+
+	defaultAnimation = 0;
 	bindPose = new BindPose();
 	interpolator = new Interpolator();
-	defaultAnimation = 0;
 	interpolator->Start();
+	interpolator->Scale(gameObject->GetComponent<Transform>()->GetScale());
 }
 
 void Animator::Update()
@@ -90,8 +95,16 @@ bool Animator::AddAnimation(const char * _path)
 					file.read((char*)&world.m[x][y], sizeof(float));
 				}
 			}
-			joint.world = XMLoadFloat4x4(&world);
 
+			//world._13 *= -1;
+			//world._23 *= -1;
+			//world._43 *= -1;
+			//world._34 *= -1;
+			//world._32 *= -1;
+			//world._31 *= -1;
+			//world._42 *= -1;
+
+			joint.world = XMLoadFloat4x4(&world);
 			joints.push_back(joint);
 
 			// Inverse Matrix
@@ -144,12 +157,23 @@ bool Animator::AddAnimation(const char * _path)
 				// KeyFrame Duration
 				file.read((char*)&keyFrame.duration, sizeof(float));
 				// KeyFrame transform matrix
-				DirectX::XMFLOAT4X4 transform;
+				XMFLOAT4X4 transform;
 				for (int x = 0; x < 4; ++x)
 				{
 					for (int y = 0; y < 4; ++y)
+					{
 						file.read((char*)&transform.m[x][y], sizeof(float));
+					}
 				}
+
+				//transform._13 *= -1;
+				//transform._23 *= -1;
+				//transform._43 *= -1;
+				//transform._34 *= -1;
+				//transform._32 *= -1;
+				//transform._31 *= -1;
+				//transform._42 *= -1;
+
 				keyFrame.transform = XMLoadFloat4x4(&transform);
 				joints[i].keyFrames.push_back(keyFrame);
 			}
@@ -161,6 +185,10 @@ bool Animator::AddAnimation(const char * _path)
 		delete[] animName;
 
 		file.close();
+
+		if (animations.size() == 1)
+			interpolator->SetDefaultAnimation(animation);
+
 		return true;
 	}
 

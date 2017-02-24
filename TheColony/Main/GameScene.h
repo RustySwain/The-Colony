@@ -9,9 +9,11 @@ class GameScene : public SceneABC
 	GameObject pointLight;
 	GameObject skybox;
 	GameObject terrain;
-	GameObject teddy;
+	GameObject bunny;
 	GameObject box;
-	GameObject mage;
+	GameObject helicopter;
+	GameObject heli_prop1;
+	GameObject heli_prop2;
 
 	//GameObject debugText;
 

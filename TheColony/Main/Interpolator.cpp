@@ -24,16 +24,19 @@ void Interpolator::Update()
 	while (currTime > animation.GetJoints()[0].keyFrames[currFrame].duration)
 	{
 		currFrame++;
-		if (currFrame >= animation.GetJoints()[0].keyFrames.size() - 1)
+		if (currFrame >= (int)animation.GetJoints()[0].keyFrames.size() - 1)
 			currTime -= animation.GetLength() - animation.GetJoints()[0].keyFrames[0].duration;
 	}
 
-	if (currFrame >= animation.GetJoints()[0].keyFrames.size() - 1)
+
+	if (currFrame >= (int)animation.GetJoints()[0].keyFrames.size() - 1)
 	{
 		if (animation.GetType() == RETURN_DEFAULT)
 			SetAnimation(defaultAnimation);
 		else if (animation.GetType() == RETURN_LAST)
 			SetAnimation(prevAnimation);
+		else if (animation.GetType() == RUN_ONCE)
+			return;
 		else
 		{
 			currTime = 0;
@@ -55,7 +58,6 @@ void Interpolator::Update()
 		XMVECTOR scalePost, rotPost, posPost;
 		XMMatrixDecompose(&scalePost, &rotPost, &posPost, nextMatrix);
 
-		//float ratio = (currTime - previousTime) / (nextTime - previousTime);
 		float ratio = 1;
 		XMMATRIX interpolatedMat = XMMatrixAffineTransformation(XMVectorLerp(scalePre, scalePost, ratio), XMVectorZero(), XMQuaternionSlerp(rotPre, rotPost, ratio), XMVectorLerp(posPre, posPost, ratio));
 
@@ -82,7 +84,12 @@ void Interpolator::SetAnimation(const Animation _animation)
 {
 	currTime = 0;
 	currFrame = 0;
-	prevAnimation = animation;
+
+	//if (animation.GetName() == "")
+		prevAnimation = defaultAnimation;
+	//else
+	//	prevAnimation = animation;
+
 	animation = _animation;
 }
 

@@ -34,7 +34,7 @@ void CameraController::Update()
 	newMousePos.x = (float)mP.x;
 	newMousePos.y = (float)mP.y;
 
-	float speed = Time::Delta() * 10;
+	float speed = Time::Delta() * 20;
 
 	// translate based on key presses
 
@@ -79,11 +79,11 @@ void CameraController::Update()
 	{
 		if (dx > 0 || newMousePos.x == Application::GetInstance()->GetWindowRect().left)
 		{
-			_cameraOrigin->RotateYPre((Time::Delta() * 100));
+			_cameraOrigin->RotateYPre((Time::Delta() * 130));
 		}
 		if (dx < 0 || newMousePos.x == Application::GetInstance()->GetWindowRect().right - 1)
 		{
-			_cameraOrigin->RotateYPre((Time::Delta() * -100));
+			_cameraOrigin->RotateYPre((Time::Delta() * -130));
 		}
 		//SetCursorPos((int)screenMiddle.x, (int)screenMiddle.y);
 	}

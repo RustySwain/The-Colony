@@ -9,6 +9,7 @@
 #include "MeshRenderer.h"
 #include <ctime>
 #include "Animator.h"
+#include "AudioSource.h"
 #include "Collider.h"
 #include "Camera.h"
 #include "Debug.h"
@@ -74,38 +75,53 @@ void GameScene::Start()
 	// Test Objects
 	box.SetId(8);
 	box.SetTag("Untagged");
+	box.SetName("Box");
 	box.Start();
 	box.AddComponent<Transform>()->SetLocalPosition(5, 0, 0);
-	box.GetComponent<Transform>()->ScalePre(0.5f);
 	box.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Box/Box_Idle.mesh");
 	box.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box/Box.dds");
-	//box.AddComponent<Animator>()->AddAnimation("../Assets/Box/Box_Idle.anim");
-	//box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Attack.anim");
-	//box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Jump.anim");
-	//box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Walk.anim");
-	//box.GetComponent<Animator>()->Play("Box_Idle");
+	box.AddComponent<Animator>()->AddAnimation("../Assets/Box/Box_Idle.anim");
+	box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Attack.anim");
+	box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Jump.anim");
+	box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Walk.anim");
+	box.GetComponent<Animator>()->Play("Box_Jump");
 
-	teddy.SetId(10);
-	teddy.SetTag("Untagged");
-	teddy.Start();
-	teddy.AddComponent<Transform>()->SetLocalPosition(-10, 0, 0);
-	teddy.GetComponent<Transform>()->ScalePre(0.03f);
-	teddy.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Teddy/Teddy_Idle.mesh");
-	teddy.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Teddy/Teddy_D.dds");
-	//teddy.AddComponent<Animator>()->AddAnimation("../Assets/Teddy/Teddy_Idle.anim");
-	//teddy.GetComponent<Animator>()->Play("Teddy_Idle");
+	bunny.SetId(10);
+	bunny.SetTag("Untagged");
+	bunny.SetName("Bunny");
+	bunny.Start();
+	bunny.AddComponent<Transform>()->SetLocalPosition(-10, 0, 0);
+	bunny.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Bunny/Bunny.mesh");
+	bunny.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Bunny/White.dds");
+	bunny.AddComponent<Animator>()->AddAnimation("../Assets/Bunny/Idle.anim");
+	bunny.GetComponent<Animator>()->AddAnimation("../Assets/Bunny/Run.anim");
+	bunny.GetComponent<Animator>()->AddAnimation("../Assets/Bunny/Attack.anim");
+	bunny.GetComponent<Animator>()->Play("Idle");
 
-	mage.SetId(11);
-	mage.SetTag("Untagged");
-	mage.Start();
-	mage.AddComponent<Transform>()->SetLocalPosition(0, 0, -5);
-	mage.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Mage/Mage.mesh");
-	mage.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Mage/diffuse.dds");
-	mage.GetComponent<MeshRenderer>()->LoadEmissiveMap(L"../Assets/Mage/emissive.dds");
-	mage.GetComponent<MeshRenderer>()->LoadNormalMap(L"../Assets/Mage/normal.dds");
-	mage.GetComponent<MeshRenderer>()->LoadSpecularMap(L"../Assets/Mage/specular.dds");
-	//mage.AddComponent<Animator>()->AddAnimation("../Assets/Mage/Idle.anim");
-	//mage.GetComponent<Animator>()->Play("Idle");
+	helicopter.SetId(11);
+	helicopter.SetTag("Untagged");
+	helicopter.SetName("Helicopter");
+	helicopter.Start();
+	helicopter.AddComponent<Transform>()->SetLocalPosition(60, 10, 30);
+	helicopter.GetComponent<Transform>()->ScalePre(0.3f);
+	helicopter.GetComponent<Transform>()->RotateZPre(15);
+	helicopter.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Helicopter/Helicopter.mesh");
+	helicopter.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Helicopter/T_Difuse_Helicopter.dds");
+	helicopter.AddComponent<AudioSource>()->AddAudioClip("../Assets/sounds/heli_sound1.wav");
+	helicopter.GetComponent<AudioSource>()->Play("heli_sound1", true);
+
+	heli_prop1.Start();
+	heli_prop1.AddComponent<Transform>()->SetParent(helicopter.GetComponent<Transform>());
+	heli_prop1.GetComponent<Transform>()->SetLocalPosition(-0.4f, 16, 0);
+	heli_prop1.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Helicopter/Helicopter_Propeller.mesh");
+	heli_prop1.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Helicopter/T_Difuse_Helicopter.dds");
+
+	heli_prop2.Start();
+	heli_prop2.AddComponent<Transform>()->SetParent(helicopter.GetComponent<Transform>());
+	heli_prop2.GetComponent<Transform>()->SetLocalPosition(35.3f, 16, 1.5);
+	heli_prop2.GetComponent<Transform>()->RotateYPre(180);
+	heli_prop2.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Helicopter/Helicopter_Propeller2.mesh");
+	heli_prop2.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Helicopter/T_Difuse_Helicopter.dds");
 
 	// Terrain
 	terrain.SetId(9);
@@ -159,10 +175,6 @@ void GameScene::Update()
 		terrain.GetComponent<Terrain>()->Generate();
 	}
 
-	if (GetAsyncKeyState(VK_RIGHT) & 0x1)
-		box.GetComponent<Animator>()->NextFrame();
-	if (GetAsyncKeyState(VK_LEFT) & 0x1)
-		box.GetComponent<Animator>()->PreviousFrame();
 	if (GetAsyncKeyState(VK_F1))
 		box.GetComponent<Animator>()->Play("Box_Idle");
 	if (GetAsyncKeyState(VK_F2))
@@ -172,15 +184,28 @@ void GameScene::Update()
 	if (GetAsyncKeyState(VK_F4))
 		box.GetComponent<Animator>()->Play("Box_Walk");
 
+	if (GetAsyncKeyState(VK_F5))
+		bunny.GetComponent<Animator>()->Play("Idle");
+	if (GetAsyncKeyState(VK_F6))
+		bunny.GetComponent<Animator>()->Play("Run");
+	if (GetAsyncKeyState(VK_F7))
+		bunny.GetComponent<Animator>()->Play("Attack");
+	
+	heli_prop1.GetComponent<Transform>()->RotateYPre(15);
+	heli_prop2.GetComponent<Transform>()->RotateZPre(20);
+	helicopter.GetComponent<Transform>()->TranslatePre(XMFLOAT3(-0.5f, 0.15f, 0));
+
 	cube.Update();
 	spotLight.Update();
 	dirLight.Update();
 	pointLight.Update();
 	skybox.Update();
 	terrain.Update();
-	teddy.Update();
+	bunny.Update();
 	box.Update();
-	mage.Update();
+	helicopter.Update();
+	heli_prop1.Update();
+	heli_prop2.Update();
 
 	//debugText.Update();
 
@@ -215,9 +240,11 @@ void GameScene::OnDelete()
 	pointLight.OnDelete();
 	skybox.OnDelete();
 	terrain.OnDelete();
-	teddy.OnDelete();
+	bunny.OnDelete();
 	box.OnDelete();
-	mage.OnDelete();
+	helicopter.OnDelete();
+	heli_prop1.OnDelete();
+	heli_prop2.OnDelete();
 
 	//debugText.OnDelete();
 }
