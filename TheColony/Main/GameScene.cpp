@@ -109,7 +109,7 @@ void GameScene::Start()
 	//helicopter.AddComponent<Animator>()->AddAnimation("../Assets/Helicopter/Helicopter_Animated.anim");
 	//helicopter.GetComponent<Animator>()->Play("Helicopter_Animated");
 	helicopter.AddComponent<AudioSource>()->AddAudioClip("../Assets/sounds/heli_sound1.wav");
-	helicopter.GetComponent<AudioSource>()->Play("heli_sound1", true);
+	//helicopter.GetComponent<AudioSource>()->Play("heli_sound1", true);
 
 	heli_prop1.Start();
 	heli_prop1.AddComponent<Transform>()->SetParent(helicopter.GetComponent<Transform>());
@@ -130,14 +130,14 @@ void GameScene::Start()
 	terrain.Start();
 	terrain.AddComponent<Transform>()->SetLocalPosition(-20, -5, -20);
 	terrain.AddComponent<MeshRenderer>();// ->LoadDiffuseMap(L"../Assets/rock.dds");
-	terrain.AddComponent<Terrain>()->SetSize(128, 128);
+	terrain.AddComponent<Terrain>()->SetSize(32, 32);
 	terrain.GetComponent<Terrain>()->SetTextureSize(1000, 1000);
 	terrain.GetComponent<Terrain>()->Seed(0);// (unsigned int)time(0));
 	terrain.GetComponent<Terrain>()->SetOctaves(3);
 	terrain.GetComponent<Terrain>()->SetPersistance(1.5f);
 	terrain.GetComponent<Terrain>()->SetLacunarity(0.1f);
 	terrain.GetComponent<Terrain>()->Generate();
-	//terrain.AddComponent<Collider>()->SetMesh(terrain.GetComponent<MeshRenderer>()->GetMesh());
+	terrain.AddComponent<Collider>()->SetMesh(terrain.GetComponent<MeshRenderer>()->GetMesh());
 
 	/*debugText.Start();
 	debugText.AddComponent<Transform>()->ScalePost(0.0005f);
@@ -145,6 +145,12 @@ void GameScene::Start()
 	debugText.AddComponent<MeshRenderer>();
 	debugText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
 	debugText.GetComponent<TextRenderer>()->SetText(" ");*/
+
+	pickingLight.Start();
+	pickingLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, 0, 0, 1));
+	pickingLight.AddComponent<Transform>();
+	pickingLight.GetComponent<Light>()->SetExtra(XMFLOAT4(3, 0, 0, 1));
+	pickingLight.GetComponent<Light>()->type = Light::POINT;
 }
 
 void GameScene::Update()
@@ -191,7 +197,7 @@ void GameScene::Update()
 		bunny.GetComponent<Animator>()->Play("Run");
 	if (GetAsyncKeyState(VK_F7))
 		bunny.GetComponent<Animator>()->Play("Attack");
-	
+
 	heli_prop1.GetComponent<Transform>()->RotateYPre(Time::Delta() * 3 * 360);
 	heli_prop2.GetComponent<Transform>()->RotateZPre(Time::Delta() * 7 * 360);
 	//helicopter.GetComponent<Transform>()->TranslatePre(XMFLOAT3(-0.5f, 0.15f, 0));
@@ -208,29 +214,25 @@ void GameScene::Update()
 	heli_prop1.Update();
 	heli_prop2.Update();
 
-	//debugText.Update();
+	pickingLight.Update();
 
-	//POINT mousePos;
-	//GetCursorPos(&mousePos);
-	//XMFLOAT3 mouseScreen((float)mousePos.x, (float)mousePos.y, 0);
-	//XMFLOAT3 nearPos = Camera::mainCam->ScreenToWorldSpace(mouseScreen);
-	//mouseScreen.z = Camera::mainCam->GetFarPlane();
-	//XMFLOAT3 farPos = Camera::mainCam->ScreenToWorldSpace(mouseScreen);
-	//XMVECTOR nearVec = XMVectorSet(nearPos.x, nearPos.y, nearPos.z, 1);
-	//XMVECTOR farVec = XMVectorSet(farPos.x, farPos.y, farPos.z, 1);
-	//XMVECTOR vecDir = XMVector3Normalize(farVec - nearVec);
-	//XMFLOAT3 flDir(vecDir.m128_f32[0], vecDir.m128_f32[1], vecDir.m128_f32[2]);
-	////if (GetAsyncKeyState(VK_LBUTTON) & 0x1)
-	//{
-	//	XMFLOAT3 outPos;
-	//	bool ray = terrain.GetComponent<Collider>()->RayCast(outPos, nearPos, flDir);
-	//	if (ray)
-	//	{
-	//		char buffer[256];
-	//		sprintf_s(buffer, "(%f, %f, %f)", outPos.x, outPos.y, outPos.z);
-	//		debugText.GetComponent<TextRenderer>()->SetText(string(buffer));
-	//	}
-	//}
+	// Picking
+	POINT mousePos;
+	GetCursorPos(&mousePos);
+	XMFLOAT3 mouseScreen((float)mousePos.x, (float)mousePos.y, 0);
+	XMFLOAT3 nearPos = Camera::mainCam->ScreenToWorldSpace(mouseScreen);
+	mouseScreen.z = Camera::mainCam->GetFarPlane();
+	XMFLOAT3 farPos = Camera::mainCam->ScreenToWorldSpace(mouseScreen);
+	XMVECTOR nearVec = XMVectorSet(nearPos.x, nearPos.y, nearPos.z, 1);
+	XMVECTOR farVec = XMVectorSet(farPos.x, farPos.y, farPos.z, 1);
+	XMVECTOR vecDir = XMVector3Normalize(farVec - nearVec);
+	XMFLOAT3 flDir(vecDir.m128_f32[0], vecDir.m128_f32[1], vecDir.m128_f32[2]);
+	XMFLOAT3 outPos;
+	bool ray = terrain.GetComponent<Collider>()->RayCast(outPos, nearPos, flDir);
+	if (ray)
+	{
+		pickingLight.GetComponent<Transform>()->SetLocalPosition(outPos.x, outPos.y + 0.1f, outPos.z);
+	}
 }
 
 void GameScene::OnDelete()
@@ -247,5 +249,5 @@ void GameScene::OnDelete()
 	heli_prop1.OnDelete();
 	heli_prop2.OnDelete();
 
-	//debugText.OnDelete();
+	pickingLight.OnDelete();
 }

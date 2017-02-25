@@ -50,6 +50,6 @@ public:
 	BoundingVolumeHeirarchy();
 	~BoundingVolumeHeirarchy();
 
-	void Analyze(Mesh* _mesh, unsigned int _minimumTris);
+	void Analyze(Mesh* _mesh, unsigned int _minimumTris, XMMATRIX _worldMat);
 	bool RayCast(XMFLOAT3& _outPos, XMFLOAT3 _rayStart, XMFLOAT3 _rayNormal) const;
 };
