@@ -7,6 +7,8 @@ class Collider : public Component
 	const unsigned int id = 3;
 	BoundingVolumeHeirarchy bvh;
 
+	static vector<const Collider*> registeredColliders;
+
 public:
 	Collider();
 	~Collider();
@@ -20,4 +22,5 @@ public:
 
 	void SetMesh(Mesh* _mesh);
 	bool RayCast(XMFLOAT3& _outPos, XMFLOAT3 _rayStart, XMFLOAT3 _rayNormal) const;
+	static bool RayCastAll(XMFLOAT3& _outPos, XMFLOAT3 _rayStart, XMFLOAT3 _rayNormal);
 };

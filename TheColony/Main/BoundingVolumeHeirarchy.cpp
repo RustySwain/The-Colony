@@ -214,7 +214,7 @@ TriangleSet BoundingVolumeHeirarchy::CreateTriangleSet(Mesh* _mesh)
 	ret.mesh = _mesh;
 	vector<Vertex> verts = _mesh->GetVertexData();
 	vector<unsigned int> tris = _mesh->GetTris();
-	unsigned int triCount = tris.size() / 3;
+	unsigned int triCount = (unsigned int)tris.size() / 3;
 	for (unsigned int i = 0; i < triCount; i++)
 	{
 		Triangle tri;
@@ -250,6 +250,12 @@ void BoundingVolumeHeirarchy::Analyze(Mesh* _mesh, unsigned int _minimumTris, XM
 {
 	assert(_mesh);
 	assert(_minimumTris);
+	if (root)
+	{
+		root->Shutdown();
+		delete root->triSet.mesh;
+		delete root;
+	}
 	root = new Node();
 	Mesh* mesh = new Mesh(*_mesh);
 	vector<Vertex>& verts = mesh->GetVertexData();
@@ -261,8 +267,7 @@ void BoundingVolumeHeirarchy::Analyze(Mesh* _mesh, unsigned int _minimumTris, XM
 	root->Analyze(CreateTriangleSet(mesh), count, _minimumTris);
 }
 
-bool BoundingVolumeHeirarchy::RayCast(XMFLOAT3& _outPos, XMFLOAT3 _rayStart, XMFLOAT3 _rayNormal) const
+bool BoundingVolumeHeirarchy::RayCast(XMFLOAT3& _outPos, float& _outDistance, XMFLOAT3 _rayStart, XMFLOAT3 _rayNormal) const
 {
-	float distance;
-	return root->RayCast(_outPos, distance, _rayStart, _rayNormal);
+	return root->RayCast(_outPos, _outDistance, _rayStart, _rayNormal);
 }

@@ -31,6 +31,7 @@ void GameScene::Start()
 	cube.AddComponent<Transform>();
 	cube.AddComponent<MeshRenderer>()->LoadFromObj("../Assets/cube.obj");
 	cube.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/crate.dds");
+	cube.AddComponent<Collider>()->SetMesh(cube.GetComponent<MeshRenderer>()->GetMesh());
 
 	skybox.SetId(1);
 	skybox.SetTag("Untagged");
@@ -84,6 +85,7 @@ void GameScene::Start()
 	box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Jump.anim");
 	box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Walk.anim");
 	box.GetComponent<Animator>()->Play("Box_Jump");
+	box.AddComponent<Collider>()->SetMesh(box.GetComponent<MeshRenderer>()->GetMesh());
 
 	bunny.SetId(10);
 	bunny.SetTag("Untagged");
@@ -96,6 +98,7 @@ void GameScene::Start()
 	bunny.GetComponent<Animator>()->AddAnimation("../Assets/Bunny/Run.anim");
 	bunny.GetComponent<Animator>()->AddAnimation("../Assets/Bunny/Attack.anim");
 	bunny.GetComponent<Animator>()->Play("Idle");
+	bunny.AddComponent<Collider>()->SetMesh(bunny.GetComponent<MeshRenderer>()->GetMesh());
 
 	helicopter.SetId(11);
 	helicopter.SetTag("Untagged");
@@ -147,7 +150,7 @@ void GameScene::Start()
 	debugText.GetComponent<TextRenderer>()->SetText(" ");*/
 
 	pickingLight.Start();
-	pickingLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, 0, 0, 1));
+	pickingLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, -1, -1, 1));
 	pickingLight.AddComponent<Transform>();
 	pickingLight.GetComponent<Light>()->SetExtra(XMFLOAT4(3, 0, 0, 1));
 	pickingLight.GetComponent<Light>()->type = Light::POINT;
@@ -202,6 +205,8 @@ void GameScene::Update()
 	heli_prop2.GetComponent<Transform>()->RotateZPre(Time::Delta() * 7 * 360);
 	//helicopter.GetComponent<Transform>()->TranslatePre(XMFLOAT3(-0.5f, 0.15f, 0));
 
+	//cube.GetComponent<Collider>()->SetMesh(cube.GetComponent<MeshRenderer>()->GetMesh());
+
 	cube.Update();
 	spotLight.Update();
 	dirLight.Update();
@@ -213,8 +218,6 @@ void GameScene::Update()
 	helicopter.Update();
 	heli_prop1.Update();
 	heli_prop2.Update();
-
-	pickingLight.Update();
 
 	// Picking
 	POINT mousePos;
@@ -228,11 +231,15 @@ void GameScene::Update()
 	XMVECTOR vecDir = XMVector3Normalize(farVec - nearVec);
 	XMFLOAT3 flDir(vecDir.m128_f32[0], vecDir.m128_f32[1], vecDir.m128_f32[2]);
 	XMFLOAT3 outPos;
-	bool ray = terrain.GetComponent<Collider>()->RayCast(outPos, nearPos, flDir);
+	bool ray = Collider::RayCastAll(outPos, nearPos, flDir);
 	if (ray)
 	{
-		pickingLight.GetComponent<Transform>()->SetLocalPosition(outPos.x, outPos.y + 0.1f, outPos.z);
+		XMVECTOR posVec = XMVectorSet(outPos.x, outPos.y, outPos.z, 1);
+		posVec += vecDir * -0.1f;
+		pickingLight.GetComponent<Transform>()->SetLocalPosition(posVec.m128_f32[0], posVec.m128_f32[1], posVec.m128_f32[2]);
 	}
+
+	pickingLight.Update();
 }
 
 void GameScene::OnDelete()
