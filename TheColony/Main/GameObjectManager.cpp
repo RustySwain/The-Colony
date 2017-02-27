@@ -4,7 +4,6 @@
 #include "Camera.h"
 #include "Time.h"
 #include "SceneManager.h"
-#include "MainMenu.h"
 #include "AudioListen.h"
 #include "GameScene.h"
 
@@ -39,7 +38,8 @@ void GameObjectManager::Start()
 
 	scene.Start();
 	scene.AddComponent<SceneManager>();
-	scene.AddComponent<GameScene>();
+	scene.AddComponent<MainMenu>();
+	scene.GetComponent<SceneManager>()->LoadScene<MainMenu>();
 }
 
 void GameObjectManager::Update()

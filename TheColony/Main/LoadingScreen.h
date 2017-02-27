@@ -6,6 +6,7 @@
 class LoadingScreen : public Component
 {
 	const unsigned int id = 20;
+	GameObject text;
 
 public:
 	LoadingScreen();
@@ -16,4 +17,6 @@ public:
 	virtual void Start() override;
 	virtual void Update() override;
 	virtual void OnDelete() override;
+
+	void SetText(string _message);
 };

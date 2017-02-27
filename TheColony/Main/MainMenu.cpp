@@ -255,6 +255,115 @@ MainMenu::~MainMenu()
 
 void MainMenu::Start()
 {
+}
+
+void MainMenu::Update()
+{
+	if (slider)
+	{
+		slideRatio += Time::Delta();
+		XMFLOAT3 posPre = slider->GetComponent<Transform>()->GetWorldPosition();
+		if (slideDir == -1)
+			posPre.x = -Lerp(minX, maxX, slideRatio);
+		else
+			posPre.x = Lerp(minX, maxX, slideRatio);
+		slider->GetComponent<Transform>()->SetLocalPosition(posPre.x, posPre.y, posPre.z);
+
+		if (slideRatio >= 1)
+		{
+			slider = nullptr;
+			slideDir = 0;
+		}
+	}
+
+	// Main
+	mainParent.Update();
+	playButton.Update();
+	playButtonText.Update();
+	optionsButton.Update();
+	optionsButtonText.Update();
+	quitButton.Update();
+	quitButtonText.Update();
+
+	// Play
+	playParent.Update();
+	newGameButton.Update();
+	newGameButtonText.Update();
+	playBackButton.Update();
+	playBackButtonText.Update();
+
+	// Options
+	optionsParent.Update();
+	graphicsButton.Update();
+	graphicsButtonText.Update();
+	audioButton.Update();
+	audioButtonText.Update();
+	optionsBackButton.Update();
+	optionsBackButtonText.Update();
+
+	// Graphics
+	graphicsParent.Update();
+	msaaButton.Update();
+	msaaButtonText.Update();
+	vsyncButton.Update();
+	vsyncButtonText.Update();
+	graphicsBackButton.Update();
+	graphicsBackButtonText.Update();
+
+	// Quit
+	quitParent.Update();
+	confirmQuitButton.Update();
+	confirmQuitButtonText.Update();
+	quitBackButton.Update();
+	quitBackButtonText.Update();
+}
+
+void MainMenu::OnDelete()
+{
+	// Main
+	mainParent.OnDelete();
+	playButton.OnDelete();
+	playButtonText.OnDelete();
+	optionsButton.OnDelete();
+	optionsButtonText.OnDelete();
+	quitButton.OnDelete();
+	quitButtonText.OnDelete();
+
+	// Play
+	playParent.OnDelete();
+	newGameButton.OnDelete();
+	newGameButtonText.OnDelete();
+	playBackButton.OnDelete();
+	playBackButtonText.OnDelete();
+
+	// Options
+	optionsParent.OnDelete();
+	graphicsButton.OnDelete();
+	graphicsButtonText.OnDelete();
+	audioButton.OnDelete();
+	audioButtonText.OnDelete();
+	optionsBackButton.OnDelete();
+	optionsBackButtonText.OnDelete();
+
+	// Graphics
+	graphicsParent.OnDelete();
+	msaaButton.OnDelete();
+	msaaButtonText.OnDelete();
+	vsyncButton.OnDelete();
+	vsyncButtonText.OnDelete();
+	graphicsBackButton.OnDelete();
+	graphicsBackButtonText.OnDelete();
+
+	// Quit
+	quitParent.OnDelete();
+	confirmQuitButton.OnDelete();
+	confirmQuitButtonText.OnDelete();
+	quitBackButton.OnDelete();
+	quitBackButtonText.OnDelete();
+}
+
+void MainMenu::Init()
+{
 	// Main Parent
 	mainParent.Start();
 	mainParent.AddComponent<Transform>()->SetLocalPosition(minX, 0, 0.5f);
@@ -542,109 +651,4 @@ void MainMenu::Start()
 	quitBackButtonText.GetComponent<Transform>()->SetLocalPosition(-0.15f, -0.37f, -0.1f);
 	quitBackButtonText.GetComponent<TextRenderer>()->SetText("Back");
 	quitBackButtonText.SetEnabled(false);
-}
-
-void MainMenu::Update()
-{
-	if (slider)
-	{
-		slideRatio += Time::Delta();
-		XMFLOAT3 posPre = slider->GetComponent<Transform>()->GetWorldPosition();
-		if (slideDir == -1)
-			posPre.x = -Lerp(minX, maxX, slideRatio);
-		else
-			posPre.x = Lerp(minX, maxX, slideRatio);
-		slider->GetComponent<Transform>()->SetLocalPosition(posPre.x, posPre.y, posPre.z);
-
-		if (slideRatio >= 1)
-		{
-			slider = nullptr;
-			slideDir = 0;
-		}
-	}
-
-	// Main
-	mainParent.Update();
-	playButton.Update();
-	playButtonText.Update();
-	optionsButton.Update();
-	optionsButtonText.Update();
-	quitButton.Update();
-	quitButtonText.Update();
-
-	// Play
-	playParent.Update();
-	newGameButton.Update();
-	newGameButtonText.Update();
-	playBackButton.Update();
-	playBackButtonText.Update();
-
-	// Options
-	optionsParent.Update();
-	graphicsButton.Update();
-	graphicsButtonText.Update();
-	audioButton.Update();
-	audioButtonText.Update();
-	optionsBackButton.Update();
-	optionsBackButtonText.Update();
-
-	// Graphics
-	graphicsParent.Update();
-	msaaButton.Update();
-	msaaButtonText.Update();
-	vsyncButton.Update();
-	vsyncButtonText.Update();
-	graphicsBackButton.Update();
-	graphicsBackButtonText.Update();
-
-	// Quit
-	quitParent.Update();
-	confirmQuitButton.Update();
-	confirmQuitButtonText.Update();
-	quitBackButton.Update();
-	quitBackButtonText.Update();
-}
-
-void MainMenu::OnDelete()
-{
-	// Main
-	mainParent.OnDelete();
-	playButton.OnDelete();
-	playButtonText.OnDelete();
-	optionsButton.OnDelete();
-	optionsButtonText.OnDelete();
-	quitButton.OnDelete();
-	quitButtonText.OnDelete();
-
-	// Play
-	playParent.OnDelete();
-	newGameButton.OnDelete();
-	newGameButtonText.OnDelete();
-	playBackButton.OnDelete();
-	playBackButtonText.OnDelete();
-
-	// Options
-	optionsParent.OnDelete();
-	graphicsButton.OnDelete();
-	graphicsButtonText.OnDelete();
-	audioButton.OnDelete();
-	audioButtonText.OnDelete();
-	optionsBackButton.OnDelete();
-	optionsBackButtonText.OnDelete();
-
-	// Graphics
-	graphicsParent.OnDelete();
-	msaaButton.OnDelete();
-	msaaButtonText.OnDelete();
-	vsyncButton.OnDelete();
-	vsyncButtonText.OnDelete();
-	graphicsBackButton.OnDelete();
-	graphicsBackButtonText.OnDelete();
-
-	// Quit
-	quitParent.OnDelete();
-	confirmQuitButton.OnDelete();
-	confirmQuitButtonText.OnDelete();
-	quitBackButton.OnDelete();
-	quitBackButtonText.OnDelete();
 }

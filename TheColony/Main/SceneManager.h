@@ -1,13 +1,21 @@
 #pragma once
 #include "GameObject.h"
 #include "Application.h"
+#include <thread>
+#include "MainMenu.h"
+#include <mutex>
 
 class SceneManager : public Component
 {
 	const unsigned int id = 18;
-	bool flag = false;
+	bool shouldLoad = false;
+	bool doneLoading = false;
 
 	GameObject loadingScreen;
+	thread loadingThread;
+	mutex mtex;
+
+	void InitScene();
 
 public:
 	SceneManager();
@@ -26,6 +34,8 @@ public:
 template <typename T>
 void SceneManager::LoadScene()
 {
-	gameObject->AddComponent<T>();
-	flag = true;
+	shouldLoad = true;
+	if (gameObject->GetComponent<T>())
+		gameObject->GetComponent<T>()->SetEnabled(false);
+	gameObject->AddComponent<T>()->SetEnabled(false);
 }
