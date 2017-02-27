@@ -16,7 +16,6 @@ public:
 	void Start() override;
 	void Update() override;
 	void OnDelete() override;
-	void LoadFromFile(fstream &_file) override {}
 
 	DirectX::AudioListener &GetListener() { return listener; }
 };

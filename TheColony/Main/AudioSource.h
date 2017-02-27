@@ -25,7 +25,6 @@ namespace DirectX
 		void Start() override;
 		void Update() override;
 		void OnDelete() override;
-		void LoadFromFile(fstream &_file) override {}
 
 		/*bool _loop: loop sound or play one-shot*/
 		void Play(const char * _clip, bool _loop);

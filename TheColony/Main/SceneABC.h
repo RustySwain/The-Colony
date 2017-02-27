@@ -9,5 +9,4 @@ public:
 
 	// Component
 	virtual const unsigned int GetId() const override { return id; };
-	virtual void LoadFromFile(fstream& _file) override {};
 };

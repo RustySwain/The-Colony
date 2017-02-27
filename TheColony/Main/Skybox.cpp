@@ -27,7 +27,3 @@ void Skybox::Update()
 void Skybox::OnDelete()
 {
 }
-
-void Skybox::LoadFromFile(fstream& _file)
-{
-}

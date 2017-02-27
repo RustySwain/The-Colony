@@ -7,6 +7,8 @@ class SceneManager : public Component
 	const unsigned int id = 18;
 	bool flag = false;
 
+	GameObject loadingScreen;
+
 public:
 	SceneManager();
 	~SceneManager();
@@ -16,7 +18,6 @@ public:
 	virtual void Start() override;
 	virtual void Update() override;
 	virtual void OnDelete() override;
-	virtual void LoadFromFile(fstream &_file) override {}
 
 	template <typename T>
 	void LoadScene();
@@ -25,7 +26,6 @@ public:
 template <typename T>
 void SceneManager::LoadScene()
 {
-	//gameObject->RemoveComponent<T>();
 	gameObject->AddComponent<T>();
 	flag = true;
 }

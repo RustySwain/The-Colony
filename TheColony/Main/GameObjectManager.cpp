@@ -60,7 +60,3 @@ void GameObjectManager::OnDelete()
 	cam.OnDelete();
 	scene.OnDelete();
 }
-
-void GameObjectManager::LoadFromFile(fstream & _file)
-{
-}

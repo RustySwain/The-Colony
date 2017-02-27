@@ -23,29 +23,6 @@ void Transform::OnDelete()
 {
 }
 
-void Transform::LoadFromFile(fstream &_file)
-{
-	localMatrix = XMMatrixIdentity();
-
-	float xPos, yPos, zPos;
-	_file.read((char*)&xPos, sizeof(float));
-	_file.read((char*)&yPos, sizeof(float));
-	_file.read((char*)&zPos, sizeof(float));
-	SetLocalPosition(xPos, yPos, zPos);
-
-	float xRot, yRot, zRot;
-	_file.read((char*)&xRot, sizeof(float));
-	_file.read((char*)&yRot, sizeof(float));
-	_file.read((char*)&zRot, sizeof(float));
-	RotateXPre(xRot);
-	RotateYPre(yRot);
-	RotateZPre(zRot);
-
-	float scale;
-	_file.read((char*)&scale, sizeof(float));
-	ScalePre(scale);
-}
-
 void Transform::RotateXPre(float _angle)
 {
 	_angle *= (float)DEG2RAD;

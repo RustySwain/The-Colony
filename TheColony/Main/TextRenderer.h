@@ -19,7 +19,6 @@ public:
 	virtual void Start() override;
 	virtual void Update() override;
 	virtual void OnDelete() override;
-	virtual void LoadFromFile(fstream &_file) override;
 
 	bool SetFont(const char* _sheetPath, const wchar_t* _texPath);
 	void SetText(string _text);

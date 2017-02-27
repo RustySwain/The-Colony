@@ -29,10 +29,6 @@ void PrefabLoader::OnDelete()
 {
 }
 
-void PrefabLoader::LoadFromFile(fstream &_file)
-{
-}
-
 void PrefabLoader::Load(string _path)
 {
 	fstream inFile;
@@ -86,42 +82,42 @@ void PrefabLoader::Load(string _path)
 
 void PrefabLoader::LoadComponent(int _component, fstream &_file)
 {
-	switch (m_Components[_component])
-	{
-	case _Transform:
-		gameObject->AddComponent<Transform>()->LoadFromFile(_file);
-		break;
-	case _RigidBody:
-		//gameObject->AddComponent<RigidBody>()->LoadFromFile(inFile);
-		break;
-	case _Collider:
-		//gameObject->AddComponent<Collider>()->LoadFromFile(inFile);
-		break;
-	case _Camera:
-		gameObject->AddComponent<Camera>()->LoadFromFile(_file);
-		break;
-	case _GameObjectManager:
-		gameObject->AddComponent<GameObjectManager>()->LoadFromFile(_file);
-		break;
-	case _MeshRenderer:
-		gameObject->AddComponent<MeshRenderer>()->LoadFromFile(_file);
-		break;
-	case _CameraController:
-		gameObject->AddComponent<CameraController>()->LoadFromFile(_file);
-		break;
-	case _Light:
-		gameObject->AddComponent<Light>()->LoadFromFile(_file);
-		break;
-	case _Skybox:
-		//gameObject->AddComponent<Skybox>()->LoadFromFile(inFile);
-		break;
-	case _Animator:
-		gameObject->AddComponent<Animator>()->LoadFromFile(_file);
-		break;
-	case _AudioSource:
-		//gameObject->AddComponent<AudioSource>()->LoadFromFile(inFile);
-		break;
-	default:
-		break;
-	}
+	//switch (m_Components[_component])
+	//{
+	//case _Transform:
+	//	gameObject->AddComponent<Transform>()->LoadFromFile(_file);
+	//	break;
+	//case _RigidBody:
+	//	//gameObject->AddComponent<RigidBody>()->LoadFromFile(inFile);
+	//	break;
+	//case _Collider:
+	//	//gameObject->AddComponent<Collider>()->LoadFromFile(inFile);
+	//	break;
+	//case _Camera:
+	//	gameObject->AddComponent<Camera>()->LoadFromFile(_file);
+	//	break;
+	//case _GameObjectManager:
+	//	gameObject->AddComponent<GameObjectManager>()->LoadFromFile(_file);
+	//	break;
+	//case _MeshRenderer:
+	//	gameObject->AddComponent<MeshRenderer>()->LoadFromFile(_file);
+	//	break;
+	//case _CameraController:
+	//	gameObject->AddComponent<CameraController>()->LoadFromFile(_file);
+	//	break;
+	//case _Light:
+	//	gameObject->AddComponent<Light>()->LoadFromFile(_file);
+	//	break;
+	//case _Skybox:
+	//	//gameObject->AddComponent<Skybox>()->LoadFromFile(inFile);
+	//	break;
+	//case _Animator:
+	//	gameObject->AddComponent<Animator>()->LoadFromFile(_file);
+	//	break;
+	//case _AudioSource:
+	//	//gameObject->AddComponent<AudioSource>()->LoadFromFile(inFile);
+	//	break;
+	//default:
+	//	break;
+	//}
 }

@@ -21,7 +21,6 @@ public:
 	void Start() override;
 	void Update() override;
 	void OnDelete() override;
-	void LoadFromFile(fstream &_file) override;
 
 	bool AddAnimation(const char * _path);
 	bool AddBindPose(BindPose * _bindPose);

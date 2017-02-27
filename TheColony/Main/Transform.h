@@ -22,7 +22,6 @@ public:
 	virtual void Start() override;
 	virtual void Update() override;
 	virtual void OnDelete() override;
-	virtual void LoadFromFile(fstream &_file) override;
 
 	void RotateXPre(float _angle);
 	void RotateYPre(float _angle);

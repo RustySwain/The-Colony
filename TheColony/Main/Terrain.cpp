@@ -302,10 +302,6 @@ void Terrain::OnDelete()
 {
 }
 
-void Terrain::LoadFromFile(fstream& _file)
-{
-}
-
 void Terrain::SetSize(unsigned int _width, unsigned int _height)
 {
 	width = _width;

@@ -89,7 +89,3 @@ void ProgressBar::Update()
 void ProgressBar::OnDelete()
 {
 }
-
-void ProgressBar::LoadFromFile(fstream& _file)
-{
-}

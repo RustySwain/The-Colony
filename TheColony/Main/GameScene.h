@@ -15,7 +15,8 @@ class GameScene : public SceneABC
 	GameObject heli_prop1;
 	GameObject heli_prop2;
 
-	//GameObject debugText;
+	GameObject debugText;
+	GameObject pickingLight;
 
 public:
 	GameScene();

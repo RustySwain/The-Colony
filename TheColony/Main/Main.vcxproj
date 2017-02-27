@@ -168,6 +168,7 @@
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="Interpolator.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LoadingScreen.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="Interpolator.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="LoadingScreen.h" />
     <ClInclude Include="Macros.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Mesh.h" />
