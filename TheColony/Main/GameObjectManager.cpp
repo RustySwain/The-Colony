@@ -21,13 +21,9 @@ void GameObjectManager::Start()
 #ifdef _DEBUG
 	eflags = eflags | AudioEngine_Debug;
 #endif
-	audioEngine.reset(new AudioEngine(eflags));
+	//audioEngine.reset(new AudioEngine(eflags));
+	audioEngine = make_unique<AudioEngine>(eflags);
 	audioEngine->SetReverb(Reverb_Default);
-
-	scene.Start();
-	scene.AddComponent<SceneManager>();
-	scene.AddComponent<MainMenu>();
-	scene.GetComponent<SceneManager>()->LoadScene<MainMenu>();
 
 	cam.SetId(2);
 	cam.SetTag("Untagged");
@@ -39,6 +35,11 @@ void GameObjectManager::Start()
 	cam.GetComponent<Transform>()->SetLocalPosition(0, 10, 5);
 	cam.GetComponent<Transform>()->RotateXPre(-40);
 	cam.AddComponent<AudioListen>();
+
+	scene.Start();
+	scene.AddComponent<SceneManager>();
+	scene.AddComponent<MainMenu>();
+	scene.GetComponent<SceneManager>()->LoadScene<MainMenu>();
 }
 
 void GameObjectManager::Update()
@@ -50,6 +51,7 @@ void GameObjectManager::Update()
 
 	cam.Update();
 	scene.Update();
+	audioEngine->Update();
 }
 
 void GameObjectManager::OnDelete()
