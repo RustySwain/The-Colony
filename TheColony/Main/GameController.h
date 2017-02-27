@@ -2,19 +2,27 @@
 #include "GameObject.h"
 #include "DirectXMath.h"
 
-class GameController : public Component
+enum JOB_ENUM { No_Job = 0, Farmer, Builder, Forester, Miner, Metalworker, Teacher, Physician };
+enum ITEM_ENUM { Wood,  };
+
+namespace DirectX
 {
-	const unsigned int id = 23;
+	class GameController : public Component
+	{
+		const unsigned int id = 23;
 
-public:
-	GameController();
-	~GameController();
+	public:
+		GameController();
+		~GameController();
 
-	// Component
-	virtual const unsigned int GetId() const override { return id; };
-	virtual void Start() override;
-	virtual void Update() override;
-	virtual void OnDelete() override;
+		// Component
+		virtual const unsigned int GetId() const override { return id; };
+		virtual void Start() override;
+		virtual void Update() override;
+		virtual void OnDelete() override;
 
-	static DirectX::XMFLOAT3 GridSquareFromTerrain(DirectX::XMFLOAT3 _terrainLoc);
-};
+		static XMFLOAT3 GridSquareFromTerrain(XMFLOAT3 _terrainLoc);
+		void AStar(XMFLOAT3);
+		void FindJob(JOB_ENUM _job);
+	};
+}

@@ -185,6 +185,7 @@
     <ClCompile Include="PrefabLoader.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="UIRenderer.cpp" />
+    <ClCompile Include="VillagerController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -226,6 +227,7 @@
     <ClInclude Include="PrefabLoader.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UIRenderer.h" />
+    <ClInclude Include="VillagerController.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PSMesh.hlsl">
