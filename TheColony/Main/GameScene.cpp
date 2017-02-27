@@ -191,7 +191,7 @@ void GameScene::Init()
 	box.SetTag("Untagged");
 	box.SetName("Box");
 	box.Start();
-	box.AddComponent<Transform>()->SetLocalPosition(5, 0, 0);
+	box.AddComponent<Transform>()->SetLocalPosition(5, -1.9f, 0);
 	box.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Box/Box_Idle.mesh");
 	box.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box/Box.dds");
 	box.AddComponent<Animator>()->AddAnimation("../Assets/Box/Box_Idle.anim");
@@ -205,7 +205,7 @@ void GameScene::Init()
 	bunny.SetTag("Untagged");
 	bunny.SetName("Bunny");
 	bunny.Start();
-	bunny.AddComponent<Transform>()->SetLocalPosition(-10, 0, 0);
+	bunny.AddComponent<Transform>()->SetLocalPosition(-10, -2.2f, 0);
 	bunny.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Bunny/Bunny.mesh");
 	bunny.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Bunny/White.dds");
 	bunny.AddComponent<Animator>()->AddAnimation("../Assets/Bunny/Idle.anim");
@@ -230,8 +230,6 @@ void GameScene::Init()
 	heli_prop1.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Helicopter/Helicopter_Propeller.mesh");
 	heli_prop1.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Helicopter/T_Difuse_Helicopter.dds");
 	heli_prop1.AddComponent<AudioSource>()->AddAudioClip("../Assets/sounds/heli_sound1.wav");
-	heli_prop1.GetComponent<AudioSource>()->SetSoundRadius(80);
-	heli_prop1.GetComponent<AudioSource>()->SetVolume(1);
 	heli_prop1.GetComponent<AudioSource>()->Play("heli_sound1", true);
 
 	heli_prop2.Start();
@@ -243,15 +241,13 @@ void GameScene::Init()
 
 	toyota.Start();
 	toyota.SetName("Toyota");
-	toyota.AddComponent<Transform>()->SetLocalPosition(-20, 0, 5);
+	toyota.AddComponent<Transform>()->SetLocalPosition(-20, -2.2f, 5);
 	toyota.GetComponent<Transform>()->ScalePre(0.2f);
 	toyota.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Toyota/toyota.mesh");
 	toyota.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Toyota/diffuse.dds");
 	toyota.GetComponent<MeshRenderer>()->LoadSpecularMap(L"../Assets/Toyota/specular.dds");
 	toyota.GetComponent<MeshRenderer>()->LoadNormalMap(L"../Assets/Toyota/normal.dds");
 	toyota.AddComponent<AudioSource>()->AddAudioClip("../Assets/sounds/car_engine.wav");
-	toyota.GetComponent<AudioSource>()->SetSoundRadius(30);
-	toyota.GetComponent<AudioSource>()->SetVolume(1);
 	toyota.GetComponent<AudioSource>()->Play("car_engine", true);
 
 	// Terrain

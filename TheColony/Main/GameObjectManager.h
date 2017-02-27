@@ -25,6 +25,5 @@ public:
 	virtual void OnDelete() override;
 
 	GameObject& GetScene() { return scene; }
-	GameObject& GetCamera() { return cam; }
 	unique_ptr<DirectX::AudioEngine>& GetAudioEngine() { return audioEngine; }
 };
