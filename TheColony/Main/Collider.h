@@ -18,9 +18,8 @@ public:
 	virtual void Start() override;
 	virtual void Update() override;
 	virtual void OnDelete() override;
-	virtual void LoadFromFile(fstream &_file) override;
 
 	void SetMesh(Mesh* _mesh);
 	bool RayCast(XMFLOAT3& _outPos, XMFLOAT3 _rayStart, XMFLOAT3 _rayNormal) const;
-	static bool RayCastAll(XMFLOAT3& _outPos, XMFLOAT3 _rayStart, XMFLOAT3 _rayNormal);
+	static bool RayCastAll(XMFLOAT3& _outPos, GameObject*& _castedObject, XMFLOAT3 _rayStart, XMFLOAT3 _rayNormal);
 };

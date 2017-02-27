@@ -32,34 +32,12 @@ void Animator::OnDelete()
 	delete interpolator;
 }
 
-void Animator::LoadFromFile(fstream & _file)
-{
-	int numAnimations = 0;
-	_file.read((char*)&numAnimations, sizeof(int));
-	for(int i = 0; i < numAnimations; ++i)
-	{
-		int animLength;
-		_file.read((char*)&animLength, sizeof(int));
-		char* animation = new char[animLength + 1];
-		_file.read(animation, 1);
-		_file.read(animation, animLength);
-		animation[animLength] = 0;
-
-		string animPath = "../Assets/";
-		animPath.append(animation);
-		AddAnimation(animPath.c_str());
-		delete[] animation;
-	}
-	_file.read((char*)&defaultAnimation, sizeof(int));
-	interpolator->SetDefaultAnimation(animations[defaultAnimation]);
-}
-
 bool Animator::AddAnimation(const char * _path)
 {
 	fstream file;
 	file.open(_path, ios_base::binary | ios_base::in);
 
-	if(file.is_open())
+	if (file.is_open())
 	{
 		Animation animation;
 		vector<Joint> joints;
@@ -68,7 +46,7 @@ bool Animator::AddAnimation(const char * _path)
 		int numJoints = 0;
 		file.read((char*)&numJoints, sizeof(int));
 
-		for(int i = 0; i < numJoints; ++i)
+		for (int i = 0; i < numJoints; ++i)
 		{
 			Joint joint;
 
@@ -131,7 +109,7 @@ bool Animator::AddAnimation(const char * _path)
 		int animType = 0;
 		file.read((char*)&animType, sizeof(int));
 
-		for(int i = 0; i < numJoints; ++i)
+		for (int i = 0; i < numJoints; ++i)
 		{
 			// Joint ID
 			int jointId = 0;
@@ -149,7 +127,7 @@ bool Animator::AddAnimation(const char * _path)
 			file.read((char*)&totalFrames, sizeof(int));
 
 			// Frame
-			for(int f = 0; f < totalFrames; ++f)
+			for (int f = 0; f < totalFrames; ++f)
 			{
 				KeyFrame keyFrame;
 				// KeyFrame ID
@@ -204,7 +182,7 @@ bool Animator::AddBindPose(BindPose * _bindPose)
 bool Animator::Play(const string _animationName)
 {
 	int index = -1;
-	for(int i = 0; i < (int)animations.size(); ++i)
+	for (int i = 0; i < (int)animations.size(); ++i)
 	{
 		if (animations[i].GetName() == _animationName)
 		{
@@ -218,18 +196,18 @@ bool Animator::Play(const string _animationName)
 		interpolator->SetAnimation(animations[index]);
 		return true;
 	}
-		
+
 	return false;
 }
 
 bool Animator::Play(int _animationIndex)
 {
-	if(_animationIndex >= 0 && _animationIndex < (int)animations.size())
+	if (_animationIndex >= 0 && _animationIndex < (int)animations.size())
 	{
 		interpolator->SetAnimation(animations[_animationIndex]);
 		return true;
 	}
-	
+
 	return false;
 }
 

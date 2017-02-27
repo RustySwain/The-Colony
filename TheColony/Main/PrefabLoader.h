@@ -18,7 +18,6 @@ public:
 	virtual void Start() override;
 	virtual void Update() override;
 	virtual void OnDelete() override;
-	virtual void LoadFromFile(fstream &_file) override;
 
 	void Load(string _path);
 	void LoadComponent(int _component, fstream &_file);

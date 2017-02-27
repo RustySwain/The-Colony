@@ -27,6 +27,7 @@ void GameScene::Start()
 {
 	cube.SetId(0);
 	cube.SetTag("Untagged");
+	cube.SetName("Cube");
 	cube.Start();
 	cube.AddComponent<Transform>();
 	cube.AddComponent<MeshRenderer>()->LoadFromObj("../Assets/cube.obj");
@@ -130,6 +131,7 @@ void GameScene::Start()
 	// Terrain
 	terrain.SetId(9);
 	terrain.SetTag("Untagged");
+	terrain.SetName("Terrain");
 	terrain.Start();
 	terrain.AddComponent<Transform>()->SetLocalPosition(-20, -5, -20);
 	terrain.AddComponent<MeshRenderer>();// ->LoadDiffuseMap(L"../Assets/rock.dds");
@@ -142,12 +144,13 @@ void GameScene::Start()
 	terrain.GetComponent<Terrain>()->Generate();
 	terrain.AddComponent<Collider>()->SetMesh(terrain.GetComponent<MeshRenderer>()->GetMesh());
 
-	/*debugText.Start();
+	debugText.Start();
 	debugText.AddComponent<Transform>()->ScalePost(0.0005f);
 	debugText.GetComponent<Transform>()->TranslatePost(XMFLOAT3(-1, 0, 0));
 	debugText.AddComponent<MeshRenderer>();
 	debugText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
-	debugText.GetComponent<TextRenderer>()->SetText(" ");*/
+	debugText.GetComponent<TextRenderer>()->SetText(" ");
+	debugText.SetEnabled(false);
 
 	pickingLight.Start();
 	pickingLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, -1, -1, 1));
@@ -205,7 +208,7 @@ void GameScene::Update()
 	heli_prop2.GetComponent<Transform>()->RotateZPre(Time::Delta() * 7 * 360);
 	//helicopter.GetComponent<Transform>()->TranslatePre(XMFLOAT3(-0.5f, 0.15f, 0));
 
-	//cube.GetComponent<Collider>()->SetMesh(cube.GetComponent<MeshRenderer>()->GetMesh());
+	cube.GetComponent<Collider>()->SetMesh(cube.GetComponent<MeshRenderer>()->GetMesh());
 
 	cube.Update();
 	spotLight.Update();
@@ -231,15 +234,18 @@ void GameScene::Update()
 	XMVECTOR vecDir = XMVector3Normalize(farVec - nearVec);
 	XMFLOAT3 flDir(vecDir.m128_f32[0], vecDir.m128_f32[1], vecDir.m128_f32[2]);
 	XMFLOAT3 outPos;
-	bool ray = Collider::RayCastAll(outPos, nearPos, flDir);
+	GameObject* castedObject = nullptr;
+	bool ray = Collider::RayCastAll(outPos, castedObject, nearPos, flDir);
 	if (ray)
 	{
 		XMVECTOR posVec = XMVectorSet(outPos.x, outPos.y, outPos.z, 1);
 		posVec += vecDir * -0.1f;
 		pickingLight.GetComponent<Transform>()->SetLocalPosition(posVec.m128_f32[0], posVec.m128_f32[1], posVec.m128_f32[2]);
+		debugText.GetComponent<TextRenderer>()->SetText(castedObject->GetName());
 	}
 
 	pickingLight.Update();
+	debugText.Update();
 }
 
 void GameScene::OnDelete()
@@ -257,4 +263,5 @@ void GameScene::OnDelete()
 	heli_prop2.OnDelete();
 
 	pickingLight.OnDelete();
+	debugText.OnDelete();
 }

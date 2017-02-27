@@ -45,10 +45,6 @@ void Button::OnDelete()
 {
 }
 
-void Button::LoadFromFile(fstream& _file)
-{
-}
-
 void Button::Subscribe(CallbackFunc* _callback)
 {
 	callbacks.push_back(_callback);

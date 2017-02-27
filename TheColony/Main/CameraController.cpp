@@ -97,10 +97,6 @@ void CameraController::OnDelete()
 	cameraOrigin.OnDelete();
 }
 
-void CameraController::LoadFromFile(fstream & _file)
-{
-}
-
 float CameraController::lerp(float point1, float point2, float alpha)
 {
 	return point1 + alpha * (point2 - point1);

@@ -24,7 +24,7 @@ void GameObject::RegisterMe(GameObject* _go)
 
 void GameObject::UnRegisterMe(GameObject* _go)
 {
-	/*if (_go->GetId())
+	if (_go->GetId())
 		gameObjectIds.erase(gameObjectIds.find(_go->GetId()));
 
 	if (gameObjectTags[_go->GetTag()].size() > 1)
@@ -34,7 +34,7 @@ void GameObject::UnRegisterMe(GameObject* _go)
 	else
 	{
 		gameObjectTags.erase(gameObjectTags.find(_go->GetTag()));
-	}*/
+	}
 }
 
 GameObject::GameObject() : id(0)

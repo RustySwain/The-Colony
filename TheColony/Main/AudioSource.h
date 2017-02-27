@@ -10,15 +10,14 @@ class AudioSource : public Component
 	int currClip;
 
 public:
-	AudioSource(){}
-	~AudioSource() override{}
+	AudioSource() {}
+	~AudioSource() override {}
 
 	// Component
 	virtual const unsigned int GetId() const override { return id; };
 	virtual void Start() override;
 	virtual void Update() override;
 	virtual void OnDelete() override;
-	virtual void LoadFromFile(fstream &_file) override{}
 
 	/*bool _loop: loop sound or play one-shot*/
 	void Play(const char * _clip, bool _loop);
