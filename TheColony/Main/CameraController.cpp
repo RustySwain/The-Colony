@@ -40,20 +40,33 @@ void CameraController::Update()
 
 	if (scrollUp)
 	{
-		if (scrollUpCount > 0)
+		/*if (scrollUpCount > 0)
+		{*/
+		if (transform->GetWorldPosition().y > 10)
 		{
 			transform->TranslatePre(XMFLOAT3(0, 0, -speed * 10));
 			scrollUpCount--;
+
+			transform->RotateXPre(1.4f);
+
 		}
-		else
+
+		scrollUp = false;
+		//}
+		/*else
 		{
-			scrollUp = false;
-		}
+		}*/
 	}
 	if (scrollDown)
 	{
-		transform->TranslatePre(XMFLOAT3(0, 0, speed * 10));
-		scrollDown = false;
+		if (transform->GetWorldPosition().y < 60)
+		{
+			transform->TranslatePre(XMFLOAT3(0, 0, speed * 10));
+
+			transform->RotateXPre(-1.4f);
+
+			scrollDown = false;
+		}
 	}
 
 	if (GetAsyncKeyState('W'))
@@ -79,13 +92,15 @@ void CameraController::Update()
 	{
 		if (dx > 0 || newMousePos.x == Application::GetInstance()->GetWindowRect().left)
 		{
+
 			_cameraOrigin->RotateYPre((Time::Delta() * 130));
 		}
-		if (dx < 0 || newMousePos.x == Application::GetInstance()->GetWindowRect().right - 1)
+		else if (dx < 0 || newMousePos.x == Application::GetInstance()->GetWindowRect().right - 1)
 		{
+
 			_cameraOrigin->RotateYPre((Time::Delta() * -130));
 		}
-		//SetCursorPos((int)screenMiddle.x, (int)screenMiddle.y);
+
 	}
 
 	GetCursorPos(&mP);

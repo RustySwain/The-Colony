@@ -11,11 +11,11 @@
 class Application
 {
 	static Application* instance;
-
+	
 	// Windows
 	HWND* window = nullptr;
 	RECT windowRect;
-
+	
 	// DirectX
 	ID3D11Device* device = nullptr;
 	ID3D11DeviceContext* context = nullptr;
@@ -38,9 +38,7 @@ class Application
 	float backBufferColor[4] = { 0, 1, 1, 1 };
 	unsigned int msCount = 8;
 	unsigned int msQuality = D3D11_STANDARD_MULTISAMPLE_PATTERN;
-	unsigned int vsync = 1;
-
-	GameObject gameObjectManager;
+	unsigned int vsync = 1;	GameObject gameObjectManager;
 	vector<const MeshRenderer*> renderers;
 	vector<const Light*> lights;
 
@@ -75,17 +73,13 @@ public:
 	ID3D11VertexShader* GetVSMesh() const { return vsMesh; };
 	ID3D11VertexShader* GetVSUI() const { return vsUI; };
 
-	unsigned int GetSampleCount() const { return msCount; };
-	unsigned int GetSampleQuality() const { return msQuality; };
-
 	void RegisterMeshRenderer(const MeshRenderer* _mr);
 	void UnRegisterMeshRenderer(const MeshRenderer* _mr);
 
 	void RegisterLight(const Light* _light);
 	void UnregisterLight(const Light* _light);
 
-	GameObjectManager* GetGameObjectManager() { return gameObjectManager.GetComponent<GameObjectManager>(); }
-
+	GameObjectManager* GetGameObjectManager() { return gameObjectManager.GetComponent<GameObjectManager>(); }	
 	void Init(HWND& _window);
 	void Update() const;
 	void Render();

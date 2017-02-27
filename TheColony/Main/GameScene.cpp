@@ -278,4 +278,5 @@ void GameScene::Init()
 	pickingLight.AddComponent<Transform>();
 	pickingLight.GetComponent<Light>()->SetExtra(XMFLOAT4(7, 0, 0, 1));
 	pickingLight.GetComponent<Light>()->type = Light::POINT;
+	
 }
