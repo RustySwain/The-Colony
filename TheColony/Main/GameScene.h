@@ -20,6 +20,10 @@ class GameScene : public SceneABC
 
 	GameObject debugText;
 	GameObject pickingLight;
+	GameObject test;
+	
+
+
 
 public:
 	GameScene();
