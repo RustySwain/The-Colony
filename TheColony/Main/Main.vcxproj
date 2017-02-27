@@ -152,6 +152,7 @@
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="AudioClip.cpp" />
+    <ClCompile Include="AudioListen.cpp" />
     <ClCompile Include="AudioSource.cpp" />
     <ClCompile Include="BindPose.cpp" />
     <ClCompile Include="BoundingVolumeHeirarchy.cpp" />
@@ -167,6 +168,7 @@
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="Interpolator.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LoadingScreen.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -187,6 +189,7 @@
     <ClInclude Include="Animator.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="AudioClip.h" />
+    <ClInclude Include="AudioListen.h" />
     <ClInclude Include="AudioSource.h" />
     <ClInclude Include="BindPose.h" />
     <ClInclude Include="BoundingVolumeHeirarchy.h" />
@@ -203,6 +206,7 @@
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="Interpolator.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="LoadingScreen.h" />
     <ClInclude Include="Macros.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Mesh.h" />

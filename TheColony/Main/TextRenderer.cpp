@@ -25,10 +25,6 @@ void TextRenderer::OnDelete()
 	if (font) delete font;
 }
 
-void TextRenderer::LoadFromFile(fstream & _file)
-{
-}
-
 bool TextRenderer::SetFont(const char* _sheetPath, const wchar_t* _texPath)
 {
 	if (font) delete font;
@@ -39,6 +35,7 @@ bool TextRenderer::SetFont(const char* _sheetPath, const wchar_t* _texPath)
 
 void TextRenderer::SetText(string _text)
 {
+	if (_text.size() == 0) SetText(" ");
 	Mesh*& mesh = gameObject->GetComponent<MeshRenderer>()->GetMesh();
 	if (!mesh)
 	{

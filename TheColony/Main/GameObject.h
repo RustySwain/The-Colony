@@ -142,5 +142,4 @@ public:
 	virtual void Start() = 0;
 	virtual void Update() = 0;
 	virtual void OnDelete() = 0;
-	virtual void LoadFromFile(fstream &file) = 0;
 };

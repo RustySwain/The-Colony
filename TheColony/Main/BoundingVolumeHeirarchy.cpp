@@ -64,9 +64,9 @@ void BoundingVolumeHeirarchy::Node::Analyze(TriangleSet _triSet, unsigned int& _
 
 bool BoundingVolumeHeirarchy::Node::RayCast(XMFLOAT3& _outPos, float& _outDistance, XMFLOAT3 _rayStart, XMFLOAT3 _rayNormal)
 {
-	if (_rayStart.x > bounds.min.x && Dot(_rayNormal, XMFLOAT3(1, 0, 0)) < 0) return false;
-	if (_rayStart.y > bounds.min.y && Dot(_rayNormal, XMFLOAT3(0, 1, 0)) < 0) return false;
-	if (_rayStart.z > bounds.min.z && Dot(_rayNormal, XMFLOAT3(0, 0, 1)) < 0) return false;
+	if (_rayStart.x < bounds.min.x && Dot(_rayNormal, XMFLOAT3(1, 0, 0)) < 0) return false;
+	if (_rayStart.y < bounds.min.y && Dot(_rayNormal, XMFLOAT3(0, 1, 0)) < 0) return false;
+	if (_rayStart.z < bounds.min.z && Dot(_rayNormal, XMFLOAT3(0, 0, 1)) < 0) return false;
 	if (_rayStart.x > bounds.max.x && Dot(_rayNormal, XMFLOAT3(1, 0, 0)) > 0) return false;
 	if (_rayStart.y > bounds.max.y && Dot(_rayNormal, XMFLOAT3(0, 1, 0)) > 0) return false;
 	if (_rayStart.z > bounds.max.z && Dot(_rayNormal, XMFLOAT3(0, 0, 1)) > 0) return false;
@@ -186,22 +186,22 @@ bool BoundingVolumeHeirarchy::RayToTriangle(XMFLOAT3& _outPos, float& _outDistan
 	XMVECTOR rayStart = XMVectorSet(_rayStart.x, _rayStart.y, _rayStart.z, 1);
 	float d0 = XMVector3Dot(planeNormal, rayStart).m128_f32[0];
 	float d1 = XMVector3Dot(planeNormal, a).m128_f32[0];
-	float d2 = d0 - d1;
+	float d2 = abs(d0 - d1);
 	float d3 = XMVector3Dot(planeNormal, rayNormal).m128_f32[0];
 	float df = -(d2 / d3);
 	/*df = abs(df);
 	if (df > INT_MAX)
 		return false;*/
 	XMVECTOR cp = rayStart + rayNormal * df;
-	XMVECTOR edge0 = b - a;
-	XMVECTOR edge1 = c - b;
-	XMVECTOR edge2 = a - c;
+	XMVECTOR edge0 = XMVector3Normalize(b - a);
+	XMVECTOR edge1 = XMVector3Normalize(c - b);
+	XMVECTOR edge2 = XMVector3Normalize(a - c);
 	XMVECTOR norm0 = XMVector3Normalize(XMVector3Cross(edge0, planeNormal));
 	XMVECTOR norm1 = XMVector3Normalize(XMVector3Cross(edge1, planeNormal));
 	XMVECTOR norm2 = XMVector3Normalize(XMVector3Cross(edge2, planeNormal));
-	if (XMVector3Dot(norm0, cp - a).m128_f32[0] > 0) return false;
-	if (XMVector3Dot(norm1, cp - b).m128_f32[0] > 0) return false;
-	if (XMVector3Dot(norm2, cp - c).m128_f32[0] > 0) return false;
+	if (XMVector3Dot(norm0, cp - a).m128_f32[0] < 0) return false;
+	if (XMVector3Dot(norm1, cp - b).m128_f32[0] < 0) return false;
+	if (XMVector3Dot(norm2, cp - c).m128_f32[0] < 0) return false;
 
 	_outDistance = df;
 	_outPos = XMFLOAT3(cp.m128_f32[0], cp.m128_f32[1], cp.m128_f32[2]);
@@ -214,7 +214,7 @@ TriangleSet BoundingVolumeHeirarchy::CreateTriangleSet(Mesh* _mesh)
 	ret.mesh = _mesh;
 	vector<Vertex> verts = _mesh->GetVertexData();
 	vector<unsigned int> tris = _mesh->GetTris();
-	unsigned int triCount = tris.size() / 3;
+	unsigned int triCount = (unsigned int)tris.size() / 3;
 	for (unsigned int i = 0; i < triCount; i++)
 	{
 		Triangle tri;
@@ -241,20 +241,33 @@ BoundingVolumeHeirarchy::~BoundingVolumeHeirarchy()
 	if (root)
 	{
 		root->Shutdown();
+		delete root->triSet.mesh;
 		delete root;
 	}
 }
 
-void BoundingVolumeHeirarchy::Analyze(Mesh* _mesh, unsigned int _minimumTris)
+void BoundingVolumeHeirarchy::Analyze(Mesh* _mesh, unsigned int _minimumTris, XMMATRIX _worldMat)
 {
 	assert(_mesh);
 	assert(_minimumTris);
+	if (root)
+	{
+		root->Shutdown();
+		delete root->triSet.mesh;
+		delete root;
+	}
 	root = new Node();
-	root->Analyze(CreateTriangleSet(_mesh), count, _minimumTris);
+	Mesh* mesh = new Mesh(*_mesh);
+	vector<Vertex>& verts = mesh->GetVertexData();
+	for (unsigned int i = 0; i < verts.size(); i++)
+	{
+		XMMATRIX tr = _worldMat * XMMatrixTranslation(verts[i].position.x, verts[i].position.y, verts[i].position.z);
+		verts[i].position = XMFLOAT4(tr.r[3].m128_f32[0], tr.r[3].m128_f32[1], tr.r[3].m128_f32[2], 1);
+	}
+	root->Analyze(CreateTriangleSet(mesh), count, _minimumTris);
 }
 
-bool BoundingVolumeHeirarchy::RayCast(XMFLOAT3& _outPos, XMFLOAT3 _rayStart, XMFLOAT3 _rayNormal) const
+bool BoundingVolumeHeirarchy::RayCast(XMFLOAT3& _outPos, float& _outDistance, XMFLOAT3 _rayStart, XMFLOAT3 _rayNormal) const
 {
-	float distance;
-	return root->RayCast(_outPos, distance, _rayStart, _rayNormal);
+	return root->RayCast(_outPos, _outDistance, _rayStart, _rayNormal);
 }

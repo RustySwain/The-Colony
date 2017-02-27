@@ -33,7 +33,6 @@ public:
 	virtual void Update() override;
 	virtual void OnDelete() override;
 	virtual const unsigned int GetId() const override { return id; }
-	virtual void LoadFromFile(fstream &_file) override;
 
 private:
 	float lerp(float point1, float point2, float alpha);

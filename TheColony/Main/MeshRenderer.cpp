@@ -134,18 +134,6 @@ void MeshRenderer::OnDelete()
 	SAFE_RELEASE(sampler);
 }
 
-void MeshRenderer::LoadFromFile(fstream & _file)
-{
-	int meshLength;
-	_file.read((char*)&meshLength, sizeof(int));
-	char* mesh = new char[meshLength + 1];
-	_file.read(mesh, 1);
-	_file.read(mesh, meshLength);
-	mesh[meshLength] = 0;
-	LoadFromBinary(mesh);
-	delete[] mesh;
-}
-
 void MeshRenderer::AddInstance(XMMATRIX _mat, int _key)
 {
 	PerInstanceVertexData pivd;

@@ -31,7 +31,6 @@ public:
 	virtual void Update() override;
 	virtual void OnDelete() override;
 	virtual const unsigned int GetId() const override { return id; };
-	virtual void LoadFromFile(fstream &_file) override;
 
 	void SetSize(unsigned int _width, unsigned int _height);
 	void SetTextureSize(unsigned int _width, unsigned int _height);
