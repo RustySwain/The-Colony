@@ -15,6 +15,7 @@
 #include "TextRenderer.h"
 #include "Application.h"
 #include "PlayerController.h"
+#include "GameController.h"
 
 GameScene::GameScene()
 {
@@ -105,14 +106,17 @@ void GameScene::Update()
 	XMFLOAT3 flDir(vecDir.m128_f32[0], vecDir.m128_f32[1], vecDir.m128_f32[2]);
 	XMFLOAT3 outPos;
 	GameObject* castedObject = nullptr;
-	bool ray = Collider::RayCastAll(outPos, castedObject, nearPos, flDir);
+	bool ray = terrain.GetComponent<Collider>()->RayCast(outPos, nearPos, flDir);
 	if (ray)
 	{
-		//outPos = PlayerController::GridSquareFromTerrain(outPos);
-		XMVECTOR posVec = XMVectorSet(outPos.x, outPos.y, outPos.z, 1);
-		posVec += vecDir * -0.1f;
+		//outPos = GameController::GridSquareFromTerrain(outPos);
+		char buffer[256];
+		XMFLOAT3 lightPos = pickingLight.GetComponent<Transform>()->GetWorldPosition();
+		sprintf_s(buffer, "(%f, %f, %f), (%f, %f, %f)", outPos.x, outPos.y, outPos.z, lightPos.x, lightPos.y, lightPos.z);
+		//debugText.GetComponent<TextRenderer>()->SetText(string(buffer)/*castedObject->GetName()*/);
+		XMVECTOR posVec = XMVectorSet(outPos.x, outPos.y + 0.1f, outPos.z, 1);
+		//posVec += vecDir * -0.1f;
 		pickingLight.GetComponent<Transform>()->SetLocalPosition(posVec.m128_f32[0], posVec.m128_f32[1], posVec.m128_f32[2]);
-		debugText.GetComponent<TextRenderer>()->SetText(castedObject->GetName());
 	}
 
 	pickingLight.Update();
@@ -274,12 +278,12 @@ void GameScene::Init()
 	debugText.AddComponent<MeshRenderer>();
 	debugText.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
 	debugText.GetComponent<TextRenderer>()->SetText(" ");
-	debugText.SetEnabled(false);
+	//debugText.SetEnabled(false);
 
 	pickingLight.Start();
 	pickingLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, -1, -1, 1));
 	pickingLight.AddComponent<Transform>();
-	pickingLight.GetComponent<Light>()->SetExtra(XMFLOAT4(3, 0, 0, 1));
+	pickingLight.GetComponent<Light>()->SetExtra(XMFLOAT4(7, 0, 0, 1));
 	pickingLight.GetComponent<Light>()->type = Light::POINT;
 	
 }
