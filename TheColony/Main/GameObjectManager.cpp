@@ -18,10 +18,6 @@ GameObjectManager::~GameObjectManager()
 void GameObjectManager::Start()
 {
 	AUDIO_ENGINE_FLAGS eflags = AudioEngine_EnvironmentalReverb | AudioEngine_ReverbUseFilters;
-#ifdef _DEBUG
-	eflags = eflags | AudioEngine_Debug;
-#endif
-	//audioEngine.reset(new AudioEngine(eflags));
 	audioEngine = make_unique<AudioEngine>(eflags);
 	audioEngine->SetReverb(Reverb_Default);
 
