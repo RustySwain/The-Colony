@@ -26,4 +26,5 @@ public:
 	virtual void Start() override;
 	virtual void Update() override;
 	virtual void OnDelete() override;
+	virtual void Init() override;
 };

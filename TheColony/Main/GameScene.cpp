@@ -25,6 +25,117 @@ GameScene::~GameScene()
 
 void GameScene::Start()
 {
+}
+
+void GameScene::Update()
+{
+	//Rotate light
+	spotLight.GetComponent<Transform>()->RotateYPost(Time::Delta() * 100);
+
+	// Testing instancing stuff, feel free to remove, but it works
+	static unsigned int instanceInd = 1;
+	cube.GetComponent<Transform>()->RotateYPost(Time::Delta() * 90);
+	if (GetAsyncKeyState('O') & 0x1)
+	{
+		XMMATRIX mat = XMMatrixIdentity();
+		float y = (float)(rand() % 100) / 10.0f;
+		mat *= XMMatrixTranslation(0, y, 0);
+		cube.GetComponent<MeshRenderer>()->AddInstance(mat, instanceInd++);
+	}
+	if (GetAsyncKeyState('I'))
+	{
+		unsigned int id = rand() % instanceInd;
+		cube.GetComponent<MeshRenderer>()->RemoveInstance(id);
+	}
+	if (GetAsyncKeyState('L'))
+		dirLight.GetComponent<Transform>()->RotateYPost(Time::Delta() * 180.0f);
+
+	if (GetAsyncKeyState(VK_RETURN))
+	{
+		terrain.GetComponent<Terrain>()->Seed((unsigned int)time(0));
+		terrain.GetComponent<Terrain>()->Generate();
+	}
+
+	if (GetAsyncKeyState(VK_F1))
+		box.GetComponent<Animator>()->Play("Box_Idle");
+	if (GetAsyncKeyState(VK_F2))
+		box.GetComponent<Animator>()->Play("Box_Attack");
+	if (GetAsyncKeyState(VK_F3))
+		box.GetComponent<Animator>()->Play("Box_Jump");
+	if (GetAsyncKeyState(VK_F4))
+		box.GetComponent<Animator>()->Play("Box_Walk");
+
+	if (GetAsyncKeyState(VK_F5))
+		bunny.GetComponent<Animator>()->Play("Idle");
+	if (GetAsyncKeyState(VK_F6))
+		bunny.GetComponent<Animator>()->Play("Run");
+	if (GetAsyncKeyState(VK_F7))
+		bunny.GetComponent<Animator>()->Play("Attack");
+
+	heli_prop1.GetComponent<Transform>()->RotateYPre(Time::Delta() * 3 * 360);
+	heli_prop2.GetComponent<Transform>()->RotateZPre(Time::Delta() * 7 * 360);
+	//helicopter.GetComponent<Transform>()->TranslatePre(XMFLOAT3(-0.5f, 0.15f, 0));
+
+	cube.GetComponent<Collider>()->SetMesh(cube.GetComponent<MeshRenderer>()->GetMesh());
+
+	cube.Update();
+	spotLight.Update();
+	dirLight.Update();
+	pointLight.Update();
+	skybox.Update();
+	terrain.Update();
+	bunny.Update();
+	box.Update();
+	helicopter.Update();
+	heli_prop1.Update();
+	heli_prop2.Update();
+
+	// Picking
+	POINT mousePos;
+	GetCursorPos(&mousePos);
+	XMFLOAT3 mouseScreen((float)mousePos.x, (float)mousePos.y, 0);
+	XMFLOAT3 nearPos = Camera::mainCam->ScreenToWorldSpace(mouseScreen);
+	mouseScreen.z = Camera::mainCam->GetFarPlane();
+	XMFLOAT3 farPos = Camera::mainCam->ScreenToWorldSpace(mouseScreen);
+	XMVECTOR nearVec = XMVectorSet(nearPos.x, nearPos.y, nearPos.z, 1);
+	XMVECTOR farVec = XMVectorSet(farPos.x, farPos.y, farPos.z, 1);
+	XMVECTOR vecDir = XMVector3Normalize(farVec - nearVec);
+	XMFLOAT3 flDir(vecDir.m128_f32[0], vecDir.m128_f32[1], vecDir.m128_f32[2]);
+	XMFLOAT3 outPos;
+	GameObject* castedObject = nullptr;
+	bool ray = Collider::RayCastAll(outPos, castedObject, nearPos, flDir);
+	if (ray)
+	{
+		XMVECTOR posVec = XMVectorSet(outPos.x, outPos.y, outPos.z, 1);
+		posVec += vecDir * -0.1f;
+		pickingLight.GetComponent<Transform>()->SetLocalPosition(posVec.m128_f32[0], posVec.m128_f32[1], posVec.m128_f32[2]);
+		debugText.GetComponent<TextRenderer>()->SetText(castedObject->GetName());
+	}
+
+	pickingLight.Update();
+	debugText.Update();
+}
+
+void GameScene::OnDelete()
+{
+	cube.OnDelete();
+	spotLight.OnDelete();
+	dirLight.OnDelete();
+	pointLight.OnDelete();
+	skybox.OnDelete();
+	terrain.OnDelete();
+	bunny.OnDelete();
+	box.OnDelete();
+	helicopter.OnDelete();
+	heli_prop1.OnDelete();
+	heli_prop2.OnDelete();
+
+	pickingLight.OnDelete();
+	debugText.OnDelete();
+}
+
+void GameScene::Init()
+{
 	cube.SetId(0);
 	cube.SetTag("Untagged");
 	cube.SetName("Cube");
@@ -157,111 +268,4 @@ void GameScene::Start()
 	pickingLight.AddComponent<Transform>();
 	pickingLight.GetComponent<Light>()->SetExtra(XMFLOAT4(3, 0, 0, 1));
 	pickingLight.GetComponent<Light>()->type = Light::POINT;
-}
-
-void GameScene::Update()
-{
-	//Rotate light
-	spotLight.GetComponent<Transform>()->RotateYPost(Time::Delta() * 100);
-
-	// Testing instancing stuff, feel free to remove, but it works
-	static unsigned int instanceInd = 1;
-	cube.GetComponent<Transform>()->RotateYPost(Time::Delta() * 90);
-	if (GetAsyncKeyState('O') & 0x1)
-	{
-		XMMATRIX mat = XMMatrixIdentity();
-		float y = (float)(rand() % 100) / 10.0f;
-		mat *= XMMatrixTranslation(0, y, 0);
-		cube.GetComponent<MeshRenderer>()->AddInstance(mat, instanceInd++);
-	}
-	if (GetAsyncKeyState('I'))
-	{
-		unsigned int id = rand() % instanceInd;
-		cube.GetComponent<MeshRenderer>()->RemoveInstance(id);
-	}
-	if (GetAsyncKeyState('L'))
-		dirLight.GetComponent<Transform>()->RotateYPost(Time::Delta() * 180.0f);
-
-	if (GetAsyncKeyState(VK_RETURN))
-	{
-		terrain.GetComponent<Terrain>()->Seed((unsigned int)time(0));
-		terrain.GetComponent<Terrain>()->Generate();
-	}
-
-	if (GetAsyncKeyState(VK_F1))
-		box.GetComponent<Animator>()->Play("Box_Idle");
-	if (GetAsyncKeyState(VK_F2))
-		box.GetComponent<Animator>()->Play("Box_Attack");
-	if (GetAsyncKeyState(VK_F3))
-		box.GetComponent<Animator>()->Play("Box_Jump");
-	if (GetAsyncKeyState(VK_F4))
-		box.GetComponent<Animator>()->Play("Box_Walk");
-
-	if (GetAsyncKeyState(VK_F5))
-		bunny.GetComponent<Animator>()->Play("Idle");
-	if (GetAsyncKeyState(VK_F6))
-		bunny.GetComponent<Animator>()->Play("Run");
-	if (GetAsyncKeyState(VK_F7))
-		bunny.GetComponent<Animator>()->Play("Attack");
-
-	heli_prop1.GetComponent<Transform>()->RotateYPre(Time::Delta() * 3 * 360);
-	heli_prop2.GetComponent<Transform>()->RotateZPre(Time::Delta() * 7 * 360);
-	//helicopter.GetComponent<Transform>()->TranslatePre(XMFLOAT3(-0.5f, 0.15f, 0));
-
-	cube.GetComponent<Collider>()->SetMesh(cube.GetComponent<MeshRenderer>()->GetMesh());
-
-	cube.Update();
-	spotLight.Update();
-	dirLight.Update();
-	pointLight.Update();
-	skybox.Update();
-	terrain.Update();
-	bunny.Update();
-	box.Update();
-	helicopter.Update();
-	heli_prop1.Update();
-	heli_prop2.Update();
-
-	// Picking
-	POINT mousePos;
-	GetCursorPos(&mousePos);
-	XMFLOAT3 mouseScreen((float)mousePos.x, (float)mousePos.y, 0);
-	XMFLOAT3 nearPos = Camera::mainCam->ScreenToWorldSpace(mouseScreen);
-	mouseScreen.z = Camera::mainCam->GetFarPlane();
-	XMFLOAT3 farPos = Camera::mainCam->ScreenToWorldSpace(mouseScreen);
-	XMVECTOR nearVec = XMVectorSet(nearPos.x, nearPos.y, nearPos.z, 1);
-	XMVECTOR farVec = XMVectorSet(farPos.x, farPos.y, farPos.z, 1);
-	XMVECTOR vecDir = XMVector3Normalize(farVec - nearVec);
-	XMFLOAT3 flDir(vecDir.m128_f32[0], vecDir.m128_f32[1], vecDir.m128_f32[2]);
-	XMFLOAT3 outPos;
-	GameObject* castedObject = nullptr;
-	bool ray = Collider::RayCastAll(outPos, castedObject, nearPos, flDir);
-	if (ray)
-	{
-		XMVECTOR posVec = XMVectorSet(outPos.x, outPos.y, outPos.z, 1);
-		posVec += vecDir * -0.1f;
-		pickingLight.GetComponent<Transform>()->SetLocalPosition(posVec.m128_f32[0], posVec.m128_f32[1], posVec.m128_f32[2]);
-		debugText.GetComponent<TextRenderer>()->SetText(castedObject->GetName());
-	}
-
-	pickingLight.Update();
-	debugText.Update();
-}
-
-void GameScene::OnDelete()
-{
-	cube.OnDelete();
-	spotLight.OnDelete();
-	dirLight.OnDelete();
-	pointLight.OnDelete();
-	skybox.OnDelete();
-	terrain.OnDelete();
-	bunny.OnDelete();
-	box.OnDelete();
-	helicopter.OnDelete();
-	heli_prop1.OnDelete();
-	heli_prop2.OnDelete();
-
-	pickingLight.OnDelete();
-	debugText.OnDelete();
 }

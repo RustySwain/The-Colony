@@ -9,4 +9,5 @@ public:
 
 	// Component
 	virtual const unsigned int GetId() const override { return id; };
+	virtual void Init() = 0;
 };

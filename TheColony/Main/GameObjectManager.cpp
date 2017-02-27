@@ -4,7 +4,6 @@
 #include "Camera.h"
 #include "Time.h"
 #include "SceneManager.h"
-#include "MainMenu.h"
 #include "GameScene.h"
 
 GameObjectManager::GameObjectManager()
@@ -20,6 +19,7 @@ void GameObjectManager::Start()
 	scene.Start();
 	scene.AddComponent<SceneManager>();
 	scene.AddComponent<MainMenu>();
+	scene.GetComponent<SceneManager>()->LoadScene<MainMenu>();
 
 	cam.SetId(2);
 	cam.SetTag("Untagged");
