@@ -13,8 +13,8 @@ namespace DirectX
 		const unsigned int id = 11;
 		AudioEmitter emitter;
 		vector<AudioClip*> clips;
-		int currClip;
-		float radius;
+		int currClip = 0;
+		float radius = 0;
 
 	public:
 		AudioSource() {}

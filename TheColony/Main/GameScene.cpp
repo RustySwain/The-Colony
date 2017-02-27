@@ -118,7 +118,7 @@ void GameScene::Start()
 	heli_prop1.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Helicopter/T_Difuse_Helicopter.dds");
 	heli_prop1.AddComponent<AudioSource>()->AddAudioClip("../Assets/sounds/heli_sound1.wav");
 	heli_prop1.GetComponent<AudioSource>()->SetSoundRadius(80);
-	heli_prop1.GetComponent<AudioSource>()->SetVolume(0);
+	heli_prop1.GetComponent<AudioSource>()->SetVolume(1);
 	heli_prop1.GetComponent<AudioSource>()->Play("heli_sound1", true);
 
 	heli_prop2.Start();
@@ -127,6 +127,19 @@ void GameScene::Start()
 	heli_prop2.GetComponent<Transform>()->RotateYPre(180);
 	heli_prop2.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Helicopter/Helicopter_Propeller2.mesh");
 	heli_prop2.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Helicopter/T_Difuse_Helicopter.dds");
+
+	toyota.Start();
+	toyota.SetName("Toyota");
+	toyota.AddComponent<Transform>()->SetLocalPosition(-20, 0, 5);
+	toyota.GetComponent<Transform>()->ScalePre(0.2f);
+	toyota.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Toyota/toyota.mesh");
+	toyota.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Toyota/diffuse.dds");
+	toyota.GetComponent<MeshRenderer>()->LoadSpecularMap(L"../Assets/Toyota/specular.dds");
+	toyota.GetComponent<MeshRenderer>()->LoadNormalMap(L"../Assets/Toyota/normal.dds");
+	toyota.AddComponent<AudioSource>()->AddAudioClip("../Assets/sounds/car_engine.wav");
+	toyota.GetComponent<AudioSource>()->SetSoundRadius(30);
+	toyota.GetComponent<AudioSource>()->SetVolume(1);
+	toyota.GetComponent<AudioSource>()->Play("car_engine", true);
 
 	// Terrain
 	terrain.SetId(9);
@@ -221,6 +234,7 @@ void GameScene::Update()
 	helicopter.Update();
 	heli_prop1.Update();
 	heli_prop2.Update();
+	toyota.Update();
 
 	// Picking
 	POINT mousePos;
@@ -261,6 +275,7 @@ void GameScene::OnDelete()
 	helicopter.OnDelete();
 	heli_prop1.OnDelete();
 	heli_prop2.OnDelete();
+	toyota.OnDelete();
 
 	pickingLight.OnDelete();
 	debugText.OnDelete();

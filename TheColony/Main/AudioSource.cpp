@@ -7,18 +7,27 @@ using namespace DirectX;
 
 void AudioSource::Start()
 {
-	currClip = 0;
+	emitter.SetPosition(gameObject->GetComponent<Transform>()->GetWorldPosition());
 }
 
 void AudioSource::Update()
 {
-	XMFLOAT3 currPos = gameObject->GetComponent<Transform>()->GetWorldPosition();
-	XMFLOAT3 camPos = Application::GetInstance()->GetGameObjectManager()->GetCamera().GetComponent<Transform>()->GetWorldPosition();
-	float dist = sqrt(pow(currPos.x - camPos.x, 2) + pow(currPos.y - camPos.y, 2) + pow(currPos.z - camPos.z, 2));
-	float ratio = abs(dist/radius - 1);
-	if (ratio < 0 || ratio > 1 || dist >= radius)
-		ratio = 0;
-	SetVolume(ratio);
+	//float ratio = 0;
+	//XMFLOAT3 currPos = gameObject->GetComponent<Transform>()->GetWorldPosition();
+	//XMFLOAT3 camPos = Application::GetInstance()->GetGameObjectManager()->GetCamera().GetComponent<Transform>()->GetWorldPosition();
+	//float dist = sqrt(pow(currPos.x - camPos.x, 2) + pow(currPos.y - camPos.y, 2) + pow(currPos.z - camPos.z, 2));
+	//if(dist < radius)
+	//{
+	//	ratio = abs(dist / radius - 1);
+	//	if (ratio < 0 || ratio > 1)
+	//		ratio = 0;
+	//}
+	//
+	//SetVolume(ratio);
+
+	emitter.SetPosition(gameObject->GetComponent<Transform>()->GetWorldPosition());
+	AudioListener listener = Camera::mainCam->gameObject->GetComponent<AudioListen>()->GetListener();
+	clips[currClip]->soundEffectInstance->Apply3D(listener, emitter);
 }
 
 void AudioSource::OnDelete()
@@ -39,8 +48,9 @@ void AudioSource::Play(const char * _clip, bool _loop)
 			currClip = i;
 	}
 
-	clips[currClip]->soundEffectInstance->Apply3D(Application::GetInstance()->GetGameObjectManager()->GetCamera().GetComponent<AudioListen>()->GetListener(), emitter);
 	clips[currClip]->soundEffectInstance->Play(_loop);
+	AudioListener listener = Camera::mainCam->gameObject->GetComponent<AudioListen>()->GetListener();
+	clips[currClip]->soundEffectInstance->Apply3D(listener, emitter);
 }
 
 void AudioSource::Pause() const
@@ -95,7 +105,7 @@ void AudioSource::AddAudioClip(const char * _path)
 	wstring filePathW(path.size(), L'#');
 	size_t outSize;
 	mbstowcs_s(&outSize, &filePathW[0], path.size() + 1, path.c_str(), path.size());
-	clip->soundEffect.reset(new SoundEffect(Application::GetInstance()->GetGameObjectManager()->GetAudioEngine().get(), filePathW.c_str()));
+	clip->soundEffect = make_unique<SoundEffect>(Application::GetInstance()->GetGameObjectManager()->GetAudioEngine().get(), filePathW.c_str());
 	clip->soundEffectInstance = clip->soundEffect->CreateInstance(SoundEffectInstance_Use3D | SoundEffectInstance_ReverbUseFilters);
 	clip->SetName(GetFileName(path));
 	clips.push_back(clip);
