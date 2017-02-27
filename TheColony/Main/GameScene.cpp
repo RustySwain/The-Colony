@@ -14,6 +14,7 @@
 #include "Debug.h"
 #include "TextRenderer.h"
 #include "Application.h"
+#include "PlayerController.h"
 
 GameScene::GameScene()
 {
@@ -106,6 +107,7 @@ void GameScene::Update()
 	bool ray = Collider::RayCastAll(outPos, castedObject, nearPos, flDir);
 	if (ray)
 	{
+		//outPos = PlayerController::GridSquareFromTerrain(outPos);
 		XMVECTOR posVec = XMVectorSet(outPos.x, outPos.y, outPos.z, 1);
 		posVec += vecDir * -0.1f;
 		pickingLight.GetComponent<Transform>()->SetLocalPosition(posVec.m128_f32[0], posVec.m128_f32[1], posVec.m128_f32[2]);
@@ -241,7 +243,7 @@ void GameScene::Init()
 
 	// Terrain
 	terrain.SetId(9);
-	terrain.SetTag("Untagged");
+	terrain.SetTag("Terrain");
 	terrain.SetName("Terrain");
 	terrain.Start();
 	terrain.AddComponent<Transform>()->SetLocalPosition(-20, -5, -20);
