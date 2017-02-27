@@ -74,7 +74,8 @@ void GameObject::Update() const
 
 void GameObject::OnDelete()
 {
-	UnRegisterMe(this);
+	if (started)
+		UnRegisterMe(this);
 	for (auto iter = components.begin(); iter != components.end(); iter++)
 	{
 		for (unsigned int i = 0; i < iter._Ptr->_Myval.second.size(); i++)

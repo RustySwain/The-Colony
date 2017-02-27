@@ -1,7 +1,14 @@
 #include "SceneManager.h"
-#include "MainMenu.h"
 #include "LoadingScreen.h"
 #include "UIRenderer.h"
+
+void SceneManager::InitScene()
+{
+	gameObject->GetComponent<MainMenu>()->Init();
+	mtex.lock();
+	doneLoading = true;
+	mtex.unlock();
+}
 
 SceneManager::SceneManager()
 {
@@ -15,6 +22,7 @@ void SceneManager::Start()
 {
 	loadingScreen.SetTag("LoadingScreen");
 	loadingScreen.Start();
+	loadingScreen.AddComponent<Transform>();
 	loadingScreen.AddComponent<MeshRenderer>();
 	loadingScreen.AddComponent<UIRenderer>();
 	loadingScreen.AddComponent<LoadingScreen>();
@@ -23,11 +31,21 @@ void SceneManager::Start()
 
 void SceneManager::Update()
 {
-	if (flag)
+	if (shouldLoad)
 	{
+		shouldLoad = false;
 		gameObject->RemoveComponent<MainMenu>();
-		flag = false;
+		//loadingThread = thread(&SceneManager::InitScene, this);
+		InitScene();
 	}
+	mtex.lock();
+	if (doneLoading)
+	{
+		//loadingThread.join();
+		doneLoading = false;
+		gameObject->GetComponent<MainMenu>()->SetEnabled(true);
+	}
+	mtex.unlock();
 	loadingScreen.Update();
 }
 

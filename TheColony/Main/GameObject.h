@@ -78,8 +78,10 @@ T* GameObject::AddComponent()
 		components[comp->GetId()].push_back(comp);
 	}
 	comp->gameObject = this;
+	comp->SetEnabled(false);
 	if (started)
 		comp->Start();
+	comp->SetEnabled(true);
 	return comp;
 }
 
