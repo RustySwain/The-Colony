@@ -1,6 +1,6 @@
 #pragma once
 #include "GameObject.h"
-#include "Button.h"
+#include <Audio.h>
 
 // Dependencies: None
 class GameObjectManager : public Component
@@ -9,6 +9,7 @@ class GameObjectManager : public Component
 
 	GameObject scene;
 	GameObject cam;
+	unique_ptr<DirectX::AudioEngine> audioEngine;
 
 	float color = 0;
 	float totalTime = 0;
@@ -24,4 +25,6 @@ public:
 	virtual void OnDelete() override;
 
 	GameObject& GetScene() { return scene; }
+	GameObject& GetCamera() { return cam; }
+	unique_ptr<DirectX::AudioEngine>& GetAudioEngine() { return audioEngine; }
 };

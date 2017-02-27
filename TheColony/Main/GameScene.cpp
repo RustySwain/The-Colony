@@ -221,16 +221,16 @@ void GameScene::Init()
 	helicopter.GetComponent<Transform>()->RotateZPre(15);
 	helicopter.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Helicopter/Helicopter.mesh");
 	helicopter.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Helicopter/T_Difuse_Helicopter.dds");
-	//helicopter.AddComponent<Animator>()->AddAnimation("../Assets/Helicopter/Helicopter_Animated.anim");
-	//helicopter.GetComponent<Animator>()->Play("Helicopter_Animated");
-	helicopter.AddComponent<AudioSource>()->AddAudioClip("../Assets/sounds/heli_sound1.wav");
-	//helicopter.GetComponent<AudioSource>()->Play("heli_sound1", true);
 
 	heli_prop1.Start();
 	heli_prop1.AddComponent<Transform>()->SetParent(helicopter.GetComponent<Transform>());
 	heli_prop1.GetComponent<Transform>()->SetLocalPosition(-0.4f, 16, 0);
 	heli_prop1.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Helicopter/Helicopter_Propeller.mesh");
 	heli_prop1.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Helicopter/T_Difuse_Helicopter.dds");
+	heli_prop1.AddComponent<AudioSource>()->AddAudioClip("../Assets/sounds/heli_sound1.wav");
+	heli_prop1.GetComponent<AudioSource>()->SetSoundRadius(80);
+	heli_prop1.GetComponent<AudioSource>()->SetVolume(0);
+	heli_prop1.GetComponent<AudioSource>()->Play("heli_sound1", true);
 
 	heli_prop2.Start();
 	heli_prop2.AddComponent<Transform>()->SetParent(helicopter.GetComponent<Transform>());

@@ -7,8 +7,8 @@ class AudioClip
 	std::string name;
 
 public:
-	std::unique_ptr<DirectX::SoundEffectInstance> soundFXInstance;
-	std::unique_ptr<DirectX::SoundEffect> soundFX;
+	std::unique_ptr<DirectX::SoundEffectInstance> soundEffectInstance;
+	std::unique_ptr<DirectX::SoundEffect> soundEffect;
 
 	AudioClip();
 	~AudioClip();

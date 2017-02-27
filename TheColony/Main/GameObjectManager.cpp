@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "Time.h"
 #include "SceneManager.h"
+#include "AudioListen.h"
 #include "GameScene.h"
 
 GameObjectManager::GameObjectManager()
@@ -16,6 +17,13 @@ GameObjectManager::~GameObjectManager()
 
 void GameObjectManager::Start()
 {
+	AUDIO_ENGINE_FLAGS eflags = AudioEngine_EnvironmentalReverb | AudioEngine_ReverbUseFilters;
+#ifdef _DEBUG
+	eflags = eflags | AudioEngine_Debug;
+#endif
+	audioEngine.reset(new AudioEngine(eflags));
+	audioEngine->SetReverb(Reverb_Default);
+
 	scene.Start();
 	scene.AddComponent<SceneManager>();
 	scene.AddComponent<MainMenu>();
@@ -30,6 +38,7 @@ void GameObjectManager::Start()
 	cam.AddComponent<CameraController>();
 	cam.GetComponent<Transform>()->SetLocalPosition(0, 10, 5);
 	cam.GetComponent<Transform>()->RotateXPre(-40);
+	cam.AddComponent<AudioListen>();
 }
 
 void GameObjectManager::Update()
@@ -45,6 +54,9 @@ void GameObjectManager::Update()
 
 void GameObjectManager::OnDelete()
 {
+	AudioEngine* sfx = audioEngine.release();
+	delete sfx;
+
 	cam.OnDelete();
 	scene.OnDelete();
 }
