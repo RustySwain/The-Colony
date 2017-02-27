@@ -157,6 +157,50 @@ void GameScene::Start()
 	pickingLight.AddComponent<Transform>();
 	pickingLight.GetComponent<Light>()->SetExtra(XMFLOAT4(3, 0, 0, 1));
 	pickingLight.GetComponent<Light>()->type = Light::POINT;
+
+	test.Start();
+	test.AddComponent<MeshRenderer>();
+	test.AddComponent<Transform>();
+	test.GetComponent<MeshRenderer>()->LoadFromObj("../Assets/ahorn.obj");
+	test.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/bark.dds");
+	test.GetComponent<Transform>()->SetLocalPosition(0, 3, 0);
+
+	for (size_t i = 0; i < 200; i++)
+	{
+		XMMATRIX mat = XMMatrixIdentity() * XMMatrixTranslation(3 * i, 3, 0);
+
+		test.GetComponent<MeshRenderer>()->AddInstance(mat, i);
+	}
+	/*for (size_t i = 0; i < meshes; i++)
+	{
+		test[i].Start();
+		test[i].AddComponent<MeshRenderer>();
+		test[i].AddComponent<Transform>();
+		if (i > 0)
+		{
+			Mesh* m = new Mesh(*test[0].GetComponent<MeshRenderer>()->GetMesh());
+			test[i].GetComponent<MeshRenderer>()->GetMesh() = m;
+		}
+		else
+		{
+			test[i].GetComponent<MeshRenderer>()->LoadFromObj("../Assets/ahorn.obj");
+		}
+		test[i].GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/bark.dds");
+		test[i].GetComponent<Transform>()->SetLocalPosition(i * 3, 3, 0);
+	}*/
+
+	/*Mesh *testMesh = new Mesh();
+	std::vector<Vertex> v;
+	std::vector<unsigned int> ind;
+
+	for (size_t i = 0; i < 1000000; i++)
+	{
+		v.push_back(Vertex());
+		ind.push_back(i);
+	}
+
+	testMesh->BuildMesh(v, ind);
+	test.GetComponent<MeshRenderer>()->GetMesh() = testMesh;*/
 }
 
 void GameScene::Update()
@@ -246,6 +290,8 @@ void GameScene::Update()
 
 	pickingLight.Update();
 	debugText.Update();
+	test.Update();
+
 }
 
 void GameScene::OnDelete()
@@ -264,4 +310,7 @@ void GameScene::OnDelete()
 
 	pickingLight.OnDelete();
 	debugText.OnDelete();
+
+	test.OnDelete();
+
 }
