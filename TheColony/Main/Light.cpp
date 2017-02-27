@@ -3,7 +3,7 @@
 #include <fstream>
 #include "Time.h"
 
-Light::Light() : type(LightType::NONE)
+Light::Light() : type(NONE)
 {
 }
 

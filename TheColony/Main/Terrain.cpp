@@ -308,7 +308,7 @@ void Terrain::SetSize(unsigned int _width, unsigned int _height)
 	height = _height;
 }
 
-void Terrain::SetTextureSize(unsigned _width, unsigned _height)
+void Terrain::SetTextureSize(unsigned int _width, unsigned int _height)
 {
 	texWidth = _width;
 	texHeight = _height;

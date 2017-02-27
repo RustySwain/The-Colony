@@ -40,5 +40,8 @@ public:
 	void SetLacunarity(float _lac) { lacunarity = _lac; };
 	void SetScale(float _scale) { scale = _scale; };
 
+	unsigned int GetWidth() const { return width; };
+	unsigned int GetHeight() const { return height; };
+
 	void Generate();
 };
