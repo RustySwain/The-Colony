@@ -18,6 +18,7 @@ class CameraController : public Component
 	bool _moving = false;
 	float elapsed;
 	float start = 0.0f;
+	float DPI = 0.25f;
 	POINT prevFrameMousePos;
 
 	GameObject cameraOrigin;
