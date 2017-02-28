@@ -9,8 +9,14 @@ enum ITEM_ENUM { Wood, };
 
 class GameController : public Component
 {
+	struct Building
+	{
+		GameObject instances;
+		vector<GameObject> colliders;
+	};
+
 	const unsigned int id = 23;
-	GameObject smallHouses;
+	Building smallHouse;
 
 public:
 	GameController();

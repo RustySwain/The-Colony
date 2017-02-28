@@ -33,9 +33,18 @@ void PlayerController::Update()
 		XMFLOAT3 flDir(vecDir.m128_f32[0], vecDir.m128_f32[1], vecDir.m128_f32[2]);
 		XMFLOAT3 outPos;
 		GameObject* terrain = GameObject::FindFromTag("Terrain")[0];
-		bool ray = terrain->GetComponent<Collider>()->RayCast(outPos, nearPos, flDir);
+		GameObject* outObj;
+		bool ray = Collider::RayCastAll(outPos, outObj, nearPos, flDir);
 		if (ray)
-			GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->PlaceBuilding(outPos);
+		{
+			if (outObj == terrain)
+			{
+				GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->PlaceBuilding(outPos);
+			}
+			else
+			{
+			}
+		}
 	}
 }
 

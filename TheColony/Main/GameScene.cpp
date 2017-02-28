@@ -105,11 +105,12 @@ void GameScene::Update()
 	XMVECTOR vecDir = XMVector3Normalize(farVec - nearVec);
 	XMFLOAT3 flDir(vecDir.m128_f32[0], vecDir.m128_f32[1], vecDir.m128_f32[2]);
 	XMFLOAT3 outPos;
-	bool ray = terrain.GetComponent<Collider>()->RayCast(outPos, nearPos, flDir);
+	GameObject* outObj;
+	bool ray = Collider::RayCastAll(outPos, outObj, nearPos, flDir);
 	if (ray)
 	{
-		outPos = GameController::GridSquareFromTerrain(outPos);
-		pickingLight.GetComponent<Transform>()->SetLocalPosition(outPos.x, outPos.y + 0.1f, outPos.z);
+		//outPos = GameController::GridSquareFromTerrain(outPos);
+		pickingLight.GetComponent<Transform>()->SetLocalPosition(outPos.x - flDir.x * 0.1f, outPos.y - flDir.y * 0.1f, outPos.z - flDir.z * 0.1f);
 	}
 
 	pickingLight.Update();
