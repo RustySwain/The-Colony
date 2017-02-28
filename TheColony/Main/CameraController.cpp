@@ -40,22 +40,16 @@ void CameraController::Update()
 
 	if (scrollUp)
 	{
-		/*if (scrollUpCount > 0)
-		{*/
 		if (transform->GetWorldPosition().y > 10)
 		{
 			transform->TranslatePre(XMFLOAT3(0, 0, -speed * 10));
 			scrollUpCount--;
 
 			transform->RotateXPre(1.4f);
-
 		}
 
 		scrollUp = false;
-		//}
-		/*else
-		{
-		}*/
+		
 	}
 	if (scrollDown)
 	{
@@ -85,20 +79,20 @@ void CameraController::Update()
 	XMFLOAT3 pos(f.m[3][0], f.m[3][1], f.m[3][2]);
 
 	// rotate based on mouse movement
-	float dx = (prevFrameMousePos.x - newMousePos.x) * 0.5f;
-	float dy = (prevFrameMousePos.y - newMousePos.y) * 0.5f;
+	float dx = (prevFrameMousePos.x - newMousePos.x);
+	float dy = (prevFrameMousePos.y - newMousePos.y);
 
 	if (GetAsyncKeyState(VK_RBUTTON))
 	{
 		if (dx > 0 || newMousePos.x == Application::GetInstance()->GetWindowRect().left)
 		{
 
-			_cameraOrigin->RotateYPre((Time::Delta() * 130));
+			_cameraOrigin->RotateYPre((dx * DPI));
 		}
 		else if (dx < 0 || newMousePos.x == Application::GetInstance()->GetWindowRect().right - 1)
 		{
 
-			_cameraOrigin->RotateYPre((Time::Delta() * -130));
+			_cameraOrigin->RotateYPre((dx * DPI));
 		}
 
 	}
