@@ -4,10 +4,7 @@
 #include "Application.h"
 #include "Defines.h"
 
-bool scrollUp = false;
-bool scrollDown = false;
-int scrollUpCount = 0;
-int scrollDownCount = 0;
+int scrollCount = 0;
 
 CameraController::CameraController()
 {
@@ -21,9 +18,17 @@ void CameraController::Start()
 {
 	cameraOrigin.Start();
 	gameObject->GetComponent<Transform>()->SetParent(cameraOrigin.AddComponent<Transform>());
+	gameObject->GetComponent<Transform>()->GetParent()->TranslatePre(XMFLOAT3(16, 5, 16));
 	elapsed = 0;
 	curScroll = 0;
-	curVelocity = 1.0f;
+	curVelocity = 0.0f;
+	scrollMin = 0;
+	scrollMax = 15;
+	minTrans = 0.0f;
+	maxTrans = 50.0f;
+	minRot = 0.0f;
+	maxRot = 60.0f;
+
 }
 
 void CameraController::Update()
@@ -38,38 +43,32 @@ void CameraController::Update()
 
 	float speed = Time::Delta() * 20;
 
-	// translate based on key presses
-
-	if (scrollUp)
+	//Catching scroll values
+	desiredScroll -= scrollCount;
+	if (desiredScroll < scrollMin)
 	{
-		if (transform->GetWorldPosition().y > 10)
-		{
-			transform->TranslatePre(XMFLOAT3(0, 0, -speed * 10));
-			scrollUpCount--;
-
-			transform->RotateXPre(1.4f);
-		}
-
-		scrollUp = false;
-		
+		desiredScroll = scrollMin;
 	}
-	if (scrollDown)
+
+	if (desiredScroll > scrollMax)
 	{
-		if (transform->GetWorldPosition().y < 60)
-		{
-			scrollDownCount++;
-			desiredScroll = scrollDownCount;
-			float transVal = SmoothDamp(curScroll, desiredScroll, curVelocity, 0.5f, 2.0f, Time::Delta());
-			float inv = 1.0f / 30;
-			float val = transVal * (15.0f * inv) + (15.0f * inv);
-
-			transform->TranslatePre(XMFLOAT3(0, 0, val));
-
-			transform->RotateXPre(-1.4f);
-
-			scrollDown = false;
-		}
+		desiredScroll = scrollMax;
 	}
+
+	scrollCount = 0;
+
+	curScroll = SmoothDamp(curScroll, desiredScroll, curVelocity, 0.5f, 20.0f, Time::Delta());
+
+
+	float inv = maxTrans / scrollMax;
+	float invAngle = maxRot / scrollMax;
+	float val = curScroll * (inv)+(inv);
+	float rot = curScroll * (invAngle)+(invAngle);
+
+	transform->SetLocalMatrix(XMMatrixIdentity());
+	transform->RotateXPre(-rot);
+	transform->TranslatePre(XMFLOAT3(0, 0, val));
+
 
 	if (GetAsyncKeyState('W'))
 		_cameraOrigin->TranslatePre(XMFLOAT3(0, 0, -speed));

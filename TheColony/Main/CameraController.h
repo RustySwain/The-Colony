@@ -22,6 +22,9 @@ class CameraController : public Component
 	float curScroll;
 	float curVelocity;
 	int desiredScroll;
+	int scrollMin, scrollMax;
+	float minRot, maxRot;
+	float minTrans, maxTrans;
 	POINT prevFrameMousePos;
 
 	GameObject cameraOrigin;
