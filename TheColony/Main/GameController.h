@@ -6,7 +6,7 @@
 using namespace DirectX;
 
 enum JOB_ENUM { No_Job = 0, Farmer, Builder, Forester, Miner, Metalworker, Teacher, Physician };
-enum ITEM_ENUM { Wood, };
+enum ITEM_ENUM { Wood = 0, Stone, Iron, Coal, Cabbage, Corn, Potato, Berries };
 
 class GameController : public Component
 {
@@ -19,6 +19,8 @@ class GameController : public Component
 	};
 
 	const unsigned int id = 23;
+	float gameTime = 0;
+	float hours = 0;
 	Building smallHouse;
 	float** gridCost = nullptr;
 	unsigned int terrainWidth, terrainHeight;
@@ -38,4 +40,5 @@ public:
 	bool PlaceBuilding(XMFLOAT3 _gridSquare);
 	void AStar(XMFLOAT3);
 	void FindJob(JOB_ENUM _job);
+	float GetHours() const { return hours; }
 };

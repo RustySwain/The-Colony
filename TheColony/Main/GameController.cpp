@@ -3,6 +3,7 @@
 #include "Terrain.h"
 #include "Transform.h"
 #include "Collider.h"
+#include "Time.h"
 #include "fstream"
 #include "sstream"
 
@@ -67,6 +68,11 @@ void GameController::Update()
 			}
 		}
 	}
+
+	gameTime += Time::Delta();
+	hours += gameTime;
+	if (hours >= 86400)
+		hours = 0;
 }
 
 void GameController::OnDelete()

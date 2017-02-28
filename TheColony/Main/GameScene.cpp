@@ -158,6 +158,13 @@ void GameScene::Init()
 	skybox.AddComponent<MeshRenderer>();
 	skybox.AddComponent<Skybox>();
 
+	gameController.SetId(3);
+	gameController.SetName("GameController");
+	gameController.SetTag("GameController");
+	gameController.Start();
+	gameController.AddComponent<GameController>();
+	gameController.AddComponent<PlayerController>();
+
 	//Lighting
 	spotLight.SetId(5);
 	spotLight.SetTag("Untagged");
@@ -192,7 +199,6 @@ void GameScene::Init()
 
 	// Test Objects
 	box.SetId(8);
-	box.SetTag("Untagged");
 	box.SetName("Box");
 	box.Start();
 	box.AddComponent<Transform>()->SetLocalPosition(5, -1.9f, 0);
@@ -206,7 +212,6 @@ void GameScene::Init()
 	box.AddComponent<Collider>()->SetMesh(box.GetComponent<MeshRenderer>()->GetMesh());
 
 	bunny.SetId(10);
-	bunny.SetTag("Untagged");
 	bunny.SetName("Bunny");
 	bunny.Start();
 	bunny.AddComponent<Transform>()->SetLocalPosition(-10, -2.2f, 0);
@@ -219,7 +224,6 @@ void GameScene::Init()
 	bunny.AddComponent<Collider>()->SetMesh(bunny.GetComponent<MeshRenderer>()->GetMesh());
 
 	helicopter.SetId(11);
-	helicopter.SetTag("Untagged");
 	helicopter.SetName("Helicopter");
 	helicopter.Start();
 	helicopter.AddComponent<Transform>()->SetLocalPosition(60, 10, 30);
@@ -243,8 +247,9 @@ void GameScene::Init()
 	heli_prop2.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Helicopter/Helicopter_Propeller2.mesh");
 	heli_prop2.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Helicopter/T_Difuse_Helicopter.dds");
 
-	toyota.Start();
+	toyota.SetId(12);
 	toyota.SetName("Toyota");
+	toyota.Start();
 	toyota.AddComponent<Transform>()->SetLocalPosition(-20, -2.2f, 5);
 	toyota.GetComponent<Transform>()->ScalePre(0.2f);
 	toyota.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Toyota/toyota.mesh");
@@ -283,9 +288,4 @@ void GameScene::Init()
 	pickingLight.AddComponent<Transform>();
 	pickingLight.GetComponent<Light>()->SetExtra(XMFLOAT4(7, 0, 0, 1));
 	pickingLight.GetComponent<Light>()->type = Light::POINT;
-
-	gameController.SetTag("GameController");
-	gameController.Start();
-	gameController.AddComponent<GameController>();
-	gameController.AddComponent<PlayerController>();
 }

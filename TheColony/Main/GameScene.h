@@ -9,6 +9,7 @@ class GameScene : public SceneABC
 	GameObject pointLight;
 	GameObject skybox;
 	GameObject terrain;
+	GameObject gameController;
 
 	// test objects
 	GameObject bunny;
@@ -21,8 +22,6 @@ class GameScene : public SceneABC
 	GameObject debugText;
 	GameObject pickingLight;
 	GameObject test;
-
-	GameObject gameController;
 
 public:
 	GameScene();
