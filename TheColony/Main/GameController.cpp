@@ -18,7 +18,7 @@ bool GameController::LoadOccupiedSquares(const char* _path, vector<XMFLOAT2>& _v
 			reader.getline(buffer, 256);
 			stringstream sstream(buffer);
 			XMFLOAT2 fl2;
-			sstream >> fl2.x >> fl2.y;
+			sstream >> fl2.y >> fl2.x;
 			_vec.push_back(fl2);
 		}
 		return true;
@@ -102,18 +102,16 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare)
 	{
 		int x = (unsigned int)smallHouse.occupiedSquares[i].x;
 		int y = (unsigned int)smallHouse.occupiedSquares[i].y;
-		unsigned int gridIndex = (x + (int)terrPos.x) * terrainHeight + (y + (int)terrPos.y);
-		if (gridIndex > terrainWidth * terrainHeight) return false;
-		if (gridCost[x + (int)terrPos.x][y + (int)terrPos.y] == 0) return false;
+		if ((x + (int)terrPos.x) >= terrainWidth - 1 || (y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
+		if (gridCost[y + (int)terrPos.z][x + (int)terrPos.x] != 1) return false;
 	}
 
 	for (unsigned int i = 0; i < smallHouse.occupiedSquares.size(); i++)
 	{
 		unsigned int x = (unsigned int)smallHouse.occupiedSquares[i].x;
 		unsigned int y = (unsigned int)smallHouse.occupiedSquares[i].y;
-		unsigned int gridIndex = (x + (unsigned int)terrPos.x) * terrainHeight + (y + (unsigned int)terrPos.y);
-		if (gridIndex > terrainWidth * terrainHeight) return false;
-		gridCost[x + (int)terrPos.x][y + (int)terrPos.y] = 0;
+		if ((x + (int)terrPos.x) >= terrainWidth - 1 || (y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
+		gridCost[y + (int)terrPos.z][x + (int)terrPos.x] = 0;
 	}
 
 	XMMATRIX translation = XMMatrixTranslation(terrPos.x, terrPos.y, terrPos.z);
