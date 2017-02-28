@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "DirectXMath.h"
+#include "Mesh.h"
 
 using namespace DirectX;
 
@@ -13,10 +14,15 @@ class GameController : public Component
 	{
 		GameObject instances;
 		vector<GameObject> colliders;
+		Mesh* collisionMesh = nullptr;
+		vector<XMFLOAT2> occupiedSquares;
 	};
 
 	const unsigned int id = 23;
 	Building smallHouse;
+	float** gridCost = nullptr;
+	unsigned int terrainWidth, terrainHeight;
+	static bool LoadOccupiedSquares(const char* _path, vector<XMFLOAT2>& _vec);
 
 public:
 	GameController();
