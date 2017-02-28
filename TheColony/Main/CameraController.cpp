@@ -11,7 +11,6 @@ int scrollDownCount = 0;
 
 CameraController::CameraController()
 {
-	elapsed = 0;
 }
 
 CameraController::~CameraController()
@@ -22,6 +21,9 @@ void CameraController::Start()
 {
 	cameraOrigin.Start();
 	gameObject->GetComponent<Transform>()->SetParent(cameraOrigin.AddComponent<Transform>());
+	elapsed = 0;
+	curScroll = 0;
+	curVelocity = 1.0f;
 }
 
 void CameraController::Update()
@@ -55,7 +57,13 @@ void CameraController::Update()
 	{
 		if (transform->GetWorldPosition().y < 60)
 		{
-			transform->TranslatePre(XMFLOAT3(0, 0, speed * 10));
+			scrollDownCount++;
+			desiredScroll = scrollDownCount;
+			float transVal = SmoothDamp(curScroll, desiredScroll, curVelocity, 0.5f, 2.0f, Time::Delta());
+			float inv = 1.0f / 30;
+			float val = transVal * (15.0f * inv) + (15.0f * inv);
+
+			transform->TranslatePre(XMFLOAT3(0, 0, val));
 
 			transform->RotateXPre(-1.4f);
 
@@ -118,6 +126,36 @@ float CameraController::xLerp(float mMin, float mMax, float mFactor)
 	return a * sin(mFactor * XM_PI) + mMin;
 }
 
+float CameraController::SmoothDamp(float current, float target, float &currentVelocity, float smoothTime, float maxSpeed, float deltaTime)
+{
+	smoothTime = max(0.0001f, smoothTime);
+	float num = 2.0f / smoothTime;
+	float num2 = num * deltaTime;
+	float num3 = 1.0f / (1.0f + num2 + 0.48f * num2 * num2 + 0.235f * num2 * num2 * num2);
+	float num4 = current - target;
+	float num5 = target;
+	float num6 = maxSpeed * smoothTime;
+	if (num4 > num6)
+	{
+		num4 = num6;
+	}
+	if (num4 < -num6)
+	{
+		num4 = -num6;
+	}
+	target = current - num4;
+	float num7 = (currentVelocity + num * num4) * deltaTime;
+	currentVelocity = (currentVelocity - num * num7) * num3;
+	float num8 = target + (num4 + num7) * num3;
+	if (num5 - current > 0.0f == num8 > num5)
+	{
+		num8 = num5;
+		currentVelocity = (num8 - num5) / deltaTime;
+	}
+	return num8;
+}
+
 void CameraController::ThirdPerson(GameObject obj, float speed)
 {
+
 }
