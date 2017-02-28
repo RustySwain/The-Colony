@@ -4,6 +4,7 @@
 #include "Application.h"
 #include "Defines.h"
 
+//Global int used in main to catch scrolls in WinProc func
 int scrollCount = 0;
 
 CameraController::CameraController()
@@ -28,7 +29,6 @@ void CameraController::Start()
 	maxTrans = 50.0f;
 	minRot = 0.0f;
 	maxRot = 60.0f;
-
 }
 
 void CameraController::Update()
@@ -43,7 +43,7 @@ void CameraController::Update()
 
 	float speed = Time::Delta() * 20;
 
-	//Catching scroll values
+	//Catching scroll values 
 	desiredScroll -= scrollCount;
 	if (desiredScroll < scrollMin)
 	{
@@ -54,11 +54,9 @@ void CameraController::Update()
 	{
 		desiredScroll = scrollMax;
 	}
-
 	scrollCount = 0;
-
+	
 	curScroll = SmoothDamp(curScroll, desiredScroll, curVelocity, 0.5f, 20.0f, Time::Delta());
-
 
 	float inv = maxTrans / scrollMax;
 	float invAngle = maxRot / scrollMax;
@@ -69,7 +67,7 @@ void CameraController::Update()
 	transform->RotateXPre(-rot);
 	transform->TranslatePre(XMFLOAT3(0, 0, val));
 
-
+	//Translates camers on Z and X axis with WASD
 	if (GetAsyncKeyState('W'))
 		_cameraOrigin->TranslatePre(XMFLOAT3(0, 0, -speed));
 	if (GetAsyncKeyState('S'))
@@ -79,13 +77,8 @@ void CameraController::Update()
 	if (GetAsyncKeyState('D'))
 		_cameraOrigin->TranslatePre(XMFLOAT3(speed, 0, 0));
 
-	// save position
-	XMMATRIX translated = transform->GetLocalMatrix();
-	XMFLOAT4X4 f;
-	XMStoreFloat4x4(&f, translated);
-	XMFLOAT3 pos(f.m[3][0], f.m[3][1], f.m[3][2]);
 
-	// rotate based on mouse movement
+	//Rotates the camera on the Y axis with right click
 	float dx = (prevFrameMousePos.x - newMousePos.x);
 	float dy = (prevFrameMousePos.y - newMousePos.y);
 
@@ -101,7 +94,6 @@ void CameraController::Update()
 
 			_cameraOrigin->RotateYPre((dx * DPI));
 		}
-
 	}
 
 	GetCursorPos(&mP);
