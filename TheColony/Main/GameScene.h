@@ -21,9 +21,8 @@ class GameScene : public SceneABC
 	GameObject debugText;
 	GameObject pickingLight;
 	GameObject test;
-	
 
-
+	GameObject gameController;
 
 public:
 	GameScene();

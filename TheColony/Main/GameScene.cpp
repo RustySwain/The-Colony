@@ -114,6 +114,8 @@ void GameScene::Update()
 
 	pickingLight.Update();
 	debugText.Update();
+
+	gameController.Update();
 }
 
 void GameScene::OnDelete()
@@ -133,6 +135,8 @@ void GameScene::OnDelete()
 
 	pickingLight.OnDelete();
 	debugText.OnDelete();
+
+	gameController.OnDelete();
 }
 
 void GameScene::Init()
@@ -254,7 +258,7 @@ void GameScene::Init()
 	terrain.SetTag("Terrain");
 	terrain.SetName("Terrain");
 	terrain.Start();
-	terrain.AddComponent<Transform>()->SetLocalPosition(-20, -5, -20);
+	terrain.AddComponent<Transform>();
 	terrain.AddComponent<MeshRenderer>();// ->LoadDiffuseMap(L"../Assets/rock.dds");
 	terrain.AddComponent<Terrain>()->SetSize(32, 32);
 	terrain.GetComponent<Terrain>()->SetTextureSize(1000, 1000);
@@ -278,5 +282,9 @@ void GameScene::Init()
 	pickingLight.AddComponent<Transform>();
 	pickingLight.GetComponent<Light>()->SetExtra(XMFLOAT4(7, 0, 0, 1));
 	pickingLight.GetComponent<Light>()->type = Light::POINT;
-	
+
+	gameController.SetTag("GameController");
+	gameController.Start();
+	gameController.AddComponent<GameController>();
+	gameController.AddComponent<PlayerController>();
 }

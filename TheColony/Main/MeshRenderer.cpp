@@ -136,10 +136,14 @@ void MeshRenderer::OnDelete()
 
 void MeshRenderer::AddInstance(XMMATRIX _mat, int _key)
 {
-	PerInstanceVertexData pivd;
-	pivd.instanceMatrix = _mat;
-	instances.push_back(pivd);
-	instanceIndices.push_back(_key);
+	auto iter = find(instanceIndices.begin(), instanceIndices.end(), _key);
+	if (iter == instanceIndices.end())
+	{
+		PerInstanceVertexData pivd;
+		pivd.instanceMatrix = _mat;
+		instances.push_back(pivd);
+		instanceIndices.push_back(_key);
+	}
 }
 
 void MeshRenderer::UpdateInstance(XMMATRIX _mat, int _key)

@@ -10,6 +10,7 @@ enum ITEM_ENUM { Wood, };
 class GameController : public Component
 {
 	const unsigned int id = 23;
+	GameObject smallHouses;
 
 public:
 	GameController();
@@ -22,6 +23,7 @@ public:
 	virtual void OnDelete() override;
 
 	static XMFLOAT3 GridSquareFromTerrain(XMFLOAT3 _terrainLoc);
+	bool PlaceBuilding(XMFLOAT3 _gridSquare);
 	void AStar(XMFLOAT3);
 	void FindJob(JOB_ENUM _job);
 };
