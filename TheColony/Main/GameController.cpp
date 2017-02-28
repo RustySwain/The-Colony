@@ -2,6 +2,7 @@
 #include "MeshRenderer.h"
 #include "Terrain.h"
 #include "Transform.h"
+#include "Time.h"
 
 GameController::GameController()
 {
@@ -17,6 +18,10 @@ void GameController::Start()
 
 void GameController::Update()
 {
+	gameTime += Time::Delta();
+	hours += gameTime;
+	if (hours >= 86400)
+		hours = 0;
 }
 
 void GameController::OnDelete()
