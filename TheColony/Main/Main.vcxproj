@@ -156,6 +156,7 @@
     <ClCompile Include="AudioSource.cpp" />
     <ClCompile Include="BindPose.cpp" />
     <ClCompile Include="BoundingVolumeHeirarchy.cpp" />
+    <ClCompile Include="BuildingPredictor.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraController.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="AudioSource.h" />
     <ClInclude Include="BindPose.h" />
     <ClInclude Include="BoundingVolumeHeirarchy.h" />
+    <ClInclude Include="BuildingPredictor.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraController.h" />
