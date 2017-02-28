@@ -88,6 +88,12 @@ bool Mesh::LoadFromObj(const char* _path)
 			vpc.normal = norms[indices[i].z - 1];
 			vertices.push_back(vpc);
 		}
+		for (unsigned int i = 0; i < tris.size(); i += 3)
+		{
+			unsigned int temp = tris[i];
+			tris[i] = tris[i + 1];
+			tris[i + 1] = temp;
+		}
 		return true;
 	}
 	return false;
@@ -101,7 +107,7 @@ bool Mesh::LoadFromBinary(const char * _path, string &_diffuseMapPath)
 
 	fstream file;
 	file.open(path, ios_base::binary | ios_base::in);
-	if(file.is_open())
+	if (file.is_open())
 	{
 		// has animation?
 		bool hasAnimation;
@@ -117,7 +123,7 @@ bool Mesh::LoadFromBinary(const char * _path, string &_diffuseMapPath)
 		// read triangles
 		int numTris = 0;
 		file.read((char*)&numTris, sizeof(int));
-		for(int i = 0; i < numTris; ++i)
+		for (int i = 0; i < numTris; ++i)
 		{
 			unsigned int tri1, tri2, tri3;
 			file.read((char*)&tri1, sizeof(unsigned int));
@@ -131,13 +137,13 @@ bool Mesh::LoadFromBinary(const char * _path, string &_diffuseMapPath)
 		// read vertices
 		int numVerts = 0;
 		file.read((char*)&numVerts, sizeof(int));
-		for(int i = 0; i < numVerts; ++i)
+		for (int i = 0; i < numVerts; ++i)
 		{
 			Vertex vertex;
 			file.read((char*)&vertex.position, sizeof(XMFLOAT4));
 			file.read((char*)&vertex.normal, sizeof(XMFLOAT4));
 
-			if(hasAnimation)
+			if (hasAnimation)
 			{
 				file.read((char*)&vertex.jointWeight[0], sizeof(float));
 				file.read((char*)&vertex.jointWeight[1], sizeof(float));

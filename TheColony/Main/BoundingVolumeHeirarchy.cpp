@@ -49,6 +49,9 @@ void BoundingVolumeHeirarchy::Node::Analyze(TriangleSet _triSet, unsigned int& _
 		}
 	}
 
+	if (t1.size() == 0 || t2.size() == 0)
+		return;
+
 	TriangleSet s1 = triSet;
 	s1.triIndices = t1;
 	TriangleSet s2 = triSet;
@@ -109,8 +112,28 @@ bool BoundingVolumeHeirarchy::Node::RayCast(XMFLOAT3& _outPos, float& _outDistan
 			return true;
 		}
 	}
-	Triangle t = triSet.tris[triSet.triIndices[0]];
-	return RayToTriangle(_outPos, _outDistance, t.a.position, t.b.position, t.c.position, _rayStart, _rayNormal);
+	bool anyRay = false;
+	XMFLOAT3 closestPoint;
+	float closestDistance = FLT_MAX;
+	for (unsigned int i = 0; i < triSet.triIndices.size(); i++)
+	{
+		Triangle t = triSet.tris[triSet.triIndices[i]];
+		XMFLOAT3 point;
+		float distance;
+		bool ray = RayToTriangle(point, distance, t.a.position, t.b.position, t.c.position, _rayStart, _rayNormal);
+		if (ray)
+		{
+			anyRay = ray;
+			if (distance < closestDistance)
+			{
+				closestDistance = distance;
+				closestPoint = point;
+			}
+		}
+	}
+	_outPos = closestPoint;
+	_outDistance = closestDistance;
+	return anyRay;
 }
 
 void BoundingVolumeHeirarchy::Node::Shutdown() const

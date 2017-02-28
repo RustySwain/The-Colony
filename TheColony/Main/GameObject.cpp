@@ -12,14 +12,17 @@ void GameObject::RegisterMe(GameObject* _go)
 		pid.second = _go;
 		gameObjectIds.insert(pid);
 	}
-	auto iter = gameObjectTags.find(_go->GetTag());
-	if (iter == gameObjectTags.end())
+	if (_go->GetTag().size())
 	{
-		pair<string, vector<GameObject*>> ptag;
-		ptag.first = _go->GetTag();
-		gameObjectTags.insert(ptag);
+		auto iter = gameObjectTags.find(_go->GetTag());
+		if (iter == gameObjectTags.end())
+		{
+			pair<string, vector<GameObject*>> ptag;
+			ptag.first = _go->GetTag();
+			gameObjectTags.insert(ptag);
+		}
+		gameObjectTags[_go->GetTag()].push_back(_go);
 	}
-	gameObjectTags[_go->GetTag()].push_back(_go);
 }
 
 void GameObject::UnRegisterMe(GameObject* _go)
@@ -27,13 +30,16 @@ void GameObject::UnRegisterMe(GameObject* _go)
 	if (_go->GetId())
 		gameObjectIds.erase(gameObjectIds.find(_go->GetId()));
 
-	if (gameObjectTags[_go->GetTag()].size() > 1)
+	if (_go->GetTag().size())
 	{
-		gameObjectTags[_go->GetTag()].erase(find(gameObjectTags[_go->GetTag()].begin(), gameObjectTags[_go->GetTag()].end(), _go));
-	}
-	else
-	{
-		gameObjectTags.erase(gameObjectTags.find(_go->GetTag()));
+		if (gameObjectTags[_go->GetTag()].size() > 1)
+		{
+			gameObjectTags[_go->GetTag()].erase(find(gameObjectTags[_go->GetTag()].begin(), gameObjectTags[_go->GetTag()].end(), _go));
+		}
+		else
+		{
+			gameObjectTags.erase(gameObjectTags.find(_go->GetTag()));
+		}
 	}
 }
 

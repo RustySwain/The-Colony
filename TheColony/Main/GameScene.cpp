@@ -106,22 +106,18 @@ void GameScene::Update()
 	XMVECTOR vecDir = XMVector3Normalize(farVec - nearVec);
 	XMFLOAT3 flDir(vecDir.m128_f32[0], vecDir.m128_f32[1], vecDir.m128_f32[2]);
 	XMFLOAT3 outPos;
-	GameObject* castedObject = nullptr;
-	bool ray = terrain.GetComponent<Collider>()->RayCast(outPos, nearPos, flDir);
+	GameObject* outObj;
+	bool ray = Collider::RayCastAll(outPos, outObj, nearPos, flDir);
 	if (ray)
 	{
 		//outPos = GameController::GridSquareFromTerrain(outPos);
-		char buffer[256];
-		XMFLOAT3 lightPos = pickingLight.GetComponent<Transform>()->GetWorldPosition();
-		sprintf_s(buffer, "(%f, %f, %f), (%f, %f, %f)", outPos.x, outPos.y, outPos.z, lightPos.x, lightPos.y, lightPos.z);
-		//debugText.GetComponent<TextRenderer>()->SetText(string(buffer)/*castedObject->GetName()*/);
-		XMVECTOR posVec = XMVectorSet(outPos.x, outPos.y + 0.1f, outPos.z, 1);
-		//posVec += vecDir * -0.1f;
-		pickingLight.GetComponent<Transform>()->SetLocalPosition(posVec.m128_f32[0], posVec.m128_f32[1], posVec.m128_f32[2]);
+		pickingLight.GetComponent<Transform>()->SetLocalPosition(outPos.x - flDir.x * 0.1f, outPos.y - flDir.y * 0.1f, outPos.z - flDir.z * 0.1f);
 	}
 
 	pickingLight.Update();
 	debugText.Update();
+
+	gameController.Update();
 }
 
 void GameScene::OnDelete()
@@ -142,6 +138,8 @@ void GameScene::OnDelete()
 
 	pickingLight.OnDelete();
 	debugText.OnDelete();
+
+	gameController.OnDelete();
 }
 
 void GameScene::Init()
@@ -167,6 +165,7 @@ void GameScene::Init()
 	gameController.SetTag("GameController");
 	gameController.Start();
 	gameController.AddComponent<GameController>();
+	gameController.AddComponent<PlayerController>();
 
 	//Lighting
 	spotLight.SetId(5);
@@ -267,7 +266,7 @@ void GameScene::Init()
 	terrain.SetTag("Terrain");
 	terrain.SetName("Terrain");
 	terrain.Start();
-	terrain.AddComponent<Transform>()->SetLocalPosition(-20, -5, -20);
+	terrain.AddComponent<Transform>();
 	terrain.AddComponent<MeshRenderer>();// ->LoadDiffuseMap(L"../Assets/rock.dds");
 	terrain.AddComponent<Terrain>()->SetSize(32, 32);
 	terrain.GetComponent<Terrain>()->SetTextureSize(1000, 1000);
