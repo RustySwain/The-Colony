@@ -102,7 +102,7 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare)
 	{
 		int x = (unsigned int)smallHouse.occupiedSquares[i].x;
 		int y = (unsigned int)smallHouse.occupiedSquares[i].y;
-		if ((x + (int)terrPos.x) >= terrainWidth - 1 || (y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
+		if ((unsigned int)(x + (int)terrPos.x) >= terrainWidth - 1 || (unsigned int)(y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
 		if (gridCost[y + (int)terrPos.z][x + (int)terrPos.x] != 1) return false;
 	}
 
@@ -110,7 +110,7 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare)
 	{
 		unsigned int x = (unsigned int)smallHouse.occupiedSquares[i].x;
 		unsigned int y = (unsigned int)smallHouse.occupiedSquares[i].y;
-		if ((x + (int)terrPos.x) >= terrainWidth - 1 || (y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
+		if ((unsigned int)(x + (int)terrPos.x) >= terrainWidth - 1 || (unsigned int)(y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
 		gridCost[y + (int)terrPos.z][x + (int)terrPos.x] = 0;
 	}
 
