@@ -6,6 +6,7 @@
 #include "Time.h"
 #include "fstream"
 #include "sstream"
+#include "PathSearch.h"
 
 bool GameController::LoadOccupiedSquares(const char* _path, vector<XMFLOAT2>& _vec)
 {
@@ -47,6 +48,11 @@ void GameController::Start()
 
 void GameController::Update()
 {
+	gameTime += Time::Delta();
+	hours += gameTime;
+	if (hours >= 86400)
+		hours = 0;
+
 	smallHouse.instances.Update();
 	for (unsigned int i = 0; i < smallHouse.colliders.size(); i++)
 		smallHouse.colliders[i].Update();
@@ -68,11 +74,6 @@ void GameController::Update()
 			}
 		}
 	}
-
-	gameTime += Time::Delta();
-	hours += gameTime;
-	if (hours >= 86400)
-		hours = 0;
 }
 
 void GameController::OnDelete()
@@ -124,4 +125,14 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare)
 	smallHouse.colliders.push_back(nuCollider);
 
 	return true;
+}
+
+void GameController::FindJob(JOB_ENUM _job)
+{
+}
+
+vector<XMFLOAT3> GameController::AStar(XMFLOAT3 _start, XMFLOAT3 _goal)
+{
+	PathSearch pathSearch;
+	return pathSearch.AStar(_start, _goal);
 }

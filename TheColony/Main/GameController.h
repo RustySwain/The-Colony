@@ -36,9 +36,11 @@ public:
 	virtual void Update() override;
 	virtual void OnDelete() override;
 
+	// Accessors
+	float GetHours() const { return hours / 3600; }
+
 	static XMFLOAT3 GridSquareFromTerrain(XMFLOAT3 _terrainLoc);
 	bool PlaceBuilding(XMFLOAT3 _gridSquare);
-	void AStar(XMFLOAT3);
-	void FindJob(JOB_ENUM _job);
-	float GetHours() const { return hours; }
+	static void FindJob(JOB_ENUM _job);
+	static vector<XMFLOAT3> AStar(XMFLOAT3 _start, XMFLOAT3 _goal);
 };
