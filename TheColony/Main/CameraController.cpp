@@ -23,12 +23,11 @@ void CameraController::Start()
 	curScroll = 0;
 	curVelocity = 0.0f;
 	scrollMin = 0;
-	scrollMax = 15;
+	scrollMax = 5;
 	minTrans = 0.0f;
 	maxTrans = 50.0f;
 	minRot = 0.0f;
 	maxRot = 60.0f;
-
 }
 
 void CameraController::Update()
@@ -59,7 +58,6 @@ void CameraController::Update()
 
 	curScroll = SmoothDamp(curScroll, desiredScroll, curVelocity, 0.5f, 20.0f, Time::Delta());
 
-
 	float inv = maxTrans / scrollMax;
 	float invAngle = maxRot / scrollMax;
 	float val = curScroll * (inv)+(inv);
@@ -68,7 +66,6 @@ void CameraController::Update()
 	transform->SetLocalMatrix(XMMatrixIdentity());
 	transform->RotateXPre(-rot);
 	transform->TranslatePre(XMFLOAT3(0, 0, val));
-
 
 	if (GetAsyncKeyState('W'))
 		_cameraOrigin->TranslatePre(XMFLOAT3(0, 0, -speed));
@@ -93,15 +90,12 @@ void CameraController::Update()
 	{
 		if (dx > 0 || newMousePos.x == Application::GetInstance()->GetWindowRect().left)
 		{
-
 			_cameraOrigin->RotateYPre((dx * DPI));
 		}
 		else if (dx < 0 || newMousePos.x == Application::GetInstance()->GetWindowRect().right - 1)
 		{
-
 			_cameraOrigin->RotateYPre((dx * DPI));
 		}
-
 	}
 
 	GetCursorPos(&mP);
@@ -156,5 +150,4 @@ float CameraController::SmoothDamp(float current, float target, float &currentVe
 
 void CameraController::ThirdPerson(GameObject obj, float speed)
 {
-
 }

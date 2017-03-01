@@ -49,4 +49,5 @@ public:
 	void SetFarPlane(const float& _dist) { farPlane = _dist; UpdateProjMat(); };
 
 	XMFLOAT3 ScreenToWorldSpace(XMFLOAT3 _screenPos) const;
+	XMFLOAT3 WorldToScreenSpace(XMFLOAT3 _worldPos) const;
 };
