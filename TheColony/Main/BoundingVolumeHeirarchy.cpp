@@ -284,7 +284,7 @@ void BoundingVolumeHeirarchy::Analyze(Mesh* _mesh, unsigned int _minimumTris, XM
 	vector<Vertex>& verts = mesh->GetVertexData();
 	for (unsigned int i = 0; i < verts.size(); i++)
 	{
-		XMMATRIX tr = _worldMat * XMMatrixTranslation(verts[i].position.x, verts[i].position.y, verts[i].position.z);
+		XMMATRIX tr = XMMatrixTranslation(verts[i].position.x, verts[i].position.y, verts[i].position.z) * _worldMat;
 		verts[i].position = XMFLOAT4(tr.r[3].m128_f32[0], tr.r[3].m128_f32[1], tr.r[3].m128_f32[2], 1);
 	}
 	root->Analyze(CreateTriangleSet(mesh), count, _minimumTris);

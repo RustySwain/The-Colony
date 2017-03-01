@@ -70,6 +70,7 @@ Output main(Input _in)
 	pos = mul(proj, pos);
 	ret.pos = pos;
 	ret.normal = normalize(float4(mul((float3x3)worldMat, _in.normal.xyz), 0));
+	ret.normal = normalize(float4(mul((float3x3)_in.instance, ret.normal.xyz), 0));
 	ret.uv = _in.uv;
 	ret.color = _in.color;
 	return ret;

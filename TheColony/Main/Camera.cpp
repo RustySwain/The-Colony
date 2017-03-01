@@ -77,3 +77,14 @@ XMFLOAT3 Camera::ScreenToWorldSpace(XMFLOAT3 _screenPos) const
 	unProj = tra.r[3];
 	return XMFLOAT3(unProj.m128_f32[0], unProj.m128_f32[1], unProj.m128_f32[2]);
 }
+
+XMFLOAT3 Camera::WorldToScreenSpace(XMFLOAT3 _worldPos) const
+{
+	XMVECTOR worldVec = XMVectorSet(_worldPos.x, _worldPos.y, _worldPos.z, 1);
+	RECT viewPort = Application::GetInstance()->GetWindowRect();
+	XMMATRIX worldMat = gameObject->GetComponent<Transform>()->GetLocalMatrix();
+	XMVECTOR proj = XMVector3Project(worldVec, (float)viewPort.left, (float)viewPort.top, (float)viewPort.right - (float)viewPort.left, (float)viewPort.bottom - (float)viewPort.top, nearPlane, farPlane, projectionMatrix, viewMatrix, worldMat);
+	XMMATRIX tra = XMMatrixTranslation(proj.m128_f32[0], proj.m128_f32[1], proj.m128_f32[2]) * worldMat;
+	proj = tra.r[3];
+	return XMFLOAT3(proj.m128_f32[0], proj.m128_f32[1], proj.m128_f32[2]);
+}
