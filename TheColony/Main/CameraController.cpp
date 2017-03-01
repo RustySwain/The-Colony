@@ -58,7 +58,7 @@ void CameraController::Update()
 	
 	curScroll = SmoothDamp(curScroll, (float)desiredScroll, curVelocity, 0.5f, 20.0f, Time::Delta());
 
-	curScroll = SmoothDamp(curScroll, desiredScroll, curVelocity, 0.5f, 20.0f, Time::Delta());	float inv = maxTrans / scrollMax;
+	float inv = maxTrans / scrollMax;
 	float invAngle = maxRot / scrollMax;
 	float val = curScroll * (inv)+(inv);
 	float rot = curScroll * (invAngle)+(invAngle);
