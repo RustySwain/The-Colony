@@ -138,8 +138,6 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare)
 
 bool GameController::Predict(XMFLOAT3 _gridSquare)
 {
-	buildingPredictor.GetComponent<BuildingPredictor>()->Clear();
-
 	XMFLOAT3 terrPos = GridSquareFromTerrain(_gridSquare);
 
 	for (unsigned int i = 0; i < smallHouse.occupiedSquares.size(); i++)
@@ -147,17 +145,24 @@ bool GameController::Predict(XMFLOAT3 _gridSquare)
 		int x = (unsigned int)smallHouse.occupiedSquares[i].x;
 		int y = (unsigned int)smallHouse.occupiedSquares[i].y;
 		if ((unsigned int)(x + (int)terrPos.x) >= terrainWidth - 1 || (unsigned int)(y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
-		if (gridCost[y + (int)terrPos.z][x + (int)terrPos.x] != 1) return false;
+		XMFLOAT3 squarePos((float)x + terrPos.x, terrPos.y, (float)y + terrPos.z);
+		if (gridCost[y + (int)terrPos.z][x + (int)terrPos.x] != 1)
+			buildingPredictor.GetComponent<BuildingPredictor>()->AddRed(squarePos);
 	}
 
 	for (unsigned int i = 0; i < smallHouse.occupiedSquares.size(); i++)
 	{
 		unsigned int x = (unsigned int)smallHouse.occupiedSquares[i].x;
 		unsigned int y = (unsigned int)smallHouse.occupiedSquares[i].y;
-		XMFLOAT3 squarePos(x + (int)terrPos.x, terrPos.y, y + (int)terrPos.z);
+		XMFLOAT3 squarePos((float)x + (int)terrPos.x, terrPos.y, (float)y + (int)terrPos.z);
 		buildingPredictor.GetComponent<BuildingPredictor>()->AddGreen(squarePos);
 	}
 	return true;
+}
+
+void GameController::ClearPrediction()
+{
+	buildingPredictor.GetComponent<BuildingPredictor>()->Clear();
 }
 
 void GameController::FindJob(JOB_ENUM _job)

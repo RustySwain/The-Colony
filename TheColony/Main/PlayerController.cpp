@@ -33,20 +33,14 @@ void PlayerController::Update()
 		XMFLOAT3 flDir(vecDir.m128_f32[0], vecDir.m128_f32[1], vecDir.m128_f32[2]);
 		XMFLOAT3 outPos;
 		GameObject* terrain = GameObject::FindFromTag("Terrain")[0];
-		GameObject* outObj;
-		bool ray = Collider::RayCastAll(outPos, outObj, nearPos, flDir);
+		bool ray = terrain->GetComponent<Collider>()->RayCast(outPos, nearPos, flDir);
 		if (ray)
 		{
-			if (outObj == terrain)
-			{
-				GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->PlaceBuilding(outPos);
-			}
-			else
-			{
-			}
+			GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->PlaceBuilding(outPos);
 		}
 	}
 
+	GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->ClearPrediction();
 	if (GetAsyncKeyState(VK_RSHIFT))
 	{
 		POINT mousePos;
@@ -61,17 +55,10 @@ void PlayerController::Update()
 		XMFLOAT3 flDir(vecDir.m128_f32[0], vecDir.m128_f32[1], vecDir.m128_f32[2]);
 		XMFLOAT3 outPos;
 		GameObject* terrain = GameObject::FindFromTag("Terrain")[0];
-		GameObject* outObj;
-		bool ray = Collider::RayCastAll(outPos, outObj, nearPos, flDir);
+		bool ray = terrain->GetComponent<Collider>()->RayCast(outPos, nearPos, flDir);
 		if (ray)
 		{
-			if (outObj == terrain)
-			{
-				GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->Predict(outPos);
-			}
-			else
-			{
-			}
+			GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->Predict(outPos);
 		}
 	}
 }

@@ -43,6 +43,7 @@ public:
 	static XMFLOAT3 GridSquareFromTerrain(XMFLOAT3 _terrainLoc);
 	bool PlaceBuilding(XMFLOAT3 _gridSquare);
 	bool Predict(XMFLOAT3 _gridSquare);
+	void ClearPrediction();
 	static void FindJob(JOB_ENUM _job);
 	static vector<XMFLOAT3> AStar(XMFLOAT3 _start, XMFLOAT3 _goal);
 };
