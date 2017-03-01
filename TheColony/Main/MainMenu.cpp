@@ -275,6 +275,8 @@ void MainMenu::Update()
 			slideDir = 0;
 		}
 	}
+	//Background
+	background.Update();
 
 	// Main
 	mainParent.Update();
@@ -320,6 +322,9 @@ void MainMenu::Update()
 
 void MainMenu::OnDelete()
 {
+	//Background 
+	background.OnDelete();
+
 	// Main
 	mainParent.OnDelete();
 	playButton.OnDelete();
@@ -364,6 +369,12 @@ void MainMenu::OnDelete()
 
 void MainMenu::Init()
 {
+	//Background
+	background.Start();
+	background.AddComponent<Transform>()->SetLocalPosition(0, 0, 0.6f);
+	background.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Background.dds");
+	background.AddComponent<UIRenderer>()->SetRect(-1, -1, 2, 2);
+
 	// Main Parent
 	mainParent.Start();
 	mainParent.AddComponent<Transform>()->SetLocalPosition(minX, 0, 0.5f);

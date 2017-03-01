@@ -45,25 +45,25 @@ void UIRenderer::SetRect(float _top, float _left, float _height, float _width)
 	topLeft.position.x = left;
 	topLeft.position.y = top;
 	topLeft.uv.x = 0;
-	topLeft.uv.y = 1;
+	topLeft.uv.y = 0;
 
 	Vertex bottomLeft;
 	bottomLeft.position.x = left;
 	bottomLeft.position.y = top - height;
 	bottomLeft.uv.x = 0;
-	bottomLeft.uv.y = 0;
+	bottomLeft.uv.y = 1;
 
 	Vertex topRight;
 	topRight.position.x = left + width;
 	topRight.position.y = top;
 	topRight.uv.x = 1;
-	topRight.uv.y = 1;
+	topRight.uv.y = 0;
 
 	Vertex bottomRight;
 	bottomRight.position.x = left + width;
 	bottomRight.position.y = top - height;
 	bottomRight.uv.x = 1;
-	bottomRight.uv.y = 0;
+	bottomRight.uv.y = 1;
 
 	verts[0] = topLeft;
 	verts[1] = bottomLeft;

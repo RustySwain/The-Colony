@@ -10,6 +10,9 @@ class MainMenu : public SceneABC
 
 	float minX = -0.75f, maxX = 0.75f;
 
+	//Background
+	GameObject background;
+
 	// Main
 	GameObject mainParent;
 	GameObject playButton;
