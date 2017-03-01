@@ -163,8 +163,8 @@ void GameScene::Init()
 	gameController.SetName("GameController");
 	gameController.SetTag("GameController");
 	gameController.Start();
-	gameController.AddComponent<GameController>();
 	gameController.AddComponent<PlayerController>();
+	gameController.AddComponent<GameController>();
 
 	//Lighting
 	spotLight.SetId(5);

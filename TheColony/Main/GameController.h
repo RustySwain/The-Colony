@@ -24,6 +24,7 @@ class GameController : public Component
 	Building smallHouse;
 	float** gridCost = nullptr;
 	unsigned int terrainWidth, terrainHeight;
+	GameObject buildingPredictor;
 	static bool LoadOccupiedSquares(const char* _path, vector<XMFLOAT2>& _vec);
 
 public:
@@ -41,6 +42,7 @@ public:
 
 	static XMFLOAT3 GridSquareFromTerrain(XMFLOAT3 _terrainLoc);
 	bool PlaceBuilding(XMFLOAT3 _gridSquare);
+	bool Predict(XMFLOAT3 _gridSquare);
 	static void FindJob(JOB_ENUM _job);
 	static vector<XMFLOAT3> AStar(XMFLOAT3 _start, XMFLOAT3 _goal);
 };

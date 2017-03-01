@@ -7,6 +7,7 @@
 #include "fstream"
 #include "sstream"
 #include "PathSearch.h"
+#include "BuildingPredictor.h"
 
 bool GameController::LoadOccupiedSquares(const char* _path, vector<XMFLOAT2>& _vec)
 {
@@ -44,6 +45,11 @@ void GameController::Start()
 	smallHouse.collisionMesh = new Mesh();
 	smallHouse.collisionMesh->LoadFromObj("../Assets/Buildings/SmallHouseCollision.obj");
 	LoadOccupiedSquares("../Assets/Buildings/SmallHouse.building", smallHouse.occupiedSquares);
+
+	buildingPredictor.Start();
+	buildingPredictor.AddComponent<Transform>();
+	buildingPredictor.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/White.dds");
+	buildingPredictor.AddComponent<BuildingPredictor>();
 }
 
 void GameController::Update()
@@ -74,6 +80,8 @@ void GameController::Update()
 			}
 		}
 	}
+
+	buildingPredictor.Update();
 }
 
 void GameController::OnDelete()
@@ -86,6 +94,7 @@ void GameController::OnDelete()
 	for (unsigned int i = 0; i < terrainHeight; i++)
 		delete[] gridCost[i];
 	delete[] gridCost;
+	buildingPredictor.OnDelete();
 }
 
 XMFLOAT3 GameController::GridSquareFromTerrain(XMFLOAT3 _terrainLoc)
@@ -124,6 +133,30 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare)
 	nuCollider.AddComponent<Collider>()->SetMesh(smallHouse.collisionMesh);
 	smallHouse.colliders.push_back(nuCollider);
 
+	return true;
+}
+
+bool GameController::Predict(XMFLOAT3 _gridSquare)
+{
+	buildingPredictor.GetComponent<BuildingPredictor>()->Clear();
+
+	XMFLOAT3 terrPos = GridSquareFromTerrain(_gridSquare);
+
+	for (unsigned int i = 0; i < smallHouse.occupiedSquares.size(); i++)
+	{
+		int x = (unsigned int)smallHouse.occupiedSquares[i].x;
+		int y = (unsigned int)smallHouse.occupiedSquares[i].y;
+		if ((unsigned int)(x + (int)terrPos.x) >= terrainWidth - 1 || (unsigned int)(y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
+		if (gridCost[y + (int)terrPos.z][x + (int)terrPos.x] != 1) return false;
+	}
+
+	for (unsigned int i = 0; i < smallHouse.occupiedSquares.size(); i++)
+	{
+		unsigned int x = (unsigned int)smallHouse.occupiedSquares[i].x;
+		unsigned int y = (unsigned int)smallHouse.occupiedSquares[i].y;
+		XMFLOAT3 squarePos(x + (int)terrPos.x, terrPos.y, y + (int)terrPos.z);
+		buildingPredictor.GetComponent<BuildingPredictor>()->AddGreen(squarePos);
+	}
 	return true;
 }
 

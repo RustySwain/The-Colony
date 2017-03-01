@@ -43,6 +43,8 @@ public:
 	float GetFov() const { return fov; };
 	float GetNearPlane() const { return nearPlane; }
 	float GetFarPlane() const { return farPlane; }
+	XMMATRIX GetViewMatrix() const { return viewMatrix; };
+	XMMATRIX GetProjectionMatrix() const { return projectionMatrix; };
 
 	void SetFov(const float& _fov) { fov = _fov; UpdateProjMat(); }
 	void SetNearPlane(const float& _dist) { nearPlane = _dist; UpdateProjMat(); };
