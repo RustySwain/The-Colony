@@ -9,10 +9,7 @@
 
 using namespace std;
 
-extern bool scrollUp;
-extern bool scrollDown;
-extern int scrollUpCount;
-extern int scrollDownCount;
+extern int scrollCount;
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -25,20 +22,12 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		//Scroll Up
 		if (wheel_delta > 0)
 		{
-			scrollDownCount = 0;
-
-			scrollUpCount++;
-			scrollUp = true;
-			scrollDown = false;
+			scrollCount++;
 		}
 		//Scroll Down
 		else if (wheel_delta < 0)
 		{
-			scrollUpCount = 0;
-
-			scrollDownCount++;
-			scrollDown = true;
-			scrollUp = false;
+			scrollCount--;
 		}
 		return 0;
 	} break;

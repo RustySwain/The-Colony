@@ -18,6 +18,13 @@ class CameraController : public Component
 	bool _moving = false;
 	float elapsed;
 	float start = 0.0f;
+	float DPI = 0.25f;
+	float curScroll;
+	float curVelocity;
+	int desiredScroll;
+	int scrollMin, scrollMax;
+	float minRot, maxRot;
+	float minTrans, maxTrans;
 	POINT prevFrameMousePos;
 
 	GameObject cameraOrigin;
@@ -37,4 +44,5 @@ public:
 private:
 	float lerp(float point1, float point2, float alpha);
 	float xLerp(float mMin, float mMax, float mFactor);
+	float SmoothDamp(float current, float target, float &currentVelocity, float smoothTime, float maxSpeed, float deltaTime);
 };

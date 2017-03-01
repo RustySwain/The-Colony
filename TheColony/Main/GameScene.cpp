@@ -93,7 +93,6 @@ void GameScene::Update()
 	heli_prop1.Update();
 	heli_prop2.Update();
 	toyota.Update();
-	gameController.Update();
 
 	// Picking
 	POINT mousePos;
@@ -135,7 +134,6 @@ void GameScene::OnDelete()
 	heli_prop1.OnDelete();
 	heli_prop2.OnDelete();
 	toyota.OnDelete();
-	gameController.OnDelete();
 
 	pickingLight.OnDelete();
 	debugText.OnDelete();

@@ -1,8 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "DirectXMath.h"
-#include "PriorityQueue.h"
-#include <unordered_map>
+#include "Mesh.h"
 
 using namespace DirectX;
 
@@ -11,20 +10,25 @@ enum ITEM_ENUM { Wood = 0, Stone, Iron, Coal, Cabbage, Corn, Potato, Berries };
 
 class GameController : public Component
 {
-	const unsigned int id = 23;
-	float gameTime = 0;
-	float hours = 0;
-
 	struct Building
 	{
 		GameObject instances;
 		vector<GameObject> colliders;
+		Mesh* collisionMesh = nullptr;
+		vector<XMFLOAT2> occupiedSquares;
 	};
+
+	const unsigned int id = 23;
+	float gameTime = 0;
+	float hours = 0;
+	Building smallHouse;
+	float** gridCost = nullptr;
+	unsigned int terrainWidth, terrainHeight;
+	static bool LoadOccupiedSquares(const char* _path, vector<XMFLOAT2>& _vec);
 
 public:
 	GameController();
 	~GameController();
-	Building smallHouse;
 
 	// Component
 	virtual const unsigned int GetId() const override { return id; };

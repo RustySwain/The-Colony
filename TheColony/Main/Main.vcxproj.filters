@@ -132,6 +132,9 @@
     <ClCompile Include="VillagerController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BuildingPredictor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="PathSearch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -255,6 +258,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VillagerController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildingPredictor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PathSearch.h">

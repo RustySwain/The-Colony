@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib SmallHousePlaceHolder.mtl
+mtllib SmallHouseCollision.mtl
 g default
 v -1.000000 0.000000 2.000000
 v 2.000000 0.000000 2.000000
