@@ -16,6 +16,9 @@
     <Filter Include="Scenes">
       <UniqueIdentifier>{97f86b49-1d8a-4ede-b56d-250e47641509}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Gameplay">
+      <UniqueIdentifier>{80fe17b2-f93c-46ad-a3ae-6546d08c1177}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -136,6 +139,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PathSearch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -267,6 +273,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PriorityQueue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

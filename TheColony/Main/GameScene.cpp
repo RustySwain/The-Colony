@@ -159,13 +159,6 @@ void GameScene::Init()
 	skybox.AddComponent<MeshRenderer>();
 	skybox.AddComponent<Skybox>();
 
-	gameController.SetId(3);
-	gameController.SetName("GameController");
-	gameController.SetTag("GameController");
-	gameController.Start();
-	gameController.AddComponent<GameController>();
-	gameController.AddComponent<PlayerController>();
-
 	//Lighting
 	spotLight.SetId(5);
 	spotLight.SetTag("Untagged");
@@ -202,7 +195,7 @@ void GameScene::Init()
 	box.SetId(8);
 	box.SetName("Box");
 	box.Start();
-	box.AddComponent<Transform>()->SetLocalPosition(5, -1.9f, 0);
+	box.AddComponent<Transform>()->SetLocalPosition(5, 0, 0);
 	box.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Box/Box_Idle.mesh");
 	box.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box/Box.dds");
 	box.AddComponent<Animator>()->AddAnimation("../Assets/Box/Box_Idle.anim");
@@ -215,7 +208,8 @@ void GameScene::Init()
 	bunny.SetId(10);
 	bunny.SetName("Bunny");
 	bunny.Start();
-	bunny.AddComponent<Transform>()->SetLocalPosition(-10, -2.2f, 0);
+	bunny.AddComponent<Transform>()->SetLocalPosition(2, 2.4f, 3);
+	bunny.GetComponent<Transform>()->ScalePre(0.4f);
 	bunny.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Bunny/Bunny.mesh");
 	bunny.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Bunny/White.dds");
 	bunny.AddComponent<Animator>()->AddAnimation("../Assets/Bunny/Idle.anim");
@@ -223,7 +217,9 @@ void GameScene::Init()
 	bunny.GetComponent<Animator>()->AddAnimation("../Assets/Bunny/Attack.anim");
 	bunny.GetComponent<Animator>()->Play("Idle");
 	bunny.AddComponent<Collider>()->SetMesh(bunny.GetComponent<MeshRenderer>()->GetMesh());
-	//bunny.AddComponent<VillagerController>();
+	bunny.AddComponent<VillagerController>();
+	bunny.GetComponent<VillagerController>()->IsMale(true);
+	bunny.GetComponent<VillagerController>()->SetAge(15);
 
 	helicopter.SetId(11);
 	helicopter.SetName("Helicopter");
@@ -252,7 +248,7 @@ void GameScene::Init()
 	toyota.SetId(12);
 	toyota.SetName("Toyota");
 	toyota.Start();
-	toyota.AddComponent<Transform>()->SetLocalPosition(-20, -2.2f, 5);
+	toyota.AddComponent<Transform>()->SetLocalPosition(-20, 0, 5);
 	toyota.GetComponent<Transform>()->ScalePre(0.2f);
 	toyota.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Toyota/toyota.mesh");
 	toyota.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Toyota/diffuse.dds");
@@ -290,4 +286,11 @@ void GameScene::Init()
 	pickingLight.AddComponent<Transform>();
 	pickingLight.GetComponent<Light>()->SetExtra(XMFLOAT4(7, 0, 0, 1));
 	pickingLight.GetComponent<Light>()->type = Light::POINT;
+
+	gameController.SetId(3);
+	gameController.SetName("GameController");
+	gameController.SetTag("GameController");
+	gameController.Start();
+	gameController.AddComponent<GameController>();
+	gameController.AddComponent<PlayerController>();
 }

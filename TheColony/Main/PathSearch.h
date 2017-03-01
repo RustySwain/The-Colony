@@ -3,6 +3,7 @@
 #include <DirectXMath.h>
 #include <unordered_map>
 #include "PriorityQueue.h"
+#include "TileMap.h"
 
 using namespace std;
 using namespace DirectX;
@@ -10,14 +11,13 @@ using namespace DirectX;
 class PathSearch
 {
 	struct Edge;
-	struct Tile;
 	struct SearchNode
 	{
-		Tile* tile;
+		Tile *tile;
 		SearchNode *parent;
 		vector<Edge*> edges;
 		bool visited;
-		float cost = 0;
+		float hCost = 0;
 		float givenCost = 0;
 		float finalCost = 0;
 	};
@@ -26,13 +26,11 @@ class PathSearch
 		SearchNode* endpoint;
 		float cost = 0;
 	};
-	struct Tile
-	{
-		XMFLOAT3 position;
-	};
 
+	TileMap *tileMap;
 	PriorityQueue<SearchNode*> priorityQueue;
 	unordered_map<Tile*, SearchNode*> nodes;
+	float hWeight = 0.5f;
 
 	static bool IsGreater(SearchNode * const & _lhs, SearchNode * const & _rhs);
 
@@ -40,5 +38,8 @@ public:
 	PathSearch();
 	~PathSearch();
 
+	void initialize(TileMap * _tileMap);
 	vector<XMFLOAT3> AStar(XMFLOAT3 _start, XMFLOAT3 _goal);
+	void ChangeTileCost(Tile * _tile, float _cost);
+	float Estimate(Tile * _lhs, Tile * _rhs) const;
 };

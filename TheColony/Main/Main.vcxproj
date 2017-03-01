@@ -183,6 +183,8 @@
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
+    <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="PrefabLoader.cpp" />
     <ClCompile Include="Transform.cpp" />
@@ -211,6 +213,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="GameScene.h" />
+    <ClInclude Include="Tile.h" />
     <ClInclude Include="Interpolator.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LoadingScreen.h" />
@@ -228,6 +231,7 @@
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="TextRenderer.h" />
+    <ClInclude Include="TileMap.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="PrefabLoader.h" />
     <ClInclude Include="Transform.h" />

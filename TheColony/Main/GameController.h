@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "DirectXMath.h"
 #include "Mesh.h"
+#include "PathSearch.h"
 
 using namespace DirectX;
 
@@ -25,6 +26,8 @@ class GameController : public Component
 	float** gridCost = nullptr;
 	unsigned int terrainWidth, terrainHeight;
 	static bool LoadOccupiedSquares(const char* _path, vector<XMFLOAT2>& _vec);
+	PathSearch pathSearch;
+	TileMap *tileMap;
 
 public:
 	GameController();
@@ -42,5 +45,5 @@ public:
 	static XMFLOAT3 GridSquareFromTerrain(XMFLOAT3 _terrainLoc);
 	bool PlaceBuilding(XMFLOAT3 _gridSquare);
 	static void FindJob(JOB_ENUM _job);
-	static vector<XMFLOAT3> AStar(XMFLOAT3 _start, XMFLOAT3 _goal);
+	vector<XMFLOAT3> AStar(XMFLOAT3 _start, XMFLOAT3 _goal);
 };
