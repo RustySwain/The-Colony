@@ -24,7 +24,7 @@ void CameraController::Start()
 	curScroll = 0;
 	curVelocity = 0.0f;
 	scrollMin = 0;
-	scrollMax = 15;
+	scrollMax = 5;
 	minTrans = 0.0f;
 	maxTrans = 50.0f;
 	minRot = 0.0f;
@@ -58,7 +58,7 @@ void CameraController::Update()
 	
 	curScroll = SmoothDamp(curScroll, (float)desiredScroll, curVelocity, 0.5f, 20.0f, Time::Delta());
 
-	float inv = maxTrans / scrollMax;
+	curScroll = SmoothDamp(curScroll, desiredScroll, curVelocity, 0.5f, 20.0f, Time::Delta());	float inv = maxTrans / scrollMax;
 	float invAngle = maxRot / scrollMax;
 	float val = curScroll * (inv)+(inv);
 	float rot = curScroll * (invAngle)+(invAngle);
@@ -86,12 +86,10 @@ void CameraController::Update()
 	{
 		if (dx > 0 || newMousePos.x == Application::GetInstance()->GetWindowRect().left)
 		{
-
 			_cameraOrigin->RotateYPre((dx * DPI));
 		}
 		else if (dx < 0 || newMousePos.x == Application::GetInstance()->GetWindowRect().right - 1)
 		{
-
 			_cameraOrigin->RotateYPre((dx * DPI));
 		}
 	}
@@ -148,5 +146,4 @@ float CameraController::SmoothDamp(float current, float target, float &currentVe
 
 void CameraController::ThirdPerson(GameObject obj, float speed)
 {
-
 }

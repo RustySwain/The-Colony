@@ -43,10 +43,13 @@ public:
 	float GetFov() const { return fov; };
 	float GetNearPlane() const { return nearPlane; }
 	float GetFarPlane() const { return farPlane; }
+	XMMATRIX GetViewMatrix() const { return viewMatrix; };
+	XMMATRIX GetProjectionMatrix() const { return projectionMatrix; };
 
 	void SetFov(const float& _fov) { fov = _fov; UpdateProjMat(); }
 	void SetNearPlane(const float& _dist) { nearPlane = _dist; UpdateProjMat(); };
 	void SetFarPlane(const float& _dist) { farPlane = _dist; UpdateProjMat(); };
 
 	XMFLOAT3 ScreenToWorldSpace(XMFLOAT3 _screenPos) const;
+	XMFLOAT3 WorldToScreenSpace(XMFLOAT3 _worldPos) const;
 };

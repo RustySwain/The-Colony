@@ -6,6 +6,9 @@
 #include "Time.h"
 #include "fstream"
 #include "sstream"
+#include "PathSearch.h"
+#include "BuildingPredictor.h"
+#include "Defines.h"
 
 bool GameController::LoadOccupiedSquares(const char* _path, vector<XMFLOAT2>& _vec)
 {
@@ -43,13 +46,23 @@ void GameController::Start()
 	smallHouse.collisionMesh = new Mesh();
 	smallHouse.collisionMesh->LoadFromObj("../Assets/Buildings/SmallHouseCollision.obj");
 	LoadOccupiedSquares("../Assets/Buildings/SmallHouse.building", smallHouse.occupiedSquares);
+
+	buildingPredictor.Start();
+	buildingPredictor.AddComponent<Transform>();
+	buildingPredictor.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/White.dds");
+	buildingPredictor.AddComponent<BuildingPredictor>();
 }
 
 void GameController::Update()
 {
+	gameTime += Time::Delta();
+	hours += gameTime;
+	if (hours >= 86400)
+		hours = 0;
+
 	smallHouse.instances.Update();
 	for (unsigned int i = 0; i < smallHouse.colliders.size(); i++)
-		smallHouse.colliders[i].Update();
+		smallHouse.colliders[i]->Update();
 	static bool updated = false;
 	if (!updated)
 	{
@@ -69,22 +82,23 @@ void GameController::Update()
 		}
 	}
 
-	gameTime += Time::Delta();
-	hours += gameTime;
-	if (hours >= 86400)
-		hours = 0;
+	buildingPredictor.Update();
 }
 
 void GameController::OnDelete()
 {
 	smallHouse.instances.OnDelete();
 	for (unsigned int i = 0; i < smallHouse.colliders.size(); i++)
-		smallHouse.colliders[i].OnDelete();
+	{
+		smallHouse.colliders[i]->OnDelete();
+		delete smallHouse.colliders[i];
+	}
 	delete smallHouse.collisionMesh;
 
 	for (unsigned int i = 0; i < terrainHeight; i++)
 		delete[] gridCost[i];
 	delete[] gridCost;
+	buildingPredictor.OnDelete();
 }
 
 XMFLOAT3 GameController::GridSquareFromTerrain(XMFLOAT3 _terrainLoc)
@@ -94,34 +108,79 @@ XMFLOAT3 GameController::GridSquareFromTerrain(XMFLOAT3 _terrainLoc)
 	return XMFLOAT3(pos.x, pos.y, pos.z);
 }
 
-bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare)
+bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation)
 {
 	XMFLOAT3 terrPos = GridSquareFromTerrain(_gridSquare);
 
 	for (unsigned int i = 0; i < smallHouse.occupiedSquares.size(); i++)
 	{
-		int x = (unsigned int)smallHouse.occupiedSquares[i].x;
-		int y = (unsigned int)smallHouse.occupiedSquares[i].y;
+		XMMATRIX tmp = XMMatrixTranslation(smallHouse.occupiedSquares[i].x, smallHouse.occupiedSquares[i].y, 0) * XMMatrixRotationZ(_rotation * 90.0f * DEG2RAD);
+		int x = (int)round(tmp.r[3].m128_f32[0]);
+		int y = (int)round(tmp.r[3].m128_f32[1]);
 		if ((unsigned int)(x + (int)terrPos.x) >= terrainWidth - 1 || (unsigned int)(y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
 		if (gridCost[y + (int)terrPos.z][x + (int)terrPos.x] != 1) return false;
 	}
 
 	for (unsigned int i = 0; i < smallHouse.occupiedSquares.size(); i++)
 	{
-		unsigned int x = (unsigned int)smallHouse.occupiedSquares[i].x;
-		unsigned int y = (unsigned int)smallHouse.occupiedSquares[i].y;
+		XMMATRIX tmp = XMMatrixTranslation(smallHouse.occupiedSquares[i].x, smallHouse.occupiedSquares[i].y, 0) * XMMatrixRotationZ(_rotation * 90.0f * DEG2RAD);
+		int x = (int)round(tmp.r[3].m128_f32[0]);
+		int y = (int)round(tmp.r[3].m128_f32[1]);
 		if ((unsigned int)(x + (int)terrPos.x) >= terrainWidth - 1 || (unsigned int)(y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
 		gridCost[y + (int)terrPos.z][x + (int)terrPos.x] = 0;
 	}
 
-	XMMATRIX translation = XMMatrixTranslation(terrPos.x, terrPos.y, terrPos.z);
+	XMMATRIX translation = XMMatrixRotationY(_rotation * 90.0f * -DEG2RAD) * XMMatrixTranslation(0.5f, 0, 0.5f) * XMMatrixTranslation(terrPos.x, terrPos.y, terrPos.z);
 	smallHouse.instances.GetComponent<MeshRenderer>()->AddInstance(translation, (int)_gridSquare.x * GameObject::FindFromTag("Terrain")[0]->GetComponent<Terrain>()->GetHeight() + (int)_gridSquare.z);
 
-	GameObject& nuCollider = GameObject();
-	nuCollider.Start();
-	nuCollider.AddComponent<Transform>()->SetLocalPosition(terrPos.x, terrPos.y, terrPos.z);
-	nuCollider.AddComponent<Collider>()->SetMesh(smallHouse.collisionMesh);
+	GameObject* nuCollider = new GameObject();
+	nuCollider->Start();
+	nuCollider->AddComponent<Transform>()->RotateYPre(_rotation * -90.0f);
+	nuCollider->GetComponent<Transform>()->TranslatePost(XMFLOAT3(0.5f, 0, 0.5f));
+	nuCollider->GetComponent<Transform>()->TranslatePost(XMFLOAT3(terrPos.x, terrPos.y, terrPos.z));
+	nuCollider->AddComponent<Collider>()->SetMesh(smallHouse.collisionMesh);
 	smallHouse.colliders.push_back(nuCollider);
 
 	return true;
+}
+
+bool GameController::Predict(XMFLOAT3 _gridSquare, unsigned int _rotation)
+{
+	XMFLOAT3 terrPos = GridSquareFromTerrain(_gridSquare);
+
+	for (unsigned int i = 0; i < smallHouse.occupiedSquares.size(); i++)
+	{
+		XMMATRIX tmp = XMMatrixTranslation(smallHouse.occupiedSquares[i].x, smallHouse.occupiedSquares[i].y, 0) * XMMatrixRotationZ(_rotation * 90.0f * DEG2RAD);
+		int x = (int)round(tmp.r[3].m128_f32[0]);
+		int y = (int)round(tmp.r[3].m128_f32[1]);
+		if ((unsigned int)(x + (int)terrPos.x) >= terrainWidth - 1 || (unsigned int)(y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
+		XMFLOAT3 squarePos((float)x + terrPos.x, terrPos.y, (float)y + terrPos.z);
+		if (gridCost[y + (int)terrPos.z][x + (int)terrPos.x] != 1)
+			buildingPredictor.GetComponent<BuildingPredictor>()->AddRed(squarePos);
+	}
+
+	for (unsigned int i = 0; i < smallHouse.occupiedSquares.size(); i++)
+	{
+		XMMATRIX tmp = XMMatrixTranslation(smallHouse.occupiedSquares[i].x, smallHouse.occupiedSquares[i].y, 0) * XMMatrixRotationZ(_rotation * 90.0f * DEG2RAD);
+		int x = (int)round(tmp.r[3].m128_f32[0]);
+		int y = (int)round(tmp.r[3].m128_f32[1]);
+		XMFLOAT3 squarePos((float)x + terrPos.x, terrPos.y, (float)y + terrPos.z);
+		buildingPredictor.GetComponent<BuildingPredictor>()->AddGreen(squarePos);
+	}
+	return true;
+}
+
+void GameController::ClearPrediction()
+{
+	buildingPredictor.GetComponent<BuildingPredictor>()->Clear();
+}
+
+void GameController::FindJob(JOB_ENUM _job)
+{
+}
+
+vector<XMFLOAT3> GameController::AStar(XMFLOAT3 _start, XMFLOAT3 _goal)
+{
+	PathSearch pathSearch;
+	return pathSearch.AStar(_start, _goal);
 }
