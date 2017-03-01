@@ -13,7 +13,7 @@ class GameController : public Component
 	struct Building
 	{
 		GameObject instances;
-		vector<GameObject> colliders;
+		vector<GameObject*> colliders;
 		Mesh* collisionMesh = nullptr;
 		vector<XMFLOAT2> occupiedSquares;
 	};
@@ -41,8 +41,8 @@ public:
 	float GetHours() const { return hours / 3600; }
 
 	static XMFLOAT3 GridSquareFromTerrain(XMFLOAT3 _terrainLoc);
-	bool PlaceBuilding(XMFLOAT3 _gridSquare);
-	bool Predict(XMFLOAT3 _gridSquare);
+	bool PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation);
+	bool Predict(XMFLOAT3 _gridSquare, unsigned int _rotation);
 	void ClearPrediction();
 	static void FindJob(JOB_ENUM _job);
 	static vector<XMFLOAT3> AStar(XMFLOAT3 _start, XMFLOAT3 _goal);

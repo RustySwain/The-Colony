@@ -19,6 +19,12 @@ void PlayerController::Start()
 
 void PlayerController::Update()
 {
+	if (GetAsyncKeyState('R') & 0x1)
+	{
+		rotation++;
+		rotation %= 4;
+	}
+
 	if (GetAsyncKeyState(VK_LBUTTON))
 	{
 		POINT mousePos;
@@ -36,7 +42,7 @@ void PlayerController::Update()
 		bool ray = terrain->GetComponent<Collider>()->RayCast(outPos, nearPos, flDir);
 		if (ray)
 		{
-			GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->PlaceBuilding(outPos);
+			GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->PlaceBuilding(outPos, rotation);
 		}
 	}
 
@@ -58,7 +64,7 @@ void PlayerController::Update()
 		bool ray = terrain->GetComponent<Collider>()->RayCast(outPos, nearPos, flDir);
 		if (ray)
 		{
-			GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->Predict(outPos);
+			GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->Predict(outPos, rotation);
 		}
 	}
 }
