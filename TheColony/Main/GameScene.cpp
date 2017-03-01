@@ -16,6 +16,7 @@
 #include "Application.h"
 #include "PlayerController.h"
 #include "GameController.h"
+#include "VillagerController.h"
 
 GameScene::GameScene()
 {
@@ -224,6 +225,7 @@ void GameScene::Init()
 	bunny.GetComponent<Animator>()->AddAnimation("../Assets/Bunny/Attack.anim");
 	bunny.GetComponent<Animator>()->Play("Idle");
 	bunny.AddComponent<Collider>()->SetMesh(bunny.GetComponent<MeshRenderer>()->GetMesh());
+	//bunny.AddComponent<VillagerController>();
 
 	helicopter.SetId(11);
 	helicopter.SetName("Helicopter");

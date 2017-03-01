@@ -4,6 +4,7 @@
 #include "Transform.h"
 #include "Collider.h"
 #include "Time.h"
+#include "PathSearch.h"
 
 GameController::GameController()
 {
@@ -23,6 +24,11 @@ void GameController::Start()
 
 void GameController::Update()
 {
+	gameTime += Time::Delta();
+	hours += gameTime;
+	if (hours >= 86400)
+		hours = 0;
+
 	static bool updated = false;
 	if (!updated)
 	{
@@ -32,11 +38,6 @@ void GameController::Update()
 	smallHouse.instances.Update();
 	for (unsigned int i = 0; i < smallHouse.colliders.size(); i++)
 		smallHouse.colliders[i].Update();
-
-	gameTime += Time::Delta();
-	hours += gameTime;
-	if (hours >= 86400)
-		hours = 0;
 }
 
 void GameController::OnDelete()
@@ -65,4 +66,14 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare)
 	nuCollider.AddComponent<Collider>()->SetMesh(smallHouse.instances.GetComponent<MeshRenderer>()->GetMesh());
 	smallHouse.colliders.push_back(nuCollider);
 	return true;
+}
+
+void GameController::FindJob(JOB_ENUM _job)
+{
+}
+
+vector<XMFLOAT3> GameController::AStar(XMFLOAT3 _start, XMFLOAT3 _goal)
+{
+	PathSearch pathSearch;
+	return pathSearch.AStar(_start, _goal);
 }
