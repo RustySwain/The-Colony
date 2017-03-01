@@ -79,8 +79,8 @@ void BuildingPredictor::AddGreen(XMFLOAT3 _terrainPos)
 	v4Pos3 = Project(v4Pos3);
 	v4Pos4 = XMFLOAT4(v4Pos3.x, v4Pos3.y, 0.001f, 1);
 
-	verts[vertsTaken++].position = v2Pos4;
 	verts[vertsTaken++].position = v1Pos4;
+	verts[vertsTaken++].position = v2Pos4;
 	verts[vertsTaken++].position = v3Pos4;
 	verts[vertsTaken++].position = v2Pos4;
 	verts[vertsTaken++].position = v4Pos4;
