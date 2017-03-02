@@ -116,6 +116,8 @@ void GameController::OnDelete()
 		delete[] gridCost[i];
 	delete[] gridCost;
 	buildingPredictor.OnDelete();
+
+	delete tileMap;
 }
 
 XMFLOAT3 GameController::GridSquareFromTerrain(XMFLOAT3 _terrainLoc)

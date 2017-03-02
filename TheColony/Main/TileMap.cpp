@@ -7,6 +7,7 @@ TileMap::TileMap()
 
 TileMap::~TileMap()
 {
+	reset();
 }
 
 void TileMap::reset()

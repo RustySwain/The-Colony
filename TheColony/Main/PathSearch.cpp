@@ -12,8 +12,10 @@ PathSearch::~PathSearch()
 
 	for each(pair<Tile*, SearchNode*> node in nodes)
 	{
-		node.second->parent = nullptr;
-		node.second->visited = false;
+		for (size_t i = 0; i < node.second->edges.size(); ++i)
+			delete node.second->edges[i];
+
+		delete node.second;
 	}
 }
 
