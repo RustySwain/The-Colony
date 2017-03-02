@@ -38,6 +38,8 @@ public:
 	void TranslatePre(XMFLOAT3 _translation);
 	void TranslatePost(XMFLOAT3 _translation);
 
+	void LookAt(XMFLOAT3 _v);
+
 	// Fast
 	XMMATRIX GetLocalMatrix() const;
 	// Slow. If you aren't updating this, just store it instead of calling this every frame.

@@ -86,6 +86,33 @@ void Transform::TranslatePost(XMFLOAT3 _translation)
 	localMatrix = localMatrix * XMMatrixTranslation(_translation.x, _translation.y, _translation.z);
 }
 
+void Transform::LookAt(XMFLOAT3 _v)
+{
+	XMFLOAT4X4 u;
+	XMStoreFloat4x4(&u, localMatrix);
+	XMVECTOR localVector = XMVectorSet(u._41, u._42, u._43, 1);
+	XMVECTOR lookAtVector = XMVectorSet(_v.x, _v.y, _v.z, 1);
+	XMVECTOR upVector = XMVectorSet(0, 1, 0, 1);
+	XMVECTOR zaxis = XMVector3Normalize(lookAtVector - localVector);
+	XMVECTOR xaxis = XMVector3Normalize(XMVector3Cross(upVector, zaxis));
+	XMVECTOR yaxis = XMVector3Cross(zaxis, xaxis);
+
+	localMatrix.r[0].m128_f32[0] = xaxis.m128_f32[0];
+	localMatrix.r[0].m128_f32[1] = xaxis.m128_f32[1];
+	localMatrix.r[0].m128_f32[2] = xaxis.m128_f32[2];
+
+	localMatrix.r[1].m128_f32[0] = yaxis.m128_f32[0];
+	localMatrix.r[1].m128_f32[1] = yaxis.m128_f32[1];
+	localMatrix.r[1].m128_f32[2] = yaxis.m128_f32[2];
+
+	localMatrix.r[2].m128_f32[0] = zaxis.m128_f32[0];
+	localMatrix.r[2].m128_f32[1] = zaxis.m128_f32[1];
+	localMatrix.r[2].m128_f32[2] = zaxis.m128_f32[2];
+
+	RotateYPre(180);
+	ScalePre(scale);
+}
+
 XMMATRIX Transform::GetLocalMatrix() const
 {
 	return localMatrix;
