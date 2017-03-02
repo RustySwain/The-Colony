@@ -28,7 +28,7 @@ void VillagerController::Update()
 		{
 			if (HOME == step)
 			{
-				if(GetAsyncKeyState('T') & 0x1)
+				if (GetAsyncKeyState('T') & 0x1)
 					RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), XMFLOAT3(10, 2.4f, 25));
 			}
 			else if (TRAVELING == step)
@@ -50,12 +50,10 @@ void VillagerController::Update()
 					Debug::Log(pos, 0);
 					newPosVec += currPosVec;
 					gameObject->GetComponent<Transform>()->SetLocalPosition(newPosVec.m128_f32[0], newPosVec.m128_f32[1], newPosVec.m128_f32[2]);
-					
-					float distToTile = sqrt(pow(pathToWalk[pathCount].x - currPosition.x, 2) + pow(pathToWalk[pathCount].z - currPosition.z, 2));
-					if (distToTile <= 0.05f)
-					{
-						pathCount++;
 
+					float distToTile = sqrt(pow(pathToWalk[pathCount].x - currPosition.x, 2) + pow(pathToWalk[pathCount].z - currPosition.z, 2));
+					if (distToTile <= 0.05f && ++pathCount < pathToWalk.size())
+					{
 						XMFLOAT3 nextPosition = pathToWalk[pathCount];
 						XMVECTOR nextPosVec = XMVectorSet(newPosition.x, nextPosition.y, nextPosition.z, 1);
 						nextPosVec = XMVector3Normalize(nextPosVec);
@@ -66,8 +64,6 @@ void VillagerController::Update()
 
 						//float angle = acos(nextPosVec);
 						//gameObject->GetComponent<Transform>()->RotateYPre(angle);
-
-						
 					}
 
 					if (pathCount == pathToWalk.size())
@@ -84,10 +80,8 @@ void VillagerController::Update()
 							step = WORKING;
 							isWorking = true;
 						}
-
 					}
 				}
-
 			}
 			else if (WORKING == step)
 			{
@@ -96,7 +90,6 @@ void VillagerController::Update()
 					// TODO: do job
 					if ((int)inventory.size() == 200)
 					{
-
 					}
 				}
 				else
@@ -105,11 +98,10 @@ void VillagerController::Update()
 		}
 		else
 		{
-
 		}
 	}
 
-	if(!moveFlag)
+	if (!moveFlag)
 		moveFlag = true;
 }
 
