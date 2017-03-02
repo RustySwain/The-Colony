@@ -41,18 +41,20 @@ GameController::~GameController()
 void GameController::Start()
 {
 	buildings.push_back(Building());
-	buildings[0].instances.Start();
-	buildings[0].instances.AddComponent<Transform>();
-	buildings[0].instances.AddComponent<MeshRenderer>()->LoadFromObj("../Assets/Buildings/SmallHousePlaceHolder.obj");
-	buildings[0].instances.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/bark.dds");
+	buildings[0].instances = new GameObject();
+	buildings[0].instances->Start();
+	buildings[0].instances->AddComponent<Transform>();
+	buildings[0].instances->AddComponent<MeshRenderer>()->LoadFromObj("../Assets/Buildings/SmallHousePlaceHolder.obj");
+	buildings[0].instances->GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/bark.dds");
 	buildings[0].collisionMesh = new Mesh();
 	buildings[0].collisionMesh->LoadFromObj("../Assets/Buildings/SmallHouseCollision.obj");
 	LoadOccupiedSquares("../Assets/Buildings/SmallHouse.building", buildings[0].occupiedSquares);
 	buildings.push_back(Building());
-	buildings[1].instances.Start();
-	buildings[1].instances.AddComponent<Transform>();
-	buildings[1].instances.AddComponent<MeshRenderer>()->LoadFromObj("../Assets/Buildings/MedHousePlaceHolder.obj");
-	buildings[1].instances.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/bark.dds");
+	buildings[1].instances = new GameObject();
+	buildings[1].instances->Start();
+	buildings[1].instances->AddComponent<Transform>();
+	buildings[1].instances->AddComponent<MeshRenderer>()->LoadFromObj("../Assets/Buildings/MedHousePlaceHolder.obj");
+	buildings[1].instances->GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/bark.dds");
 	buildings[1].collisionMesh = new Mesh();
 	buildings[1].collisionMesh->LoadFromObj("../Assets/Buildings/MedHouseCollision.obj");
 	LoadOccupiedSquares("../Assets/Buildings/MedHouse.building", buildings[1].occupiedSquares);
@@ -89,7 +91,7 @@ void GameController::Update()
 
 	for (unsigned int i = 0; i < buildings.size(); i++)
 	{
-		buildings[i].instances.Update();
+		buildings[i].instances->Update();
 		for (unsigned int j = 0; j < buildings[i].colliders.size(); j++)
 		{
 			buildings[i].colliders[j]->Update();
@@ -100,7 +102,7 @@ void GameController::Update()
 	{
 		updated = true;
 		for (unsigned int i = 0; i < buildings.size(); i++)
-			buildings[i].instances.GetComponent<MeshRenderer>()->RemoveInstance(-1);
+			buildings[i].instances->GetComponent<MeshRenderer>()->RemoveInstance(-1);
 		GameObject* terrain = GameObject::FindFromTag("Terrain")[0];
 		terrainWidth = terrain->GetComponent<Terrain>()->GetWidth();
 		terrainHeight = terrain->GetComponent<Terrain>()->GetHeight();
@@ -122,7 +124,8 @@ void GameController::OnDelete()
 {
 	for (unsigned int i = 0; i < buildings.size(); i++)
 	{
-		buildings[i].instances.OnDelete();
+		buildings[i].instances->OnDelete();
+		delete buildings[i].instances;
 		for (unsigned int j = 0; j < buildings[i].colliders.size(); j++)
 		{
 			buildings[i].colliders[j]->OnDelete();
@@ -181,7 +184,7 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation,
 	}
 
 	XMMATRIX translation = XMMatrixRotationY(_rotation * 90.0f * -DEG2RAD) * XMMatrixTranslation(0.5f, 0, 0.5f) * XMMatrixTranslation(terrPos.x, terrPos.y, terrPos.z);
-	buildings[_buildingIndex].instances.GetComponent<MeshRenderer>()->AddInstance(translation, (int)_gridSquare.x * GameObject::FindFromTag("Terrain")[0]->GetComponent<Terrain>()->GetHeight() + (int)_gridSquare.z);
+	buildings[_buildingIndex].instances->GetComponent<MeshRenderer>()->AddInstance(translation, (int)_gridSquare.x * GameObject::FindFromTag("Terrain")[0]->GetComponent<Terrain>()->GetHeight() + (int)_gridSquare.z);
 
 	GameObject* nuCollider = new GameObject();
 	nuCollider->Start();

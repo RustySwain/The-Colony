@@ -13,7 +13,7 @@ class GameController : public Component
 {
 	struct Building
 	{
-		GameObject instances;
+		GameObject* instances = nullptr;
 		vector<GameObject*> colliders;
 		Mesh* collisionMesh = nullptr;
 		vector<XMFLOAT3> occupiedSquares;
