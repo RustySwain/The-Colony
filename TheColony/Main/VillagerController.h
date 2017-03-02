@@ -20,6 +20,8 @@ class VillagerController : public Component
 	STEP step = HOME;
 	vector<XMFLOAT3> pathToWalk;
 	int pathCount = 0;
+	bool moveFlag = false;
+	float totalTime = 0;
 
 public:
 	VillagerController();
@@ -30,6 +32,16 @@ public:
 	void Start() override;
 	void Update() override;
 	void OnDelete() override;
+
+	// Mutators
+	void SetAge(int _age) { age = _age; }
+	void IsMale(bool _isMale) { isMale = _isMale; }
+
+	// Accessors
+	unsigned int GetAge() const { return age; }
+	bool IsMale() const { return isMale; }
+	unsigned int Health() const { return health; }
+	unsigned int Hunger() const { return hunger; }
 
 	void RequestPath(XMFLOAT3 _from, XMFLOAT3 _to);
 	GameObject * FindJob();

@@ -51,6 +51,23 @@ void GameController::Start()
 	buildingPredictor.AddComponent<Transform>();
 	buildingPredictor.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/White.dds");
 	buildingPredictor.AddComponent<BuildingPredictor>();
+
+	// Create TileMap
+	GameObject* terrain = GameObject::FindFromTag("Terrain")[0];
+	unsigned int width = terrain->GetComponent<Terrain>()->GetWidth();
+	unsigned int height = terrain->GetComponent<Terrain>()->GetHeight();
+
+	tileMap = new TileMap();
+	tileMap->createTileArray(width, height);
+
+	for(unsigned int x = 0; x < width; ++x)
+	{
+		for(unsigned int z = 0; z < height; ++z)
+		{
+			tileMap->addTile(x, z, 1);
+		}
+	}
+	pathSearch.initialize(tileMap);
 }
 
 void GameController::Update()
@@ -128,6 +145,9 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation)
 		int y = (int)round(tmp.r[3].m128_f32[1]);
 		if ((unsigned int)(x + (int)terrPos.x) >= terrainWidth - 1 || (unsigned int)(y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
 		gridCost[y + (int)terrPos.z][x + (int)terrPos.x] = 0;
+		
+		Tile * tile = tileMap->getTile(x + (int)terrPos.x, y + (int)terrPos.z);
+		pathSearch.ChangeTileCost(tile, 0);
 	}
 
 	XMMATRIX translation = XMMatrixRotationY(_rotation * 90.0f * -DEG2RAD) * XMMatrixTranslation(0.5f, 0, 0.5f) * XMMatrixTranslation(terrPos.x, terrPos.y, terrPos.z);
@@ -181,6 +201,5 @@ void GameController::FindJob(JOB_ENUM _job)
 
 vector<XMFLOAT3> GameController::AStar(XMFLOAT3 _start, XMFLOAT3 _goal)
 {
-	PathSearch pathSearch;
 	return pathSearch.AStar(_start, _goal);
 }
