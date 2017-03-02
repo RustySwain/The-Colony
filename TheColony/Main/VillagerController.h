@@ -46,6 +46,7 @@ public:
 	float Speed() const { return speed; }
 
 	void RequestPath(XMFLOAT3 _from, XMFLOAT3 _to);
+	void Notify();
 	GameObject * FindJob();
 };
 

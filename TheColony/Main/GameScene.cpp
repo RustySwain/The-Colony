@@ -207,6 +207,7 @@ void GameScene::Init()
 
 	bunny.SetId(10);
 	bunny.SetName("Bunny");
+	bunny.SetTag("Villager");
 	bunny.Start();
 	bunny.AddComponent<Transform>()->SetLocalPosition(2, 2.4f, 3);
 	bunny.GetComponent<Transform>()->ScalePre(0.4f);

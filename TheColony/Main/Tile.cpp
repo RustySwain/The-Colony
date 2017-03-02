@@ -3,7 +3,10 @@
 
 Tile::Tile(int r, int c, unsigned int weight) : row(r), column(c), weight(weight)
 {
-	position = GameController::GridSquareFromTerrain(XMFLOAT3((float)r, 0, (float)c));
+	XMFLOAT3 temp = GameController::GridSquareFromTerrain(XMFLOAT3((float)r, 0, (float)c));
+	temp.x += 0.5f;
+	temp.z -= 0.5f;
+	position = temp;
 }
 
 Tile::~Tile()

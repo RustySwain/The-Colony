@@ -9,6 +9,7 @@
 #include "PathSearch.h"
 #include "BuildingPredictor.h"
 #include "Defines.h"
+#include "VillagerController.h"
 
 bool GameController::LoadOccupiedSquares(const char* _path, vector<XMFLOAT2>& _vec)
 {
@@ -148,8 +149,14 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation)
 		if ((unsigned int)(x + (int)terrPos.x) >= terrainWidth - 1 || (unsigned int)(y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
 		gridCost[y + (int)terrPos.z][x + (int)terrPos.x] = 0;
 		
+		// Update tile map
 		Tile * tile = tileMap->getTile(x + (int)terrPos.x, y + (int)terrPos.z);
 		pathSearch.ChangeTileCost(tile, 0);
+
+		// Notifiy all villagers that a new building was placed
+		vector<GameObject*> villagers = GameObject::FindFromTag("Villager");
+		for(int v = 0; v < (int)villagers.size(); ++v)
+			villagers[v]->GetComponent<VillagerController>()->Notify();
 	}
 
 	XMMATRIX translation = XMMatrixRotationY(_rotation * 90.0f * -DEG2RAD) * XMMatrixTranslation(0.5f, 0, 0.5f) * XMMatrixTranslation(terrPos.x, terrPos.y, terrPos.z);

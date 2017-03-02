@@ -30,8 +30,8 @@ void VillagerController::Update()
 			{
 				if (GetAsyncKeyState('N') & 0x1)
 				{
-					int randX = rand() % 32 - 1;
-					int randZ = rand() % 32 - 1;
+					float randX = float(rand() % 32 - 1);
+					float randZ = float(rand() % 32 - 1);
 					gameObject->GetComponent<Transform>()->SetLocalPosition(randX, 2.4f, randZ);
 				}
 
@@ -62,8 +62,6 @@ void VillagerController::Update()
 
 					if (pathCount == pathToWalk.size())
 					{
-						pathCount = 0;
-						pathToWalk.clear();
 						gameObject->GetComponent<Animator>()->Play("Idle");
 
 						if (hours >= 0)
@@ -108,9 +106,17 @@ void VillagerController::RequestPath(XMFLOAT3 _from, XMFLOAT3 _to)
 {
 	vector<XMFLOAT3> path = GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->AStar(_from, _to);
 	reverse(path.begin(), path.end());
+	pathCount = 0;
+	pathToWalk.clear();
 	pathToWalk = path;
 	step = TRAVELING;
 	gameObject->GetComponent<Animator>()->Play("Run");
+}
+
+void VillagerController::Notify()
+{
+	if(TRAVELING == step){}
+		RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), XMFLOAT3(10, 2.4f, 25));
 }
 
 GameObject * VillagerController::FindJob()
