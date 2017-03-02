@@ -48,6 +48,14 @@ void GameController::Start()
 	buildings[0].collisionMesh = new Mesh();
 	buildings[0].collisionMesh->LoadFromObj("../Assets/Buildings/SmallHouseCollision.obj");
 	LoadOccupiedSquares("../Assets/Buildings/SmallHouse.building", buildings[0].occupiedSquares);
+	buildings.push_back(Building());
+	buildings[1].instances.Start();
+	buildings[1].instances.AddComponent<Transform>();
+	buildings[1].instances.AddComponent<MeshRenderer>()->LoadFromObj("../Assets/Buildings/MedHousePlaceHolder.obj");
+	buildings[1].instances.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/bark.dds");
+	buildings[1].collisionMesh = new Mesh();
+	buildings[1].collisionMesh->LoadFromObj("../Assets/Buildings/MedHouseCollision.obj");
+	LoadOccupiedSquares("../Assets/Buildings/MedHouse.building", buildings[1].occupiedSquares);
 
 	buildingPredictor.Start();
 	buildingPredictor.AddComponent<Transform>();
@@ -79,14 +87,20 @@ void GameController::Update()
 	if (hours >= 86400)
 		hours = 0;
 
-	buildings[0].instances.Update();
-	for (unsigned int i = 0; i < buildings[0].colliders.size(); i++)
-		buildings[0].colliders[i]->Update();
+	for (unsigned int i = 0; i < buildings.size(); i++)
+	{
+		buildings[i].instances.Update();
+		for (unsigned int j = 0; j < buildings[i].colliders.size(); j++)
+		{
+			buildings[i].colliders[j]->Update();
+		}
+	}
 	static bool updated = false;
 	if (!updated)
 	{
 		updated = true;
-		buildings[0].instances.GetComponent<MeshRenderer>()->RemoveInstance(-1);
+		for (unsigned int i = 0; i < buildings.size(); i++)
+			buildings[i].instances.GetComponent<MeshRenderer>()->RemoveInstance(-1);
 		GameObject* terrain = GameObject::FindFromTag("Terrain")[0];
 		terrainWidth = terrain->GetComponent<Terrain>()->GetWidth();
 		terrainHeight = terrain->GetComponent<Terrain>()->GetHeight();
@@ -106,13 +120,16 @@ void GameController::Update()
 
 void GameController::OnDelete()
 {
-	buildings[0].instances.OnDelete();
-	for (unsigned int i = 0; i < buildings[0].colliders.size(); i++)
+	for (unsigned int i = 0; i < buildings.size(); i++)
 	{
-		buildings[0].colliders[i]->OnDelete();
-		delete buildings[0].colliders[i];
+		buildings[i].instances.OnDelete();
+		for (unsigned int j = 0; j < buildings[i].colliders.size(); j++)
+		{
+			buildings[i].colliders[j]->OnDelete();
+			delete buildings[i].colliders[j];
+		}
+		delete buildings[i].collisionMesh;
 	}
-	delete buildings[0].collisionMesh;
 
 	for (unsigned int i = 0; i < terrainHeight; i++)
 		delete[] gridCost[i];
@@ -151,7 +168,7 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation,
 		gridCost[y + (int)terrPos.z][x + (int)terrPos.x] = 0;
 
 		// Update tile map
-		if (smallHouse.occupiedSquares[i].z == 0)
+		if (buildings[_buildingIndex].occupiedSquares[i].z == 0)
 		{
 			Tile * tile = tileMap->getTile(x + (int)terrPos.x, y + (int)terrPos.z);
 			pathSearch.ChangeTileCost(tile, 0);
@@ -198,7 +215,7 @@ bool GameController::Predict(XMFLOAT3 _gridSquare, unsigned int _rotation, unsig
 		int x = (int)round(tmp.r[3].m128_f32[0]);
 		int y = (int)round(tmp.r[3].m128_f32[1]);
 		XMFLOAT3 squarePos((float)x + terrPos.x, terrPos.y, (float)y + terrPos.z);
-		if(smallHouse.occupiedSquares[i].z == 0)
+		if (buildings[_buildingIndex].occupiedSquares[i].z == 0)
 			buildingPredictor.GetComponent<BuildingPredictor>()->AddGreen(squarePos);
 		else
 			buildingPredictor.GetComponent<BuildingPredictor>()->AddBlue(squarePos);

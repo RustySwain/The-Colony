@@ -28,7 +28,7 @@ void BuildingPredictor::Start()
 	Mesh* mesh = new Mesh();
 	vector<Vertex>& verts = mesh->GetVertexData();
 	vector<unsigned int>& tris = mesh->GetTris();
-	for (unsigned int i = 0; i < 420; i++)
+	for (unsigned int i = 0; i < 4000; i++)
 	{
 		verts.push_back(Vertex());
 		tris.push_back(i);

@@ -29,8 +29,8 @@ void PlayerController::Update()
 		buildingIndex = -1;
 	if (GetAsyncKeyState('1'))
 		buildingIndex = 0;
-	/*if (GetAsyncKeyState('2'))
-		buildingIndex = 1;*/
+	if (GetAsyncKeyState('2'))
+		buildingIndex = 1;
 
 	if (GetAsyncKeyState(VK_LBUTTON) && buildingIndex != -1)
 	{
