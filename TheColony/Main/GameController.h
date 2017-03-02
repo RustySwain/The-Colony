@@ -22,7 +22,7 @@ class GameController : public Component
 	const unsigned int id = 23;
 	float gameTime = 0;
 	float hours = 0;
-	Building smallHouse;
+	vector<Building> buildings;
 	float** gridCost = nullptr;
 	unsigned int terrainWidth, terrainHeight;
 	GameObject buildingPredictor;
@@ -44,8 +44,8 @@ public:
 	float GetHours() const { return hours / 3600; }
 
 	static XMFLOAT3 GridSquareFromTerrain(XMFLOAT3 _terrainLoc);
-	bool PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation);
-	bool Predict(XMFLOAT3 _gridSquare, unsigned int _rotation);
+	bool PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation, unsigned int _buildingIndex);
+	bool Predict(XMFLOAT3 _gridSquare, unsigned int _rotation, unsigned int _buildingIndex);
 	void ClearPrediction();
 	static void FindJob(JOB_ENUM _job);
 	vector<XMFLOAT3> AStar(XMFLOAT3 _start, XMFLOAT3 _goal);

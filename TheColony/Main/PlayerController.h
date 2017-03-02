@@ -7,6 +7,7 @@ class PlayerController : public Component
 	const unsigned int id = 21;
 
 	unsigned int rotation = 0;
+	int buildingIndex = -1;
 
 public:
 	PlayerController();

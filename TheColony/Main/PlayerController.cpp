@@ -25,7 +25,14 @@ void PlayerController::Update()
 		rotation %= 4;
 	}
 
-	if (GetAsyncKeyState(VK_LBUTTON))
+	if (GetAsyncKeyState('0'))
+		buildingIndex = -1;
+	if (GetAsyncKeyState('1'))
+		buildingIndex = 0;
+	/*if (GetAsyncKeyState('2'))
+		buildingIndex = 1;*/
+
+	if (GetAsyncKeyState(VK_LBUTTON) && buildingIndex != -1)
 	{
 		POINT mousePos;
 		GetCursorPos(&mousePos);
@@ -42,12 +49,12 @@ void PlayerController::Update()
 		bool ray = terrain->GetComponent<Collider>()->RayCast(outPos, nearPos, flDir);
 		if (ray)
 		{
-			GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->PlaceBuilding(outPos, rotation);
+			GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->PlaceBuilding(outPos, rotation, buildingIndex);
 		}
 	}
 
 	GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->ClearPrediction();
-	if (GetAsyncKeyState(VK_RSHIFT))
+	if (buildingIndex != -1)
 	{
 		POINT mousePos;
 		GetCursorPos(&mousePos);
@@ -64,7 +71,7 @@ void PlayerController::Update()
 		bool ray = terrain->GetComponent<Collider>()->RayCast(outPos, nearPos, flDir);
 		if (ray)
 		{
-			GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->Predict(outPos, rotation);
+			GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->Predict(outPos, rotation, buildingIndex);
 		}
 	}
 }
