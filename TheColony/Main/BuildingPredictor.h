@@ -23,5 +23,6 @@ public:
 
 	void AddGreen(DirectX::XMFLOAT3 _terrainPos);
 	void AddRed(DirectX::XMFLOAT3 _terrainPos);
+	void AddBlue(DirectX::XMFLOAT3 _terrainPos);
 	void Clear();
 };

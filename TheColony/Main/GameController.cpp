@@ -11,7 +11,7 @@
 #include "Defines.h"
 #include "VillagerController.h"
 
-bool GameController::LoadOccupiedSquares(const char* _path, vector<XMFLOAT2>& _vec)
+bool GameController::LoadOccupiedSquares(const char* _path, vector<XMFLOAT3>& _vec)
 {
 	ifstream reader(_path, ios_base::in);
 	if (reader.is_open())
@@ -21,8 +21,8 @@ bool GameController::LoadOccupiedSquares(const char* _path, vector<XMFLOAT2>& _v
 			char buffer[256];
 			reader.getline(buffer, 256);
 			stringstream sstream(buffer);
-			XMFLOAT2 fl2;
-			sstream >> fl2.y >> fl2.x;
+			XMFLOAT3 fl2;
+			sstream >> fl2.y >> fl2.x >> fl2.z;
 			_vec.push_back(fl2);
 		}
 		return true;
@@ -151,8 +151,11 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation,
 		gridCost[y + (int)terrPos.z][x + (int)terrPos.x] = 0;
 
 		// Update tile map
-		Tile * tile = tileMap->getTile(x + (int)terrPos.x, y + (int)terrPos.z);
-		pathSearch.ChangeTileCost(tile, 0);
+		if (smallHouse.occupiedSquares[i].z == 0)
+		{
+			Tile * tile = tileMap->getTile(x + (int)terrPos.x, y + (int)terrPos.z);
+			pathSearch.ChangeTileCost(tile, 0);
+		}
 
 		// Notifiy all villagers that a new building was placed
 		vector<GameObject*> villagers = GameObject::FindFromTag("Villager");
@@ -195,7 +198,10 @@ bool GameController::Predict(XMFLOAT3 _gridSquare, unsigned int _rotation, unsig
 		int x = (int)round(tmp.r[3].m128_f32[0]);
 		int y = (int)round(tmp.r[3].m128_f32[1]);
 		XMFLOAT3 squarePos((float)x + terrPos.x, terrPos.y, (float)y + terrPos.z);
-		buildingPredictor.GetComponent<BuildingPredictor>()->AddGreen(squarePos);
+		if(smallHouse.occupiedSquares[i].z == 0)
+			buildingPredictor.GetComponent<BuildingPredictor>()->AddGreen(squarePos);
+		else
+			buildingPredictor.GetComponent<BuildingPredictor>()->AddBlue(squarePos);
 	}
 	return true;
 }

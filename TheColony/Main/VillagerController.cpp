@@ -40,7 +40,7 @@ void VillagerController::Update()
 			}
 			else if (TRAVELING == step)
 			{
-				if (moveFlag)
+				if (moveFlag && pathToWalk.size() > 0)
 				{
 					XMFLOAT3 newPosition = pathToWalk[pathCount];
 					gameObject->GetComponent<Transform>()->LookAt(newPosition);
@@ -115,7 +115,7 @@ void VillagerController::RequestPath(XMFLOAT3 _from, XMFLOAT3 _to)
 
 void VillagerController::Notify()
 {
-	if(TRAVELING == step){}
+	if(TRAVELING == step)
 		RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), XMFLOAT3(10, 2.4f, 25));
 }
 

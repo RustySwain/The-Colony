@@ -16,7 +16,7 @@ class GameController : public Component
 		GameObject instances;
 		vector<GameObject*> colliders;
 		Mesh* collisionMesh = nullptr;
-		vector<XMFLOAT2> occupiedSquares;
+		vector<XMFLOAT3> occupiedSquares;
 	};
 
 	const unsigned int id = 23;
@@ -26,7 +26,7 @@ class GameController : public Component
 	float** gridCost = nullptr;
 	unsigned int terrainWidth, terrainHeight;
 	GameObject buildingPredictor;
-	static bool LoadOccupiedSquares(const char* _path, vector<XMFLOAT2>& _vec);
+	static bool LoadOccupiedSquares(const char* _path, vector<XMFLOAT3>& _vec);
 	PathSearch pathSearch;
 	TileMap *tileMap;
 
