@@ -218,8 +218,8 @@ void GameScene::Init()
 	bunny.GetComponent<Animator>()->Play("Idle");
 	bunny.AddComponent<Collider>()->SetMesh(bunny.GetComponent<MeshRenderer>()->GetMesh());
 	bunny.AddComponent<VillagerController>();
-	bunny.GetComponent<VillagerController>()->IsMale(true);
 	bunny.GetComponent<VillagerController>()->SetAge(15);
+	bunny.GetComponent<VillagerController>()->Speed(2.3f);
 
 	helicopter.SetId(11);
 	helicopter.SetName("Helicopter");

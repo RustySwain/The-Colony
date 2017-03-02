@@ -21,7 +21,7 @@ class VillagerController : public Component
 	vector<XMFLOAT3> pathToWalk;
 	int pathCount = 0;
 	bool moveFlag = false;
-	float totalTime = 0;
+	float speed = 1.0f;
 
 public:
 	VillagerController();
@@ -36,12 +36,14 @@ public:
 	// Mutators
 	void SetAge(int _age) { age = _age; }
 	void IsMale(bool _isMale) { isMale = _isMale; }
+	void Speed(float _speed) { speed = _speed; }
 
 	// Accessors
 	unsigned int GetAge() const { return age; }
 	bool IsMale() const { return isMale; }
 	unsigned int Health() const { return health; }
 	unsigned int Hunger() const { return hunger; }
+	float Speed() const { return speed; }
 
 	void RequestPath(XMFLOAT3 _from, XMFLOAT3 _to);
 	GameObject * FindJob();

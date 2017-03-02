@@ -5,6 +5,7 @@
 #include "Debug.h"
 #include <Windows.h>
 #include "Animator.h"
+#include <random>
 
 VillagerController::VillagerController()
 {
@@ -20,8 +21,6 @@ void VillagerController::Start()
 
 void VillagerController::Update()
 {
-	totalTime += Time::Delta();
-
 	float hours = GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->GetHours();
 	if (hours >= 0)
 	{
@@ -29,12 +28,19 @@ void VillagerController::Update()
 		{
 			if (HOME == step)
 			{
-				if (GetAsyncKeyState('T') & 0x1)
+				if (GetAsyncKeyState('N') & 0x1)
+				{
+					int randX = rand() % 32 - 1;
+					int randZ = rand() % 32 - 1;
+					gameObject->GetComponent<Transform>()->SetLocalPosition(randX, 2.4f, randZ);
+				}
+
+				if (GetAsyncKeyState('M') & 0x1)
 					RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), XMFLOAT3(10, 2.4f, 25));
 			}
 			else if (TRAVELING == step)
 			{
-				if (moveFlag && totalTime >= 7.0f)
+				if (moveFlag)
 				{
 					XMFLOAT3 newPosition = pathToWalk[pathCount];
 					gameObject->GetComponent<Transform>()->LookAt(newPosition);
@@ -43,26 +49,15 @@ void VillagerController::Update()
 					XMVECTOR currPosVec = XMVectorSet(currPosition.x, currPosition.y, currPosition.z, 1);
 					newPosVec -= currPosVec;
 					newPosVec = XMVector3Normalize(newPosVec);
-					newPosVec *= Time::Delta() * 2.3f;
-					string pos = to_string(newPosVec.m128_f32[0]);
-					pos += ", ";
-					pos += to_string(newPosVec.m128_f32[1]);
-					pos += ", ";
-					pos += to_string(newPosVec.m128_f32[2]);
-					Debug::Log(pos, 0);
+					newPosVec *= Time::Delta() * speed;
 					newPosVec += currPosVec;
 					gameObject->GetComponent<Transform>()->SetLocalPosition(newPosVec.m128_f32[0], newPosVec.m128_f32[1], newPosVec.m128_f32[2]);
 
 					float distToTile = sqrt(pow(pathToWalk[pathCount].x - currPosition.x, 2) + pow(pathToWalk[pathCount].z - currPosition.z, 2));
-					if (distToTile <= 0.05f)
+					if (distToTile <= 0.05f && ++pathCount < pathToWalk.size())
 					{
-						pathCount++;
-
-						if (pathCount < pathToWalk.size())
-						{
-							XMFLOAT3 nextPosition = pathToWalk[pathCount];
-							gameObject->GetComponent<Transform>()->LookAt(nextPosition);
-						}
+						XMFLOAT3 nextPosition = pathToWalk[pathCount];
+						gameObject->GetComponent<Transform>()->LookAt(nextPosition);
 					}
 
 					if (pathCount == pathToWalk.size())
@@ -71,7 +66,7 @@ void VillagerController::Update()
 						pathToWalk.clear();
 						gameObject->GetComponent<Animator>()->Play("Idle");
 
-						if (hours >= 17)
+						if (hours >= 0)
 						{
 							step = HOME;
 						}
@@ -80,10 +75,8 @@ void VillagerController::Update()
 							step = WORKING;
 							isWorking = true;
 						}
-
 					}
 				}
-
 			}
 			else if (WORKING == step)
 			{
@@ -92,7 +85,6 @@ void VillagerController::Update()
 					// TODO: do job
 					if ((int)inventory.size() == 200)
 					{
-
 					}
 				}
 				else
@@ -101,7 +93,6 @@ void VillagerController::Update()
 		}
 		else
 		{
-
 		}
 	}
 
