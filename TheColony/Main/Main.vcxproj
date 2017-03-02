@@ -182,6 +182,7 @@
     <ClCompile Include="ProgressBar.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="TerrainFollowing.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TileMap.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="GameScene.h" />
+    <ClInclude Include="TerrainFollowing.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Interpolator.h" />
     <ClInclude Include="Light.h" />

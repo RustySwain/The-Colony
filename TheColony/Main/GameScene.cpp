@@ -17,6 +17,7 @@
 #include "PlayerController.h"
 #include "GameController.h"
 #include "VillagerController.h"
+#include "TerrainFollowing.h"
 
 GameScene::GameScene()
 {
@@ -60,19 +61,10 @@ void GameScene::Update()
 	}
 
 	if (GetAsyncKeyState(VK_F1))
-		box.GetComponent<Animator>()->Play("Box_Idle");
-	if (GetAsyncKeyState(VK_F2))
-		box.GetComponent<Animator>()->Play("Box_Attack");
-	if (GetAsyncKeyState(VK_F3))
-		box.GetComponent<Animator>()->Play("Box_Jump");
-	if (GetAsyncKeyState(VK_F4))
-		box.GetComponent<Animator>()->Play("Box_Walk");
-
-	if (GetAsyncKeyState(VK_F5))
 		bunny.GetComponent<Animator>()->Play("Idle");
-	if (GetAsyncKeyState(VK_F6))
+	if (GetAsyncKeyState(VK_F2))
 		bunny.GetComponent<Animator>()->Play("Run");
-	if (GetAsyncKeyState(VK_F7))
+	if (GetAsyncKeyState(VK_F3))
 		bunny.GetComponent<Animator>()->Play("Attack");
 
 	heli_prop1.GetComponent<Transform>()->RotateYPre(Time::Delta() * 3 * 360);
@@ -88,11 +80,9 @@ void GameScene::Update()
 	skybox.Update();
 	terrain.Update();
 	bunny.Update();
-	box.Update();
 	helicopter.Update();
 	heli_prop1.Update();
 	heli_prop2.Update();
-	toyota.Update();
 
 	// Picking
 	POINT mousePos;
@@ -129,11 +119,9 @@ void GameScene::OnDelete()
 	skybox.OnDelete();
 	terrain.OnDelete();
 	bunny.OnDelete();
-	box.OnDelete();
 	helicopter.OnDelete();
 	heli_prop1.OnDelete();
 	heli_prop2.OnDelete();
-	toyota.OnDelete();
 
 	pickingLight.OnDelete();
 	debugText.OnDelete();
@@ -192,24 +180,11 @@ void GameScene::Init()
 	pointLight.GetComponent<Light>()->type = Light::POINT;
 
 	// Test Objects
-	box.SetId(8);
-	box.SetName("Box");
-	box.Start();
-	box.AddComponent<Transform>()->SetLocalPosition(5, 0, 0);
-	box.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Box/Box_Idle.mesh");
-	box.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Box/Box.dds");
-	box.AddComponent<Animator>()->AddAnimation("../Assets/Box/Box_Idle.anim");
-	box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Attack.anim");
-	box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Jump.anim");
-	box.GetComponent<Animator>()->AddAnimation("../Assets/Box/Box_Walk.anim");
-	box.GetComponent<Animator>()->Play("Box_Jump");
-	box.AddComponent<Collider>()->SetMesh(box.GetComponent<MeshRenderer>()->GetMesh());
-
 	bunny.SetId(10);
 	bunny.SetName("Bunny");
 	bunny.SetTag("Villager");
 	bunny.Start();
-	bunny.AddComponent<Transform>()->SetLocalPosition(2, 2.4f, 3);
+	bunny.AddComponent<Transform>()->SetLocalPosition(15, 2.5f, 3);
 	bunny.GetComponent<Transform>()->ScalePre(0.4f);
 	bunny.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Bunny/Bunny.mesh");
 	bunny.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Bunny/White.dds");
@@ -245,18 +220,6 @@ void GameScene::Init()
 	heli_prop2.GetComponent<Transform>()->RotateYPre(180);
 	heli_prop2.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Helicopter/Helicopter_Propeller2.mesh");
 	heli_prop2.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Helicopter/T_Difuse_Helicopter.dds");
-
-	toyota.SetId(12);
-	toyota.SetName("Toyota");
-	toyota.Start();
-	toyota.AddComponent<Transform>()->SetLocalPosition(-20, 0, 5);
-	toyota.GetComponent<Transform>()->ScalePre(0.2f);
-	toyota.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Toyota/toyota.mesh");
-	toyota.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Toyota/diffuse.dds");
-	toyota.GetComponent<MeshRenderer>()->LoadSpecularMap(L"../Assets/Toyota/specular.dds");
-	toyota.GetComponent<MeshRenderer>()->LoadNormalMap(L"../Assets/Toyota/normal.dds");
-	toyota.AddComponent<AudioSource>()->AddAudioClip("../Assets/sounds/car_engine.wav");
-	toyota.GetComponent<AudioSource>()->Play("car_engine", true);
 
 	// Terrain
 	terrain.SetId(9);

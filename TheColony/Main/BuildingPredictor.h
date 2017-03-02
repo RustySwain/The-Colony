@@ -21,8 +21,6 @@ public:
 	virtual void Update() override;
 	virtual void OnDelete() override;
 
-	void AddGreen(DirectX::XMFLOAT3 _terrainPos);
-	void AddRed(DirectX::XMFLOAT3 _terrainPos);
-	void AddBlue(DirectX::XMFLOAT3 _terrainPos);
+	void AddColor(DirectX::XMFLOAT3 _terrainPos, DirectX::XMFLOAT4 _color);
 	void Clear();
 };

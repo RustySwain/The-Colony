@@ -10,9 +10,9 @@ class VillagerController : public Component
 	JOB_ENUM job = No_Job;
 	unsigned int health = 100;
 	unsigned int hunger = 100;
-	GameObject* house;
+	GameObject* house = nullptr;
 	vector<ITEM_ENUM> inventory;
-	GameObject* spouse;
+	GameObject* spouse = nullptr;
 	bool education = false;
 	unsigned int age = 0;
 	bool isMale = true;
@@ -22,6 +22,7 @@ class VillagerController : public Component
 	int pathCount = 0;
 	bool moveFlag = false;
 	float speed = 1.0f;
+	bool recalculatePath = false;
 
 public:
 	VillagerController();

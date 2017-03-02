@@ -21,6 +21,15 @@ void VillagerController::Start()
 
 void VillagerController::Update()
 {
+	if(house == nullptr)
+	{
+		vector<GameObject*> houses = GameObject::FindFromTag("House");
+		if (houses.size() > 0)
+		{
+			house = houses[0];
+		}
+	}
+
 	float hours = GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->GetHours();
 	if (hours >= 0)
 	{
@@ -40,7 +49,7 @@ void VillagerController::Update()
 			}
 			else if (TRAVELING == step)
 			{
-				if (moveFlag && pathToWalk.size() > 0)
+				if (moveFlag)
 				{
 					XMFLOAT3 newPosition = pathToWalk[pathCount];
 					gameObject->GetComponent<Transform>()->LookAt(newPosition);
@@ -58,11 +67,18 @@ void VillagerController::Update()
 					{
 						XMFLOAT3 nextPosition = pathToWalk[pathCount];
 						gameObject->GetComponent<Transform>()->LookAt(nextPosition);
+						if(recalculatePath)
+						{
+							RequestPath(currPosition, XMFLOAT3(10, 2.4f, 25));
+							recalculatePath = false;
+						}
 					}
 
 					if (pathCount == pathToWalk.size())
 					{
 						gameObject->GetComponent<Animator>()->Play("Idle");
+						pathCount = 0;
+						pathToWalk.clear();
 
 						if (hours >= 0)
 						{
@@ -93,9 +109,6 @@ void VillagerController::Update()
 		{
 		}
 	}
-
-	if (!moveFlag)
-		moveFlag = true;
 }
 
 void VillagerController::OnDelete()
@@ -107,16 +120,18 @@ void VillagerController::RequestPath(XMFLOAT3 _from, XMFLOAT3 _to)
 	vector<XMFLOAT3> path = GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->AStar(_from, _to);
 	reverse(path.begin(), path.end());
 	pathCount = 0;
-	pathToWalk.clear();
 	pathToWalk = path;
 	step = TRAVELING;
+	moveFlag = true;
 	gameObject->GetComponent<Animator>()->Play("Run");
 }
 
 void VillagerController::Notify()
 {
 	if(TRAVELING == step)
-		RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), XMFLOAT3(10, 2.4f, 25));
+	{
+		recalculatePath = true;
+	}
 }
 
 GameObject * VillagerController::FindJob()

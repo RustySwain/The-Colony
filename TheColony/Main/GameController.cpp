@@ -148,7 +148,7 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation)
 		int y = (int)round(tmp.r[3].m128_f32[1]);
 		if ((unsigned int)(x + (int)terrPos.x) >= terrainWidth - 1 || (unsigned int)(y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
 		gridCost[y + (int)terrPos.z][x + (int)terrPos.x] = 0;
-		
+
 		// Update tile map
 		if (smallHouse.occupiedSquares[i].z == 0)
 		{
@@ -166,6 +166,7 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation)
 	smallHouse.instances.GetComponent<MeshRenderer>()->AddInstance(translation, (int)_gridSquare.x * GameObject::FindFromTag("Terrain")[0]->GetComponent<Terrain>()->GetHeight() + (int)_gridSquare.z);
 
 	GameObject* nuCollider = new GameObject();
+	nuCollider->SetTag("House");
 	nuCollider->Start();
 	nuCollider->AddComponent<Transform>()->RotateYPre(_rotation * -90.0f);
 	nuCollider->GetComponent<Transform>()->TranslatePost(XMFLOAT3(0.5f, 0, 0.5f));
@@ -188,7 +189,7 @@ bool GameController::Predict(XMFLOAT3 _gridSquare, unsigned int _rotation)
 		if ((unsigned int)(x + (int)terrPos.x) >= terrainWidth - 1 || (unsigned int)(y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
 		XMFLOAT3 squarePos((float)x + terrPos.x, terrPos.y, (float)y + terrPos.z);
 		if (gridCost[y + (int)terrPos.z][x + (int)terrPos.x] != 1)
-			buildingPredictor.GetComponent<BuildingPredictor>()->AddRed(squarePos);
+			buildingPredictor.GetComponent<BuildingPredictor>()->AddColor(squarePos, XMFLOAT4(1, 0, 0, 0.5f));
 	}
 
 	for (unsigned int i = 0; i < smallHouse.occupiedSquares.size(); i++)
@@ -198,9 +199,11 @@ bool GameController::Predict(XMFLOAT3 _gridSquare, unsigned int _rotation)
 		int y = (int)round(tmp.r[3].m128_f32[1]);
 		XMFLOAT3 squarePos((float)x + terrPos.x, terrPos.y, (float)y + terrPos.z);
 		if(smallHouse.occupiedSquares[i].z == 0)
-			buildingPredictor.GetComponent<BuildingPredictor>()->AddGreen(squarePos);
-		else
-			buildingPredictor.GetComponent<BuildingPredictor>()->AddBlue(squarePos);
+			buildingPredictor.GetComponent<BuildingPredictor>()->AddColor(squarePos, XMFLOAT4(0, 1, 0, 0.5f));
+		else if(smallHouse.occupiedSquares[i].z == 1)
+			buildingPredictor.GetComponent<BuildingPredictor>()->AddColor(squarePos, XMFLOAT4(0, 0.807f, 0.819f, 0.5f));
+		else if (smallHouse.occupiedSquares[i].z == 2)
+			buildingPredictor.GetComponent<BuildingPredictor>()->AddColor(squarePos, XMFLOAT4(1, 1, 0, 0.5f));
 	}
 	return true;
 }
@@ -216,5 +219,7 @@ void GameController::FindJob(JOB_ENUM _job)
 
 vector<XMFLOAT3> GameController::AStar(XMFLOAT3 _start, XMFLOAT3 _goal)
 {
-	return pathSearch.AStar(_start, _goal);
+	XMFLOAT3 start = GridSquareFromTerrain(_start);
+	XMFLOAT3 goal = GridSquareFromTerrain(_goal);
+	return pathSearch.AStar(start, goal);
 }

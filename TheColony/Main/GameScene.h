@@ -13,11 +13,9 @@ class GameScene : public SceneABC
 
 	// test objects
 	GameObject bunny;
-	GameObject box;
 	GameObject helicopter;
 	GameObject heli_prop1;
 	GameObject heli_prop2;
-	GameObject toyota;
 
 	GameObject debugText;
 	GameObject pickingLight;

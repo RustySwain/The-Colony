@@ -17,6 +17,7 @@ class GameController : public Component
 		vector<GameObject*> colliders;
 		Mesh* collisionMesh = nullptr;
 		vector<XMFLOAT3> occupiedSquares;
+		XMFLOAT3 frontDoor;
 	};
 
 	const unsigned int id = 23;
