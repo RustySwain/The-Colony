@@ -39,6 +39,10 @@ namespace BuildingCreator
 			OpenFileDialog dialog = new OpenFileDialog();
 			if (dialog.ShowDialog() == DialogResult.OK)
 			{
+				if (dialog.FileName.Split('.')[1] != "building")
+				{
+					return;
+				}
 				StreamReader reader = new StreamReader(dialog.OpenFile());
 				while (!reader.EndOfStream)
 				{

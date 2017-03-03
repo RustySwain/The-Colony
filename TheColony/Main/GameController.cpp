@@ -23,7 +23,7 @@ bool GameController::LoadOccupiedSquares(const char* _path, vector<XMFLOAT3>& _v
 			reader.getline(buffer, 256);
 			stringstream sstream(buffer);
 			XMFLOAT3 fl2;
-			sstream >> fl2.y >> fl2.x >> fl2.z;
+			sstream >> fl2.x >> fl2.y >> fl2.z;
 			_vec.push_back(fl2);
 		}
 		return true;
@@ -200,6 +200,7 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation,
 	nuCollider->GetComponent<Transform>()->TranslatePost(XMFLOAT3(terrPos.x, terrPos.y, terrPos.z));
 	nuCollider->AddComponent<Collider>()->SetMesh(buildings[_buildingIndex].collisionMesh);
 	buildings[_buildingIndex].colliders.push_back(nuCollider);
+
 	// Add house component
 	if (_buildingIndex >= 0 && _buildingIndex <= 2)
 	{
@@ -251,7 +252,7 @@ bool GameController::Predict(XMFLOAT3 _gridSquare, unsigned int _rotation, unsig
 		XMFLOAT3 squarePos((float)x + terrPos.x, terrPos.y, (float)y + terrPos.z);
 		if (buildings[_buildingIndex].occupiedSquares[i].z == 0)
 			buildingPredictor.GetComponent<BuildingPredictor>()->AddColor(squarePos, XMFLOAT4(0, 1, 0, 0.5f));
-		else if(buildings[_buildingIndex].occupiedSquares[i].z == 1)
+		else if (buildings[_buildingIndex].occupiedSquares[i].z == 1)
 			buildingPredictor.GetComponent<BuildingPredictor>()->AddColor(squarePos, XMFLOAT4(0, 0.807f, 0.819f, 0.5f));
 		else if (buildings[_buildingIndex].occupiedSquares[i].z == 2)
 			buildingPredictor.GetComponent<BuildingPredictor>()->AddColor(squarePos, XMFLOAT4(1, 1, 0, 0.5f));

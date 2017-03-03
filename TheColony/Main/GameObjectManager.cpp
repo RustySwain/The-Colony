@@ -35,7 +35,7 @@ void GameObjectManager::Start()
 	scene.Start();
 	scene.AddComponent<SceneManager>();
 	scene.AddComponent<GameScene>();
-	scene.GetComponent<SceneManager>()->LoadScene<GameScene>();
+	scene.GetComponent<SceneManager>()->LoadScene<MainMenu>();
 }
 
 void GameObjectManager::Update()
