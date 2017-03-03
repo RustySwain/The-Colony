@@ -156,6 +156,7 @@
     <ClCompile Include="AudioSource.cpp" />
     <ClCompile Include="BindPose.cpp" />
     <ClCompile Include="BoundingVolumeHeirarchy.cpp" />
+    <ClCompile Include="Builder.cpp" />
     <ClCompile Include="BuildingPredictor.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="House.cpp" />
     <ClCompile Include="Interpolator.cpp" />
+    <ClCompile Include="JobABC.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LoadingScreen.cpp" />
     <ClCompile Include="main.cpp" />
@@ -205,6 +207,7 @@
     <ClInclude Include="AudioSource.h" />
     <ClInclude Include="BindPose.h" />
     <ClInclude Include="BoundingVolumeHeirarchy.h" />
+    <ClInclude Include="Builder.h" />
     <ClInclude Include="BuildingABC.h" />
     <ClInclude Include="BuildingPredictor.h" />
     <ClInclude Include="Button.h" />
@@ -222,6 +225,7 @@
     <ClInclude Include="GameSaver.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="House.h" />
+    <ClInclude Include="JobABC.h" />
     <ClInclude Include="Storage.h" />
     <ClInclude Include="TerrainFollowing.h" />
     <ClInclude Include="Tile.h" />

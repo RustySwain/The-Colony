@@ -22,6 +22,12 @@
     <Filter Include="Source Files\Buildings">
       <UniqueIdentifier>{a3a3723a-4a96-446a-94bb-e0f7869b7e29}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Jobs">
+      <UniqueIdentifier>{104ca85b-a777-42ef-8fb2-b67a505724d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Jobs">
+      <UniqueIdentifier>{d9426d68-f20f-4d9a-a0ba-5824dbece0f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -164,6 +170,12 @@
     </ClCompile>
     <ClCompile Include="Farm.cpp">
       <Filter>Source Files\Buildings</Filter>
+    </ClCompile>
+    <ClCompile Include="JobABC.cpp">
+      <Filter>Source Files\Jobs</Filter>
+    </ClCompile>
+    <ClCompile Include="Builder.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -319,6 +331,12 @@
     </ClInclude>
     <ClInclude Include="Farm.h">
       <Filter>Header Files\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="JobABC.h">
+      <Filter>Header Files\Jobs</Filter>
+    </ClInclude>
+    <ClInclude Include="Builder.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
