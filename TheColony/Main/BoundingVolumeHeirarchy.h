@@ -45,6 +45,7 @@ class BoundingVolumeHeirarchy
 	static float Dot(XMFLOAT3 _a, XMFLOAT3 _b);
 	static bool RayToTriangle(XMFLOAT3& _outPos, float& _outDistance, XMFLOAT4 _a, XMFLOAT4 _b, XMFLOAT4 _c, XMFLOAT3 _rayStart, XMFLOAT3 _rayNormal);
 	static TriangleSet CreateTriangleSet(Mesh* _mesh);
+	static bool RayToAABB(AABB _aabb, XMFLOAT3 _rayStart, XMFLOAT3 _rayNormal);
 
 public:
 	BoundingVolumeHeirarchy();
