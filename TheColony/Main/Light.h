@@ -21,6 +21,12 @@ public:
 		XMFLOAT4 extra;
 	};
 
+	struct LightMatrices
+	{
+		XMMATRIX lightView;
+		XMMATRIX lightProj;
+	};
+
 	LightType type;
 
 	Light();
@@ -33,9 +39,19 @@ public:
 
 	void SetColor(XMFLOAT4 _color);
 	void SetExtra(XMFLOAT4 _extra);
+	void SetLookAt(float x, float y, float z);
+	void GenerateViewMatrix();
+	void GenerateProjectionMatrix(float screenFar, float screenNear);
 
 	LightBufferType GetLightBuffType() const;
+	LightMatrices GetLightMatrices() const;
+
 
 private:
 	LightBufferType lightBuffType;
+	LightMatrices lightMatrices;
+	XMMATRIX _viewMatrix;
+	XMMATRIX _projectionMatrix;
+	XMFLOAT4 _lookAt;
+
 };

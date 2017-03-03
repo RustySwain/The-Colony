@@ -4,7 +4,9 @@ Texture2D diffuse;
 Texture2D normals;
 Texture2D specular;
 Texture2D emissive;
+texture2D depthMapTexture;
 SamplerState sam;
+SamplerComparisonState SampleTypeWrap;
 
 struct GenericLight
 {
@@ -31,6 +33,8 @@ struct Input
 	float4 normal : NORMAL;
 	float4 uv : UV;
 	float4 color : COLOR;
+	float4 lightViewPosition : TEXCOORD1;
+	float4 lightPos : TEXCOORD2;
 };
 
 float4 applySpecular(float4 _camPos, float _specularPower, float4 _surfacePos, float4 _lightDir, float4 _surfaceNorm, float4 _lightColor, float _specularHardness)
@@ -79,6 +83,22 @@ float4 spotLight(float4 _position, float4 _worldPos, float4 _direction, float _c
 
 float4 main(Input _in) : SV_TARGET
 {
+	//Shadow
+	float bias;
+	float2 projectTexCoord;
+	float depthValue = 0;
+	float depthValue1;
+	float lightDepthValue;
+	float lightIntensity;
+
+	// Set the bias value for fixing the floating point precision issues.
+	bias = 0.01f;
+
+	// Calculate the projected texture coordinates. convert from NDC to texture space
+	projectTexCoord.x = ((_in.lightViewPosition.x / _in.lightViewPosition.w) * 0.5f) + 0.5f;
+	projectTexCoord.y = ((-_in.lightViewPosition.y / _in.lightViewPosition.w) * 0.5f) + 0.5f;
+
+
 	float4 textureColor = diffuse.Sample(sam, _in.uv.xy);
 	float alpha = textureColor.w;
 	float3 lightDir;
@@ -110,28 +130,53 @@ float4 main(Input _in) : SV_TARGET
 		}
 		case 2: // directional
 		{
-			lightColor += directionalLight(lights[i].direction, _in.normal, lights[i].color);
-			lightColor += specularRatio * applySpecular(camPos, 1024, _in.worldPos, float4(normalize(lights[i].direction.xyz), 1), _in.normal, lights[i].color, lights[i].color.w);
-			break;
-		}
-		case 3: // point
-		{
-			float attenuation = calcAttenuation(lights[i].position, _in.worldPos, lights[i].extra.x);
-			float4 lightDir = float4(lights[i].position.xyz - _in.worldPos.xyz, 1);
-			lightColor += attenuation * pointLight(lights[i].position, _in.worldPos, _in.normal, lights[i].color);
-			lightColor += specularRatio * attenuation * applySpecular(camPos, 1024, _in.worldPos, lightDir, _in.normal, lights[i].color, lights[i].color.w);
-			break;
-		}
-		case 4: // spot
-		{
-			lightColor += spotLight(lights[i].position, _in.worldPos, lights[i].direction, lights[i].extra.y, _in.normal, lights[i].extra.x, lights[i].color);
-			lightColor += specularRatio * applySpecular(camPos, 1024, _in.worldPos, float4(normalize(lights[i].direction.xyz), 1), _in.normal, lights[i].color, lights[i].color.w);
-			break;
-		}
-		}
-	}
+			//// Determine if the projected coordinates are in the 0 to 1 range.  If so then this pixel is in the view of the light.
+			//if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
+			//{
+			//	// Calculate the depth of the light.
+			//	lightDepthValue = _in.lightViewPosition.z / _in.lightViewPosition.w;
 
-	float4 returnColor = lightColor * textureColor;
-	float4 emiss = emissive.Sample(sam, _in.uv.xy);
-	return float4(returnColor.xyz, alpha) * _in.color + emiss;
+			//	float2 offsets[9] = {
+			//		float2(-1.0f, 1.0f), float2(0.0f, 1.0f), float2(1.0f, 1.0f),
+			//		float2(-1.0f, 0.0f), float2(0.0f, 0.0f), float2(1.0f, 0.0f),
+			//		float2(-1.0f, -1.0f), float2(0.0f, -1.0f), float2(1.0f, -1.0f)
+			//	};
+
+			//	[unroll]
+			//	for (int i = 0; i < 9; ++i) {
+			//		offsets[i].x *= (1.0f / 1024);
+			//		offsets[i].y *= (1.0f / 1024);
+			//		depthValue += depthMapTexture.SampleCmpLevelZero(SampleTypeWrap, projectTexCoord + offsets[i], lightDepthValue - bias);
+			//	}
+
+			//	depthValue /= 9.0f;
+
+			//	if (lightDepthValue < depthValue)
+			//	{
+					lightColor += directionalLight(lights[i].direction, _in.normal, lights[i].color);
+					lightColor += specularRatio * applySpecular(camPos, 1024, _in.worldPos, float4(normalize(lights[i].direction.xyz), 1), _in.normal, lights[i].color, lights[i].color.w);
+					//}
+				//}
+				break;
+			}
+			case 3: // point
+			{
+				float attenuation = calcAttenuation(lights[i].position, _in.worldPos, lights[i].extra.x);
+				float4 lightDir = float4(lights[i].position.xyz - _in.worldPos.xyz, 1);
+				lightColor += attenuation * pointLight(lights[i].position, _in.worldPos, _in.normal, lights[i].color);
+				lightColor += specularRatio * attenuation * applySpecular(camPos, 1024, _in.worldPos, lightDir, _in.normal, lights[i].color, lights[i].color.w);
+				break;
+			}
+			case 4: // spot
+			{
+				lightColor += spotLight(lights[i].position, _in.worldPos, lights[i].direction, lights[i].extra.y, _in.normal, lights[i].extra.x, lights[i].color);
+				lightColor += specularRatio * applySpecular(camPos, 1024, _in.worldPos, float4(normalize(lights[i].direction.xyz), 1), _in.normal, lights[i].color, lights[i].color.w);
+				break;
+			}
+			}
+		}
+
+		float4 returnColor = lightColor * textureColor;
+		float4 emiss = emissive.Sample(sam, _in.uv.xy);
+		return float4(returnColor.xyz, alpha) * _in.color + emiss;
 }

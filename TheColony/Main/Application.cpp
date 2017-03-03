@@ -204,6 +204,41 @@ void Application::CreateCameraAndLightBuffer()
 	device->CreateBuffer(&lightBufferDesc, nullptr, &lightBuffer);
 	lightBufferDesc.ByteWidth = sizeof(XMFLOAT4);
 	device->CreateBuffer(&lightBufferDesc, nullptr, &camPosBuffer);
+
+	//Buffer for light View and Proj matrices
+	lightBufferDesc.ByteWidth = sizeof(Light::LightMatrices) * 100;
+	device->CreateBuffer(&lightBufferDesc, nullptr, &lightMatricesBuffer);
+
+	lightBufferDesc.ByteWidth = sizeof(XMFLOAT4) * 100;
+	device->CreateBuffer(&lightBufferDesc, nullptr, &lightPositionBuffer);
+}
+
+void Application::CreateDepthAndTextureClass()
+{
+	_RenderTexture = new RenderTexture();
+	_RenderTexture->Initialize(device, SHADOWMAP_WIDTH, SHADOWMAP_HEIGHT, SCREEN_DEPTH, SCREEN_NEAR);
+
+	_Depth = new Depth();
+	_Depth->Initialize(device);
+
+	D3D11_SAMPLER_DESC samplerDesc;
+	// Create a wrap texture sampler state description.
+	samplerDesc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_MIRROR;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_MIRROR;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_MIRROR;
+	samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 16;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_LESS;
+	samplerDesc.BorderColor[0] = 0;
+	samplerDesc.BorderColor[1] = 0;
+	samplerDesc.BorderColor[2] = 0;
+	samplerDesc.BorderColor[3] = 0;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// Create the texture sampler state.
+	device->CreateSamplerState(&samplerDesc, &_sampleStateWrap);
 }
 
 Application::Application()
@@ -253,6 +288,7 @@ void Application::Init(HWND& _window)
 	CreateBlendState();
 	CreateRasterState();
 	CreateCameraAndLightBuffer();
+	CreateDepthAndTextureClass();
 	// Set Initial stuff
 	context->IASetInputLayout(layout);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -269,6 +305,18 @@ void Application::Update() const
 
 void Application::Render()
 {
+	//Shadow mapping render pass
+	ID3D11ShaderResourceView* pNullSRV = nullptr;
+	context->PSSetShaderResources(4, 1, &pNullSRV);
+
+	ID3D11RenderTargetView* nullRTV = nullptr;
+	context->OMSetRenderTargets(1, &nullRTV, nullptr);
+
+	//RenderSceneToTexture();
+
+	// Set the sampler states in the pixel shader.
+	context->PSSetSamplers(1, 1, &_sampleStateWrap);
+
 	//Update light and camera buffers
 	Light::LightBufferType lightBuff[100];
 	vector<const Light*> lightsToAdd;
@@ -279,6 +327,15 @@ void Application::Render()
 	for (size_t i = 0; i < lightsToAdd.size(); i++)
 	{
 		lightBuff[i] = lightsToAdd[i]->GetLightBuffType();
+	}
+
+	if (lights.size() != 0)
+	{
+		lightMat = lights[1]->GetLightMatrices();
+		XMFLOAT3 p = lights[1]->gameObject->GetComponent<Transform>()->GetWorldPosition();
+		XMFLOAT4 lightPos = XMFLOAT4(p.x, p.y, p.z, 0);
+		context->UpdateSubresource(lightMatricesBuffer, 0, 0, &lightMat, 0, 0);
+		context->UpdateSubresource(lightPositionBuffer, 0, 0, &lightPos, 0, 0);
 	}
 
 	context->UpdateSubresource(lightBuffer, 0, 0, lightBuff, 0, 0);
@@ -296,20 +353,56 @@ void Application::Render()
 
 	ID3D11Buffer* camBuf = mainCam->GetConstantBuffer();
 	context->VSSetConstantBuffers(1, 1, &camBuf);
+	context->VSSetConstantBuffers(3, 1, &lightMatricesBuffer);
+	context->VSSetConstantBuffers(4, 1, &lightPositionBuffer);
 
 	ID3D11Buffer* pixBufs[2] = { lightBuffer, camPosBuffer };
 	context->PSSetConstantBuffers(0, 2, pixBufs);
+
+	//depthBufferTexture = _RenderTexture->GetShaderResourceView();
+	//context->PSSetShaderResources(4, 1, &depthBufferTexture);
 
 	SortMeshesByDistance();
 
 	for (unsigned int i = 0; i < renderers.size(); i++)
 		if (renderers[i]->GetType() != MeshRenderer::UI && renderers[i]->GetEnabled())
 			renderers[i]->Render();
+
 	for (unsigned int i = 0; i < renderers.size(); i++)
 		if (renderers[i]->GetType() == MeshRenderer::UI && renderers[i]->GetEnabled())
 			renderers[i]->Render();
 
 	swapChain->Present(vsync, 0);
+}
+
+void Application::RenderSceneToTexture()
+{
+	XMMATRIX worldMatrix, lightViewMatrix, lightProjectionMatrix, translateMatrix;
+
+	if (lights.size() != 0 && lights[1]->type == 2)
+	{
+		// Set the render target to be the render to texture.
+		_RenderTexture->SetRenderTarget(context);
+
+		//Clear the render to texture.
+		_RenderTexture->ClearRenderTarget(context, 0.0f, 0.0f, 0.0f, 1.0f);
+
+		Light::LightMatrices lmatrices = lights[1]->GetLightMatrices();
+
+		// Render the cube model with the depth shader.
+		SortMeshesByDistance();
+
+		//i starts at 1 because renderers[0] = skybox
+		/*for (size_t i = 1; i < renderers.size(); i++)
+		{*/
+			renderers[3]->RenderShadow();
+			_Depth->Render(context, renderers[3]->GetIndexCount(), renderers[3]->gameObject->GetComponent<Transform>()->GetWorldMatrix(), lmatrices.lightView, lmatrices.lightProj);
+		//}
+		XMFLOAT3 p = lights[1]->gameObject->GetComponent<Transform>()->GetWorldPosition();
+		XMFLOAT4 lightPos = XMFLOAT4(p.x, p.y, p.z, 0);
+
+		_RenderTexture->ClearScreen(context);
+	}
 }
 
 void Application::Shutdown()
@@ -325,13 +418,23 @@ void Application::Shutdown()
 	SAFE_RELEASE(rasterState);
 	SAFE_RELEASE(camPosBuffer);
 	SAFE_RELEASE(lightBuffer);
-
+	SAFE_RELEASE(lightMatricesBuffer);
+	SAFE_RELEASE(lightPositionBuffer);
 	// Shaders
 	SAFE_RELEASE(vsMesh);
 	SAFE_RELEASE(vsUI);
 	SAFE_RELEASE(psMesh);
 	SAFE_RELEASE(psSkybox);
 	SAFE_RELEASE(psUI);
+
+	SAFE_RELEASE(_sampleStateWrap);
+
+	_Depth->Shutdown();
+	_RenderTexture->Shutdown();
+	delete _Depth;
+	delete _RenderTexture;
+
+	//SAFE_RELEASE(depthBufferTexture);
 
 	gameObjectManager.OnDelete();
 }

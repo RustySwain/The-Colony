@@ -14,6 +14,18 @@ cbuffer JointsBuffer : register(b2)
 	matrix jointOffsets[100];
 }
 
+//Shadow Stuff
+cbuffer MatrixBuffer : register(b3)
+{
+	matrix lightViewMatrix;
+	matrix lightProjectionMatrix;
+};
+
+cbuffer LightPos : register(b4)
+{
+	float4 lightPosition;
+}
+
 struct Input
 {
 	float4 pos : POSITION;
@@ -33,6 +45,8 @@ struct Output
 	float4 normal : NORMAL;
 	float4 uv : UV;
 	float4 color : COLOR;
+	float4 lightViewPosition : TEXCOORD1;
+	float4 lightPos : TEXCOORD2;
 };
 
 float4 addJointInfluence(Input _in)
@@ -53,6 +67,8 @@ float4 addJointInfluence(Input _in)
 
 Output main(Input _in)
 {
+	float4 worldPosition;
+
 	Output ret;
 	float4 pos;
 	if (_in.flags[0] == 1)
@@ -73,5 +89,21 @@ Output main(Input _in)
 	ret.normal = normalize(float4(mul((float3x3)_in.instance, ret.normal.xyz), 0));
 	ret.uv = _in.uv;
 	ret.color = _in.color;
+
+	//Shadow Stuff
+	//Putting vertex in light space
+	ret.lightViewPosition = mul(worldMat, float4(_in.pos.xyz, 1.0f));
+	ret.lightViewPosition = mul(lightViewMatrix, ret.lightViewPosition);
+	ret.lightViewPosition = mul(lightProjectionMatrix, ret.lightViewPosition);
+
+	// Calculate the position of the vertex in the world.
+	worldPosition = mul(worldMat, _in.pos);
+
+	// Determine the light position based on the position of the light and the position of the vertex in the world.
+	ret.lightPos = lightPosition - worldPosition;
+
+	// Normalize the light position vector.
+	ret.lightPos = normalize(ret.lightPos);
+
 	return ret;
 }

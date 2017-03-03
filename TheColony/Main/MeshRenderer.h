@@ -95,6 +95,8 @@ public:
 	ID3D11ShaderResourceView* GetDiffuseMap() const { return diffuseMap; };
 	void SetMeshColor(XMFLOAT4 _rgba) const;
 	void Render() const;
+	void RenderShadow() const;
+	UINT GetIndexCount() const;
 
 private:
 	Type type = MESH;

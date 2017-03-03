@@ -5,17 +5,24 @@
 #include "Camera.h"
 #include "Light.h"
 #include "GameObjectManager.h"
+#include "RenderTexture.h"
+#include "Depth.h"
 
 #pragma comment(lib, "d3d11.lib")
+
+const int SHADOWMAP_WIDTH = 1024;
+const int SHADOWMAP_HEIGHT = 1024;
+const float SCREEN_DEPTH = 100.0f;
+const float SCREEN_NEAR = 0.01f;
 
 class Application
 {
 	static Application* instance;
-	
+
 	// Windows
 	HWND* window = nullptr;
 	RECT windowRect;
-	
+
 	// DirectX
 	ID3D11Device* device = nullptr;
 	ID3D11DeviceContext* context = nullptr;
@@ -28,12 +35,15 @@ class Application
 	ID3D11RasterizerState* rasterState = nullptr;
 	ID3D11Buffer* camPosBuffer = nullptr;
 	ID3D11Buffer* lightBuffer = nullptr;
-
+	ID3D11Buffer* lightMatricesBuffer = nullptr;
+	ID3D11Buffer* lightPositionBuffer = nullptr;
+	ID3D11SamplerState *_sampleStateWrap = nullptr;
 	ID3D11VertexShader* vsMesh = nullptr;
 	ID3D11VertexShader* vsUI = nullptr;
 	ID3D11PixelShader* psMesh = nullptr;
 	ID3D11PixelShader* psSkybox = nullptr;
 	ID3D11PixelShader* psUI = nullptr;
+	ID3D11ShaderResourceView* depthBufferTexture = nullptr;
 
 	float backBufferColor[4] = { 0, 1, 1, 1 };
 	unsigned int msCount = 8;
@@ -54,7 +64,9 @@ class Application
 	void CreateBlendState();
 	void CreateRasterState();
 	void CreateCameraAndLightBuffer();
+	void CreateDepthAndTextureClass();
 	void CreateBuffer(D3D11_BUFFER_DESC* _bData, D3D11_SUBRESOURCE_DATA* _subData, ID3D11Buffer** _buffer) const;
+
 
 public:
 	Application();
@@ -79,7 +91,7 @@ public:
 	void RegisterLight(const Light* _light);
 	void UnregisterLight(const Light* _light);
 
-	GameObjectManager* GetGameObjectManager() { return gameObjectManager.GetComponent<GameObjectManager>(); }	
+	GameObjectManager* GetGameObjectManager() { return gameObjectManager.GetComponent<GameObjectManager>(); }
 	void Init(HWND& _window);
 	void Update() const;
 	void Render();
@@ -90,4 +102,10 @@ public:
 
 	void SetVsync(bool _vsync) { vsync = _vsync ? 1 : 0; };
 	bool GetVsync() const { return vsync != 0; };
+
+private:
+	void RenderSceneToTexture();
+	RenderTexture *_RenderTexture;
+	Depth *_Depth;
+	Light::LightMatrices lightMat;
 };

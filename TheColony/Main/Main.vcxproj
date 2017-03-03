@@ -164,6 +164,7 @@
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="Depth.cpp" />
     <ClCompile Include="Farm.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="GameController.cpp" />
@@ -183,6 +184,7 @@
     <ClCompile Include="NoiseGenerator.cpp" />
     <ClCompile Include="PathSearch.cpp" />
     <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="RenderTexture.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ProgressBar.cpp" />
     <ClCompile Include="Skybox.cpp" />
@@ -217,6 +219,7 @@
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Defines.h" />
+    <ClInclude Include="Depth.h" />
     <ClInclude Include="Farm.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="GameController.h" />
@@ -226,6 +229,7 @@
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="House.h" />
     <ClInclude Include="JobABC.h" />
+    <ClInclude Include="RenderTexture.h" />
     <ClInclude Include="Storage.h" />
     <ClInclude Include="TerrainFollowing.h" />
     <ClInclude Include="Tile.h" />
@@ -254,6 +258,18 @@
     <ClInclude Include="VillagerController.h" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="DepthPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="DepthVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="PSMesh.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>

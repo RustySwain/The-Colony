@@ -287,3 +287,45 @@ void MeshRenderer::Render() const
 
 	context->DrawIndexedInstanced((UINT)mesh->GetTris().size(), (UINT)instances.size(), 0, 0, 0);
 }
+
+void MeshRenderer::RenderShadow() const
+{
+	auto context = Application::GetInstance()->GetContext();
+	// only update vertex buffer if the mesh can be changed
+	if (flags & DYNAMIC)
+		context->UpdateSubresource(vertBuffer, 0, 0, mesh->GetVertexData().data(), 0, 0);
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	unsigned int offset[] = { 0, 0 }, stride[] = { sizeof(Vertex), sizeof(PerInstanceVertexData) };
+	// set buffers
+	ID3D11Buffer* vertBuffers[] = { vertBuffer, instanceBuffer };
+	context->IASetVertexBuffers(0, 2, vertBuffers, stride, offset);
+	context->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	context->VSSetConstantBuffers(0, 1, &constantBuffer);
+	// set textures for the pixel shader
+	ID3D11ShaderResourceView* textures[] = { diffuseMap, normalMap, specularMap, emissiveMap };
+	context->PSSetShaderResources(0, 4, textures);
+	context->PSSetSamplers(0, 1, &sampler);
+	/*if (type == MESH)
+	{
+		context->PSSetShader(Application::GetInstance()->GetPSMesh(), 0, 0);
+		context->VSSetShader(Application::GetInstance()->GetVSMesh(), 0, 0);
+	}
+	else if (type == SKYBOX)
+	{
+		context->PSSetShader(Application::GetInstance()->GetPSSkybox(), 0, 0);
+		context->VSSetShader(Application::GetInstance()->GetVSMesh(), 0, 0);
+	}
+	else if (type == UI)
+	{
+		context->PSSetShader(Application::GetInstance()->GetPSUI(), 0, 0);
+		context->VSSetShader(Application::GetInstance()->GetVSUI(), 0, 0);
+	}
+
+	if (gameObject->GetComponent<Animator>())
+		gameObject->GetComponent<Animator>()->SetVSBuffer();*/
+}
+
+UINT MeshRenderer::GetIndexCount() const
+{
+	return (UINT)mesh->GetTris().size();
+}
