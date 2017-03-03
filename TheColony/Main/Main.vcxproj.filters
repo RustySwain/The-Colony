@@ -87,9 +87,6 @@
     <ClCompile Include="Skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Interpolator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="NoiseGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -200,6 +197,9 @@
     </ClCompile>
     <ClCompile Include="TextRenderer.cpp">
       <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolator.cpp">
+      <Filter>Source Files\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
