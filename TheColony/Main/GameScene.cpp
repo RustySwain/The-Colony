@@ -257,4 +257,5 @@ void GameScene::Init()
 	gameController.Start();
 	gameController.AddComponent<PlayerController>();
 	gameController.AddComponent<GameController>();
+	gameController.GetComponent<GameController>()->AddHomeless(&bunny);
 }

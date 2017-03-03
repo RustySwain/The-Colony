@@ -39,6 +39,7 @@ public:
 	void SetAge(int _age) { age = _age; }
 	void IsMale(bool _isMale) { isMale = _isMale; }
 	void Speed(float _speed) { speed = _speed; }
+	void SetHouse(GameObject * _house) { house = _house; }
 
 	// Accessors
 	unsigned int GetAge() const { return age; }
@@ -49,6 +50,7 @@ public:
 
 	void RequestPath(XMFLOAT3 _from, XMFLOAT3 _to);
 	void Notify();
+	void Wander();
 	GameObject * FindJob();
 };
 

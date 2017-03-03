@@ -10,6 +10,7 @@
 #include "BuildingPredictor.h"
 #include "Defines.h"
 #include "VillagerController.h"
+#include "House.h"
 
 bool GameController::LoadOccupiedSquares(const char* _path, vector<XMFLOAT3>& _vec)
 {
@@ -152,6 +153,7 @@ XMFLOAT3 GameController::GridSquareFromTerrain(XMFLOAT3 _terrainLoc)
 bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation, unsigned int _buildingIndex)
 {
 	XMFLOAT3 terrPos = GridSquareFromTerrain(_gridSquare);
+	XMFLOAT3 frontDoor;
 
 	for (unsigned int i = 0; i < buildings[_buildingIndex].occupiedSquares.size(); i++)
 	{
@@ -169,11 +171,6 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation,
 		int y = (int)round(tmp.r[3].m128_f32[1]);
 		if ((unsigned int)(x + (int)terrPos.x) >= terrainWidth - 1 || (unsigned int)(y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
 		gridCost[y + (int)terrPos.z][x + (int)terrPos.x] = 0;
-		
-		// Set front door
-		if(buildings[_buildingIndex].occupiedSquares[i].z == 2)
-		{
-		}
 
 		// Update tile map
 		if (buildings[_buildingIndex].occupiedSquares[i].z == 0)
@@ -181,6 +178,10 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation,
 			Tile * tile = tileMap->getTile(x + (int)terrPos.x, y + (int)terrPos.z);
 			pathSearch.ChangeTileCost(tile, 0);
 		}
+
+		// Set front door
+		if (buildings[_buildingIndex].occupiedSquares[i].z == 2)
+			frontDoor = XMFLOAT3(x + terrPos.x, 0, y + terrPos.z);
 
 		// Notifiy all villagers that a new building was placed
 		vector<GameObject*> villagers = GameObject::FindFromTag("Villager");
@@ -199,9 +200,29 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation,
 	nuCollider->GetComponent<Transform>()->TranslatePost(XMFLOAT3(terrPos.x, terrPos.y, terrPos.z));
 	nuCollider->AddComponent<Collider>()->SetMesh(buildings[_buildingIndex].collisionMesh);
 	buildings[_buildingIndex].colliders.push_back(nuCollider);
-	if(0 == _buildingIndex )
+	// Add house component
+	if (_buildingIndex >= 0 && _buildingIndex <= 2)
 	{
-		
+		nuCollider->AddComponent<House>();
+		nuCollider->GetComponent<House>()->SetFrontDoor(frontDoor);
+		if (0 == _buildingIndex) // Small house
+			nuCollider->GetComponent<House>()->MaxInhabitants(4);
+		if (1 == _buildingIndex) // Medium house
+			nuCollider->GetComponent<House>()->MaxInhabitants(7);
+		if (2 == _buildingIndex) // Big House
+			nuCollider->GetComponent<House>()->MaxInhabitants(10);
+
+		unsigned int maxInhab = nuCollider->GetComponent<House>()->MaxInhabitants();
+		for(unsigned int i = 0; i < maxInhab; ++i)
+		{
+			if(homeless.size() > 0)
+			{
+				homeless.front()->GetComponent<VillagerController>()->SetHouse(nuCollider);
+				nuCollider->GetComponent<House>()->AddInhabitant(homeless.front());
+				homeless.pop();
+			}
+			else break;
+		}
 	}
 
 	return true;
@@ -253,3 +274,9 @@ vector<XMFLOAT3> GameController::AStar(XMFLOAT3 _start, XMFLOAT3 _goal)
 	XMFLOAT3 goal = GridSquareFromTerrain(_goal);
 	return pathSearch.AStar(start, goal);
 }
+
+void GameController::AddHomeless(GameObject * _object)
+{
+	homeless.push(_object);
+}
+ 

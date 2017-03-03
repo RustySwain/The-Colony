@@ -237,6 +237,11 @@ Animation Animator::GetAnimation(int _index)
 	return animations[_index];
 }
 
+string Animator::CurrAnimation() const
+{
+	return interpolator->GetAnimation().GetName();
+}
+
 Animation Animator::GetDefaultAnimation()
 {
 	return animations[defaultAnimation];

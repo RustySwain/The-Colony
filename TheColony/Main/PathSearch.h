@@ -16,15 +16,15 @@ class PathSearch
 		Tile *tile;
 		SearchNode *parent;
 		vector<Edge*> edges;
-		bool visited;
-		float hCost = 0;
-		float givenCost = 0;
-		float finalCost = 0;
+		bool visited = false;
+		float hCost;
+		float givenCost;
+		float finalCost;
 	};
 	struct Edge
 	{
 		SearchNode* endpoint;
-		float cost = 0;
+		float cost;
 	};
 
 	TileMap *tileMap;

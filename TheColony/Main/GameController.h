@@ -3,6 +3,7 @@
 #include "DirectXMath.h"
 #include "Mesh.h"
 #include "PathSearch.h"
+#include <queue>
 
 using namespace DirectX;
 
@@ -29,6 +30,7 @@ class GameController : public Component
 	static bool LoadOccupiedSquares(const char* _path, vector<XMFLOAT3>& _vec);
 	PathSearch pathSearch;
 	TileMap *tileMap;
+	queue<GameObject*> homeless;
 
 public:
 	GameController();
@@ -42,6 +44,7 @@ public:
 
 	// Accessors
 	float GetHours() const { return hours / 3600; }
+	unsigned int TotalHomeless() const { return (unsigned int)homeless.size(); }
 
 	static XMFLOAT3 GridSquareFromTerrain(XMFLOAT3 _terrainLoc);
 	bool PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation, unsigned int _buildingIndex);
@@ -49,4 +52,5 @@ public:
 	void ClearPrediction();
 	static void FindJob(JOB_ENUM _job);
 	vector<XMFLOAT3> AStar(XMFLOAT3 _start, XMFLOAT3 _goal);
+	void AddHomeless(GameObject * _object);
 };

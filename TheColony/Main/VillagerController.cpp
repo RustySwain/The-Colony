@@ -6,6 +6,8 @@
 #include <Windows.h>
 #include "Animator.h"
 #include <random>
+#include "House.h"
+#include "Terrain.h"
 
 VillagerController::VillagerController()
 {
@@ -35,22 +37,25 @@ void VillagerController::Update()
 	{
 		if (age > 14)
 		{
+			if (GetAsyncKeyState('M') & 0x1)
+			{
+				if (house)
+					RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), house->GetComponent<House>()->GetFrontDoor());
+				else
+					Wander();
+			}
+
 			if (HOME == step)
 			{
-				if (GetAsyncKeyState('N') & 0x1)
-				{
-					float randX = float(rand() % 32 - 1);
-					float randZ = float(rand() % 32 - 1);
-					gameObject->GetComponent<Transform>()->SetLocalPosition(randX, 2.4f, randZ);
-				}
-
-				if (GetAsyncKeyState('M') & 0x1)
-					RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), XMFLOAT3(10, 2.4f, 25));
+				
 			}
 			else if (TRAVELING == step)
 			{
-				if (moveFlag)
+				if (moveFlag && pathToWalk.size() > 0)
 				{
+					if(gameObject->GetComponent<Animator>()->CurrAnimation() != "Run")
+						gameObject->GetComponent<Animator>()->Play("Run");
+
 					XMFLOAT3 newPosition = pathToWalk[pathCount];
 					gameObject->GetComponent<Transform>()->LookAt(newPosition);
 					XMFLOAT3 currPosition = gameObject->GetComponent<Transform>()->GetWorldPosition();
@@ -63,14 +68,18 @@ void VillagerController::Update()
 					gameObject->GetComponent<Transform>()->SetLocalPosition(newPosVec.m128_f32[0], newPosVec.m128_f32[1], newPosVec.m128_f32[2]);
 
 					float distToTile = sqrt(pow(pathToWalk[pathCount].x - currPosition.x, 2) + pow(pathToWalk[pathCount].z - currPosition.z, 2));
-					if (distToTile <= 0.05f && ++pathCount < pathToWalk.size())
+					if (distToTile < 0.1f)
 					{
-						XMFLOAT3 nextPosition = pathToWalk[pathCount];
-						gameObject->GetComponent<Transform>()->LookAt(nextPosition);
-						if(recalculatePath)
+						++pathCount;
+						if(pathCount < pathToWalk.size())
 						{
-							RequestPath(currPosition, XMFLOAT3(10, 2.4f, 25));
-							recalculatePath = false;
+							XMFLOAT3 nextPosition = pathToWalk[pathCount];
+							gameObject->GetComponent<Transform>()->LookAt(nextPosition);
+							if (recalculatePath)
+							{
+								RequestPath(currPosition, pathToWalk[pathToWalk.size() - 1]);
+								recalculatePath = false;
+							}
 						}
 					}
 
@@ -79,16 +88,7 @@ void VillagerController::Update()
 						gameObject->GetComponent<Animator>()->Play("Idle");
 						pathCount = 0;
 						pathToWalk.clear();
-
-						if (hours >= 0)
-						{
-							step = HOME;
-						}
-						else
-						{
-							step = WORKING;
-							isWorking = true;
-						}
+						step = HOME;
 					}
 				}
 			}
@@ -109,6 +109,9 @@ void VillagerController::Update()
 		{
 		}
 	}
+
+	if (!moveFlag)
+		moveFlag = true;
 }
 
 void VillagerController::OnDelete()
@@ -122,15 +125,21 @@ void VillagerController::RequestPath(XMFLOAT3 _from, XMFLOAT3 _to)
 	pathCount = 0;
 	pathToWalk = path;
 	step = TRAVELING;
-	moveFlag = true;
-	gameObject->GetComponent<Animator>()->Play("Run");
 }
 
 void VillagerController::Notify()
 {
 	if(TRAVELING == step)
-	{
 		recalculatePath = true;
+}
+
+void VillagerController::Wander()
+{
+	if(pathToWalk.size() == 0)
+	{
+		int randX = rand() % (GameObject::FindFromTag("Terrain")[0]->GetComponent<Terrain>()->GetWidth() - 4) + 2;
+		int randZ = rand() % (GameObject::FindFromTag("Terrain")[0]->GetComponent<Terrain>()->GetHeight() - 4) + 2;
+		RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), XMFLOAT3((float)randX, 2.4f, (float)randZ));
 	}
 }
 

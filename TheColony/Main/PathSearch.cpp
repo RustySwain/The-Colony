@@ -73,6 +73,16 @@ void PathSearch::initialize(TileMap * _tileMap)
 
 vector<XMFLOAT3> PathSearch::AStar(XMFLOAT3 _start, XMFLOAT3 _goal)
 {
+	// clear nodes
+	for each(pair<Tile*, SearchNode*> node in nodes)
+	{
+		node.second->parent = nullptr;
+		node.second->visited = false;
+	}
+
+	while (!priorityQueue.empty())
+		priorityQueue.pop();
+
 	vector<XMFLOAT3> completePath;
 	Tile* start = tileMap->getTile((int)_start.x, (int)_start.z);
 	Tile* goal = tileMap->getTile((int)_goal.x, (int)_goal.z);

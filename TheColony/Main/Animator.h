@@ -32,5 +32,6 @@ public:
 
 	// Accessors
 	Animation GetAnimation(int _index);
+	string CurrAnimation() const;
 	Animation GetDefaultAnimation();
 };
