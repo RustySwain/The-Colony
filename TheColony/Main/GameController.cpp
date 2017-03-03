@@ -173,7 +173,6 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation,
 		// Set front door
 		if(buildings[_buildingIndex].occupiedSquares[i].z == 2)
 		{
-			
 		}
 
 		// Update tile map
@@ -200,6 +199,10 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation,
 	nuCollider->GetComponent<Transform>()->TranslatePost(XMFLOAT3(terrPos.x, terrPos.y, terrPos.z));
 	nuCollider->AddComponent<Collider>()->SetMesh(buildings[_buildingIndex].collisionMesh);
 	buildings[_buildingIndex].colliders.push_back(nuCollider);
+	if(0 == _buildingIndex )
+	{
+		
+	}
 
 	return true;
 }

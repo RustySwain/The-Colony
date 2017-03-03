@@ -16,8 +16,11 @@
     <Filter Include="Scenes">
       <UniqueIdentifier>{97f86b49-1d8a-4ede-b56d-250e47641509}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Gameplay">
-      <UniqueIdentifier>{80fe17b2-f93c-46ad-a3ae-6546d08c1177}</UniqueIdentifier>
+    <Filter Include="Header Files\Buildings">
+      <UniqueIdentifier>{4ea88e68-7fbd-4243-b494-ebad61192939}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Buildings">
+      <UniqueIdentifier>{a3a3723a-4a96-446a-94bb-e0f7869b7e29}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +152,15 @@
     </ClCompile>
     <ClCompile Include="TerrainFollowing.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="House.cpp">
+      <Filter>Source Files\Buildings</Filter>
+    </ClCompile>
+    <ClCompile Include="Farmer.cpp">
+      <Filter>Source Files\Buildings</Filter>
+    </ClCompile>
+    <ClCompile Include="Storage.cpp">
+      <Filter>Source Files\Buildings</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -289,6 +301,18 @@
     </ClInclude>
     <ClInclude Include="TerrainFollowing.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildingABC.h">
+      <Filter>Header Files\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="House.h">
+      <Filter>Header Files\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="Farmer.h">
+      <Filter>Header Files\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="Storage.h">
+      <Filter>Header Files\Buildings</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

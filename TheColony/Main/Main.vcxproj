@@ -163,11 +163,13 @@
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="Farmer.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="GameController.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="House.cpp" />
     <ClCompile Include="Interpolator.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LoadingScreen.cpp" />
@@ -181,6 +183,7 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ProgressBar.cpp" />
     <ClCompile Include="Skybox.cpp" />
+    <ClCompile Include="Storage.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TerrainFollowing.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
@@ -201,6 +204,7 @@
     <ClInclude Include="AudioSource.h" />
     <ClInclude Include="BindPose.h" />
     <ClInclude Include="BoundingVolumeHeirarchy.h" />
+    <ClInclude Include="BuildingABC.h" />
     <ClInclude Include="BuildingPredictor.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Camera.h" />
@@ -209,11 +213,14 @@
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Defines.h" />
+    <ClInclude Include="Farmer.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="GameController.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="GameScene.h" />
+    <ClInclude Include="House.h" />
+    <ClInclude Include="Storage.h" />
     <ClInclude Include="TerrainFollowing.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Interpolator.h" />
