@@ -17,6 +17,7 @@ namespace BuildingCreator
 		private int mapSize = 50;
 		private int cellSize = 8;
 		private Int3 origin = new Int3();
+		private int mode = 0;
 
 		public Form1()
 		{
@@ -80,14 +81,19 @@ namespace BuildingCreator
 				cell.x += origin.x;
 				cell.y += origin.y;
 				cell.z += origin.z;
-				Rectangle rect = new Rectangle(cell.x * cellSize, cell.y * cellSize, cellSize, cellSize);
+				Rectangle rect = new Rectangle(cell.x * cellSize, panel1.Height - cell.y * cellSize, cellSize, cellSize);
 				Brush brush = Brushes.Red;
 				if (gridSpaces[i].z == 0)
 					brush = Brushes.Green;
 				else if (gridSpaces[i].z == 1)
 					brush = Brushes.Blue;
+				else if (gridSpaces[i].z == 2)
+					brush = Brushes.Yellow;
 				e.Graphics.FillRectangle(brush, rect);
 			}
+
+			// Draw origin
+			e.Graphics.FillRectangle(Brushes.Red, origin.x * cellSize, panel1.Height - origin.y * cellSize, cellSize, cellSize);
 
 			// Draw grid
 			for (int i = 1; i < mapSize; i++)
@@ -97,12 +103,118 @@ namespace BuildingCreator
 			}
 		}
 
-		private void radioButton1_CheckedChanged(object sender, EventArgs e)
+		private void radioButton_CheckedChanged(object sender, EventArgs e)
 		{
 			if (radioButton1.Checked)
+			{
 				label1.BackColor = radioButton1.BackColor;
-			else
+				mode = 0;
+			}
+			else if (radioButton2.Checked)
+			{
 				label1.BackColor = radioButton2.BackColor;
+				mode = 1;
+			}
+			else if (radioButton3.Checked)
+			{
+				label1.BackColor = radioButton3.BackColor;
+				mode = 2;
+			}
+			else
+			{
+				label1.BackColor = radioButton4.BackColor;
+				mode = 3;
+			}
+		}
+
+		private void panel1_MouseDown(object sender, MouseEventArgs e)
+		{
+			Int3 mousePos = new Int3();
+			mousePos.x = e.X;
+			mousePos.y = panel1.Height - (e.Y - cellSize);
+
+			Int3 gridCoord = new Int3();
+			gridCoord.x = (mousePos.x / cellSize) - origin.x;
+			gridCoord.y = (mousePos.y / cellSize) - origin.y;
+
+			int existingIndex = -1;
+			for (int i = 0; i < gridSpaces.Count; i++)
+			{
+				if (gridSpaces[i].x == gridCoord.x && gridSpaces[i].y == gridCoord.y)
+				{
+					existingIndex = i;
+					break;
+				}
+			}
+
+			switch (mode)
+			{
+				case 0:
+					if (existingIndex == -1)
+					{
+						Int3 nu = new Int3();
+						nu.x = gridCoord.x;
+						nu.y = gridCoord.y;
+						nu.z = 0;
+						gridSpaces.Add(nu);
+					}
+					else
+					{
+						Int3 nu = new Int3();
+						nu.x = gridCoord.x;
+						nu.y = gridCoord.y;
+						nu.z = 0;
+						gridSpaces[existingIndex] = nu;
+					}
+					break;
+
+				case 1:
+					if (existingIndex == -1)
+					{
+						Int3 nu = new Int3();
+						nu.x = gridCoord.x;
+						nu.y = gridCoord.y;
+						nu.z = 1;
+						gridSpaces.Add(nu);
+					}
+					else
+					{
+						Int3 nu = new Int3();
+						nu.x = gridCoord.x;
+						nu.y = gridCoord.y;
+						nu.z = 1;
+						gridSpaces[existingIndex] = nu;
+					}
+					break;
+
+				case 2:
+					if (existingIndex == -1)
+					{
+						Int3 nu = new Int3();
+						nu.x = gridCoord.x;
+						nu.y = gridCoord.y;
+						nu.z = 2;
+						gridSpaces.Add(nu);
+					}
+					else
+					{
+						Int3 nu = new Int3();
+						nu.x = gridCoord.x;
+						nu.y = gridCoord.y;
+						nu.z = 2;
+						gridSpaces[existingIndex] = nu;
+					}
+					break;
+
+				case 3:
+					if (existingIndex != -1)
+					{
+						gridSpaces.RemoveAt(existingIndex);
+					}
+					break;
+			}
+
+			panel1.Invalidate();
 		}
 	}
 }

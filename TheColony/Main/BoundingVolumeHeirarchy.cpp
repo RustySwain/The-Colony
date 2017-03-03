@@ -1,4 +1,5 @@
 #include "BoundingVolumeHeirarchy.h"
+#include <algorithm>
 
 void BoundingVolumeHeirarchy::Node::Analyze(TriangleSet _triSet, unsigned int& _count, unsigned int _minimumTris)
 {
@@ -67,12 +68,7 @@ void BoundingVolumeHeirarchy::Node::Analyze(TriangleSet _triSet, unsigned int& _
 
 bool BoundingVolumeHeirarchy::Node::RayCast(XMFLOAT3& _outPos, float& _outDistance, XMFLOAT3 _rayStart, XMFLOAT3 _rayNormal)
 {
-	if (_rayStart.x < bounds.min.x && Dot(_rayNormal, XMFLOAT3(1, 0, 0)) < 0) return false;
-	if (_rayStart.y < bounds.min.y && Dot(_rayNormal, XMFLOAT3(0, 1, 0)) < 0) return false;
-	if (_rayStart.z < bounds.min.z && Dot(_rayNormal, XMFLOAT3(0, 0, 1)) < 0) return false;
-	if (_rayStart.x > bounds.max.x && Dot(_rayNormal, XMFLOAT3(1, 0, 0)) > 0) return false;
-	if (_rayStart.y > bounds.max.y && Dot(_rayNormal, XMFLOAT3(0, 1, 0)) > 0) return false;
-	if (_rayStart.z > bounds.max.z && Dot(_rayNormal, XMFLOAT3(0, 0, 1)) > 0) return false;
+	if (!RayToAABB(bounds, _rayStart, _rayNormal)) return false;
 
 	bool hasChildren = left != nullptr && right != nullptr;
 	if (hasChildren)
@@ -171,16 +167,26 @@ AABB BoundingVolumeHeirarchy::MakeAABBFromVerts(TriangleSet _triSet)
 	AABB ret;
 	ret.min = XMFLOAT3(FLT_MAX, FLT_MAX, FLT_MAX);
 	ret.max = XMFLOAT3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
-	auto min = [](float _a, float _b) -> float { return _a < _b ? _a : _b; };
-	auto max = [](float _a, float _b) -> float { return _a > _b ? _a : _b; };
 	for (unsigned int i = 0; i < _triSet.triIndices.size(); i++)
 	{
-		ret.min.x = min(ret.min.x, _triSet.tris[_triSet.triIndices[i]].centroid.m128_f32[0]);
-		ret.min.y = min(ret.min.y, _triSet.tris[_triSet.triIndices[i]].centroid.m128_f32[1]);
-		ret.min.z = min(ret.min.z, _triSet.tris[_triSet.triIndices[i]].centroid.m128_f32[2]);
-		ret.max.x = max(ret.max.x, _triSet.tris[_triSet.triIndices[i]].centroid.m128_f32[0]);
-		ret.max.y = max(ret.max.y, _triSet.tris[_triSet.triIndices[i]].centroid.m128_f32[1]);
-		ret.max.z = max(ret.max.z, _triSet.tris[_triSet.triIndices[i]].centroid.m128_f32[2]);
+		ret.min.x = min(ret.min.x, _triSet.tris[_triSet.triIndices[i]].a.position.x);
+		ret.min.y = min(ret.min.y, _triSet.tris[_triSet.triIndices[i]].a.position.y);
+		ret.min.z = min(ret.min.z, _triSet.tris[_triSet.triIndices[i]].a.position.z);
+		ret.max.x = max(ret.max.x, _triSet.tris[_triSet.triIndices[i]].a.position.x);
+		ret.max.y = max(ret.max.y, _triSet.tris[_triSet.triIndices[i]].a.position.y);
+		ret.max.z = max(ret.max.z, _triSet.tris[_triSet.triIndices[i]].a.position.z);
+		ret.min.x = min(ret.min.x, _triSet.tris[_triSet.triIndices[i]].b.position.x);
+		ret.min.y = min(ret.min.y, _triSet.tris[_triSet.triIndices[i]].b.position.y);
+		ret.min.z = min(ret.min.z, _triSet.tris[_triSet.triIndices[i]].b.position.z);
+		ret.max.x = max(ret.max.x, _triSet.tris[_triSet.triIndices[i]].b.position.x);
+		ret.max.y = max(ret.max.y, _triSet.tris[_triSet.triIndices[i]].b.position.y);
+		ret.max.z = max(ret.max.z, _triSet.tris[_triSet.triIndices[i]].b.position.z);
+		ret.min.x = min(ret.min.x, _triSet.tris[_triSet.triIndices[i]].c.position.x);
+		ret.min.y = min(ret.min.y, _triSet.tris[_triSet.triIndices[i]].c.position.y);
+		ret.min.z = min(ret.min.z, _triSet.tris[_triSet.triIndices[i]].c.position.z);
+		ret.max.x = max(ret.max.x, _triSet.tris[_triSet.triIndices[i]].c.position.x);
+		ret.max.y = max(ret.max.y, _triSet.tris[_triSet.triIndices[i]].c.position.y);
+		ret.max.z = max(ret.max.z, _triSet.tris[_triSet.triIndices[i]].c.position.z);
 	}
 	return ret;
 }
@@ -253,6 +259,37 @@ TriangleSet BoundingVolumeHeirarchy::CreateTriangleSet(Mesh* _mesh)
 	for (unsigned int i = 0; i < ret.tris.size(); i++)
 		ret.triIndices.push_back(i);
 	return ret;
+}
+
+bool BoundingVolumeHeirarchy::RayToAABB(AABB _aabb, XMFLOAT3 _rayStart, XMFLOAT3 _rayNormal)
+{
+	float tmin = -FLT_MAX, tmax = FLT_MAX;
+
+	if (_rayNormal.x != 0.0f)
+	{
+		float tx1 = (_aabb.min.x - _rayStart.x) / _rayNormal.x;
+		float tx2 = (_aabb.max.x - _rayStart.x) / _rayNormal.x;
+		tmin = max(tmin, min(tx1, tx2));
+		tmax = min(tmax, max(tx1, tx2));
+	}
+
+	if (_rayNormal.y != 0.0f)
+	{
+		float ty1 = (_aabb.min.y - _rayStart.y) / _rayNormal.y;
+		float ty2 = (_aabb.max.y - _rayStart.y) / _rayNormal.y;
+		tmin = max(tmin, min(ty1, ty2));
+		tmax = min(tmax, max(ty1, ty2));
+	}
+
+	if (_rayNormal.z != 0.0f)
+	{
+		float tz1 = (_aabb.min.z - _rayStart.z) / _rayNormal.z;
+		float tz2 = (_aabb.max.z - _rayStart.z) / _rayNormal.z;
+		tmin = max(tmin, min(tz1, tz2));
+		tmax = min(tmax, max(tz1, tz2));
+	}
+
+	return tmin <= tmax;
 }
 
 BoundingVolumeHeirarchy::BoundingVolumeHeirarchy() : count(0)
