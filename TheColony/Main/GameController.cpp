@@ -40,13 +40,22 @@ GameController::~GameController()
 
 void GameController::Start()
 {
-	smallHouse.instances.Start();
-	smallHouse.instances.AddComponent<Transform>();
-	smallHouse.instances.AddComponent<MeshRenderer>()->LoadFromObj("../Assets/Buildings/SmallHousePlaceHolder.obj");
-	smallHouse.instances.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/bark.dds");
-	smallHouse.collisionMesh = new Mesh();
-	smallHouse.collisionMesh->LoadFromObj("../Assets/Buildings/SmallHouseCollision.obj");
-	LoadOccupiedSquares("../Assets/Buildings/SmallHouse.building", smallHouse.occupiedSquares);
+	buildings.push_back(Building());
+	buildings[0].instances.Start();
+	buildings[0].instances.AddComponent<Transform>();
+	buildings[0].instances.AddComponent<MeshRenderer>()->LoadFromObj("../Assets/Buildings/SmallHousePlaceHolder.obj");
+	buildings[0].instances.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/bark.dds");
+	buildings[0].collisionMesh = new Mesh();
+	buildings[0].collisionMesh->LoadFromObj("../Assets/Buildings/SmallHouseCollision.obj");
+	LoadOccupiedSquares("../Assets/Buildings/SmallHouse.building", buildings[0].occupiedSquares);
+	buildings.push_back(Building());
+	buildings[1].instances.Start();
+	buildings[1].instances.AddComponent<Transform>();
+	buildings[1].instances.AddComponent<MeshRenderer>()->LoadFromObj("../Assets/Buildings/MedHousePlaceHolder.obj");
+	buildings[1].instances.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/bark.dds");
+	buildings[1].collisionMesh = new Mesh();
+	buildings[1].collisionMesh->LoadFromObj("../Assets/Buildings/MedHouseCollision.obj");
+	LoadOccupiedSquares("../Assets/Buildings/MedHouse.building", buildings[1].occupiedSquares);
 
 	buildingPredictor.Start();
 	buildingPredictor.AddComponent<Transform>();
@@ -61,9 +70,9 @@ void GameController::Start()
 	tileMap = new TileMap();
 	tileMap->createTileArray(width, height);
 
-	for(unsigned int x = 0; x < width; ++x)
+	for (unsigned int x = 0; x < width; ++x)
 	{
-		for(unsigned int z = 0; z < height; ++z)
+		for (unsigned int z = 0; z < height; ++z)
 		{
 			tileMap->addTile(x, z, 1);
 		}
@@ -78,14 +87,20 @@ void GameController::Update()
 	if (hours >= 86400)
 		hours = 0;
 
-	smallHouse.instances.Update();
-	for (unsigned int i = 0; i < smallHouse.colliders.size(); i++)
-		smallHouse.colliders[i]->Update();
+	for (unsigned int i = 0; i < buildings.size(); i++)
+	{
+		buildings[i].instances.Update();
+		for (unsigned int j = 0; j < buildings[i].colliders.size(); j++)
+		{
+			buildings[i].colliders[j]->Update();
+		}
+	}
 	static bool updated = false;
 	if (!updated)
 	{
 		updated = true;
-		smallHouse.instances.GetComponent<MeshRenderer>()->RemoveInstance(-1);
+		for (unsigned int i = 0; i < buildings.size(); i++)
+			buildings[i].instances.GetComponent<MeshRenderer>()->RemoveInstance(-1);
 		GameObject* terrain = GameObject::FindFromTag("Terrain")[0];
 		terrainWidth = terrain->GetComponent<Terrain>()->GetWidth();
 		terrainHeight = terrain->GetComponent<Terrain>()->GetHeight();
@@ -105,13 +120,16 @@ void GameController::Update()
 
 void GameController::OnDelete()
 {
-	smallHouse.instances.OnDelete();
-	for (unsigned int i = 0; i < smallHouse.colliders.size(); i++)
+	for (unsigned int i = 0; i < buildings.size(); i++)
 	{
-		smallHouse.colliders[i]->OnDelete();
-		delete smallHouse.colliders[i];
+		buildings[i].instances.OnDelete();
+		for (unsigned int j = 0; j < buildings[i].colliders.size(); j++)
+		{
+			buildings[i].colliders[j]->OnDelete();
+			delete buildings[i].colliders[j];
+		}
+		delete buildings[i].collisionMesh;
 	}
-	delete smallHouse.collisionMesh;
 
 	for (unsigned int i = 0; i < terrainHeight; i++)
 		delete[] gridCost[i];
@@ -128,29 +146,35 @@ XMFLOAT3 GameController::GridSquareFromTerrain(XMFLOAT3 _terrainLoc)
 	return XMFLOAT3(pos.x, pos.y, pos.z);
 }
 
-bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation)
+bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation, unsigned int _buildingIndex)
 {
 	XMFLOAT3 terrPos = GridSquareFromTerrain(_gridSquare);
 
-	for (unsigned int i = 0; i < smallHouse.occupiedSquares.size(); i++)
+	for (unsigned int i = 0; i < buildings[_buildingIndex].occupiedSquares.size(); i++)
 	{
-		XMMATRIX tmp = XMMatrixTranslation(smallHouse.occupiedSquares[i].x, smallHouse.occupiedSquares[i].y, 0) * XMMatrixRotationZ(_rotation * 90.0f * DEG2RAD);
+		XMMATRIX tmp = XMMatrixTranslation(buildings[_buildingIndex].occupiedSquares[i].x, buildings[_buildingIndex].occupiedSquares[i].y, 0) * XMMatrixRotationZ(_rotation * 90.0f * DEG2RAD);
 		int x = (int)round(tmp.r[3].m128_f32[0]);
 		int y = (int)round(tmp.r[3].m128_f32[1]);
 		if ((unsigned int)(x + (int)terrPos.x) >= terrainWidth - 1 || (unsigned int)(y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
 		if (gridCost[y + (int)terrPos.z][x + (int)terrPos.x] != 1) return false;
 	}
 
-	for (unsigned int i = 0; i < smallHouse.occupiedSquares.size(); i++)
+	for (unsigned int i = 0; i < buildings[_buildingIndex].occupiedSquares.size(); i++)
 	{
-		XMMATRIX tmp = XMMatrixTranslation(smallHouse.occupiedSquares[i].x, smallHouse.occupiedSquares[i].y, 0) * XMMatrixRotationZ(_rotation * 90.0f * DEG2RAD);
+		XMMATRIX tmp = XMMatrixTranslation(buildings[_buildingIndex].occupiedSquares[i].x, buildings[_buildingIndex].occupiedSquares[i].y, 0) * XMMatrixRotationZ(_rotation * 90.0f * DEG2RAD);
 		int x = (int)round(tmp.r[3].m128_f32[0]);
 		int y = (int)round(tmp.r[3].m128_f32[1]);
 		if ((unsigned int)(x + (int)terrPos.x) >= terrainWidth - 1 || (unsigned int)(y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
 		gridCost[y + (int)terrPos.z][x + (int)terrPos.x] = 0;
+		
+		// Set front door
+		if(buildings[_buildingIndex].occupiedSquares[i].z == 2)
+		{
+			
+		}
 
 		// Update tile map
-		if (smallHouse.occupiedSquares[i].z == 0)
+		if (buildings[_buildingIndex].occupiedSquares[i].z == 0)
 		{
 			Tile * tile = tileMap->getTile(x + (int)terrPos.x, y + (int)terrPos.z);
 			pathSearch.ChangeTileCost(tile, 0);
@@ -158,12 +182,12 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation)
 
 		// Notifiy all villagers that a new building was placed
 		vector<GameObject*> villagers = GameObject::FindFromTag("Villager");
-		for(int v = 0; v < (int)villagers.size(); ++v)
+		for (int v = 0; v < (int)villagers.size(); ++v)
 			villagers[v]->GetComponent<VillagerController>()->Notify();
 	}
 
 	XMMATRIX translation = XMMatrixRotationY(_rotation * 90.0f * -DEG2RAD) * XMMatrixTranslation(0.5f, 0, 0.5f) * XMMatrixTranslation(terrPos.x, terrPos.y, terrPos.z);
-	smallHouse.instances.GetComponent<MeshRenderer>()->AddInstance(translation, (int)_gridSquare.x * GameObject::FindFromTag("Terrain")[0]->GetComponent<Terrain>()->GetHeight() + (int)_gridSquare.z);
+	buildings[_buildingIndex].instances.GetComponent<MeshRenderer>()->AddInstance(translation, (int)_gridSquare.x * GameObject::FindFromTag("Terrain")[0]->GetComponent<Terrain>()->GetHeight() + (int)_gridSquare.z);
 
 	GameObject* nuCollider = new GameObject();
 	nuCollider->SetTag("House");
@@ -171,19 +195,19 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation)
 	nuCollider->AddComponent<Transform>()->RotateYPre(_rotation * -90.0f);
 	nuCollider->GetComponent<Transform>()->TranslatePost(XMFLOAT3(0.5f, 0, 0.5f));
 	nuCollider->GetComponent<Transform>()->TranslatePost(XMFLOAT3(terrPos.x, terrPos.y, terrPos.z));
-	nuCollider->AddComponent<Collider>()->SetMesh(smallHouse.collisionMesh);
-	smallHouse.colliders.push_back(nuCollider);
+	nuCollider->AddComponent<Collider>()->SetMesh(buildings[_buildingIndex].collisionMesh);
+	buildings[_buildingIndex].colliders.push_back(nuCollider);
 
 	return true;
 }
 
-bool GameController::Predict(XMFLOAT3 _gridSquare, unsigned int _rotation)
+bool GameController::Predict(XMFLOAT3 _gridSquare, unsigned int _rotation, unsigned int _buildingIndex)
 {
 	XMFLOAT3 terrPos = GridSquareFromTerrain(_gridSquare);
 
-	for (unsigned int i = 0; i < smallHouse.occupiedSquares.size(); i++)
+	for (unsigned int i = 0; i < buildings[_buildingIndex].occupiedSquares.size(); i++)
 	{
-		XMMATRIX tmp = XMMatrixTranslation(smallHouse.occupiedSquares[i].x, smallHouse.occupiedSquares[i].y, 0) * XMMatrixRotationZ(_rotation * 90.0f * DEG2RAD);
+		XMMATRIX tmp = XMMatrixTranslation(buildings[_buildingIndex].occupiedSquares[i].x, buildings[_buildingIndex].occupiedSquares[i].y, 0) * XMMatrixRotationZ(_rotation * 90.0f * DEG2RAD);
 		int x = (int)round(tmp.r[3].m128_f32[0]);
 		int y = (int)round(tmp.r[3].m128_f32[1]);
 		if ((unsigned int)(x + (int)terrPos.x) >= terrainWidth - 1 || (unsigned int)(y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
@@ -192,17 +216,17 @@ bool GameController::Predict(XMFLOAT3 _gridSquare, unsigned int _rotation)
 			buildingPredictor.GetComponent<BuildingPredictor>()->AddColor(squarePos, XMFLOAT4(1, 0, 0, 0.5f));
 	}
 
-	for (unsigned int i = 0; i < smallHouse.occupiedSquares.size(); i++)
+	for (unsigned int i = 0; i < buildings[_buildingIndex].occupiedSquares.size(); i++)
 	{
-		XMMATRIX tmp = XMMatrixTranslation(smallHouse.occupiedSquares[i].x, smallHouse.occupiedSquares[i].y, 0) * XMMatrixRotationZ(_rotation * 90.0f * DEG2RAD);
+		XMMATRIX tmp = XMMatrixTranslation(buildings[_buildingIndex].occupiedSquares[i].x, buildings[_buildingIndex].occupiedSquares[i].y, 0) * XMMatrixRotationZ(_rotation * 90.0f * DEG2RAD);
 		int x = (int)round(tmp.r[3].m128_f32[0]);
 		int y = (int)round(tmp.r[3].m128_f32[1]);
 		XMFLOAT3 squarePos((float)x + terrPos.x, terrPos.y, (float)y + terrPos.z);
-		if(smallHouse.occupiedSquares[i].z == 0)
+		if (buildings[_buildingIndex].occupiedSquares[i].z == 0)
 			buildingPredictor.GetComponent<BuildingPredictor>()->AddColor(squarePos, XMFLOAT4(0, 1, 0, 0.5f));
-		else if(smallHouse.occupiedSquares[i].z == 1)
+		else if(buildings[_buildingIndex].occupiedSquares[i].z == 1)
 			buildingPredictor.GetComponent<BuildingPredictor>()->AddColor(squarePos, XMFLOAT4(0, 0.807f, 0.819f, 0.5f));
-		else if (smallHouse.occupiedSquares[i].z == 2)
+		else if (buildings[_buildingIndex].occupiedSquares[i].z == 2)
 			buildingPredictor.GetComponent<BuildingPredictor>()->AddColor(squarePos, XMFLOAT4(1, 1, 0, 0.5f));
 	}
 	return true;

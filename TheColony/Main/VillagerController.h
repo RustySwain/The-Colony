@@ -5,6 +5,7 @@ class VillagerController : public Component
 {
 	const unsigned int id = 24;
 
+	enum NOTIFICATION { UPDATE_PATH = 0, UPDATE_HOUSE };
 	enum STEP { HOME = 0, TRAVELING, WORKING, SCHOOL, WAITING };
 
 	JOB_ENUM job = No_Job;
