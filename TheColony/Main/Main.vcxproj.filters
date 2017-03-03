@@ -175,7 +175,7 @@
       <Filter>Source Files\Jobs</Filter>
     </ClCompile>
     <ClCompile Include="Builder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Jobs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -336,7 +336,7 @@
       <Filter>Header Files\Jobs</Filter>
     </ClInclude>
     <ClInclude Include="Builder.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Jobs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
