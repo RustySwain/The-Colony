@@ -1,13 +1,13 @@
 #pragma once
 #include "BuildingABC.h"
 
-class Farmer : public BuildingABC
+class Farm : public BuildingABC
 {
 	JOB_ENUM job = No_Job;
 
 public:
-	Farmer(){}
-	~Farmer(){}
+	Farm() {}
+	~Farm() {}
 
 	// Component
 	void Start() override;

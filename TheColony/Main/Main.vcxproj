@@ -163,11 +163,12 @@
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="Debug.cpp" />
-    <ClCompile Include="Farmer.cpp" />
+    <ClCompile Include="Farm.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="GameController.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
+    <ClCompile Include="GameSaver.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="House.cpp" />
     <ClCompile Include="Interpolator.cpp" />
@@ -213,11 +214,12 @@
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Defines.h" />
-    <ClInclude Include="Farmer.h" />
+    <ClInclude Include="Farm.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="GameController.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectManager.h" />
+    <ClInclude Include="GameSaver.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="House.h" />
     <ClInclude Include="Storage.h" />

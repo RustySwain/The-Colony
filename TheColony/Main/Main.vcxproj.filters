@@ -156,10 +156,13 @@
     <ClCompile Include="House.cpp">
       <Filter>Source Files\Buildings</Filter>
     </ClCompile>
-    <ClCompile Include="Farmer.cpp">
+    <ClCompile Include="Storage.cpp">
       <Filter>Source Files\Buildings</Filter>
     </ClCompile>
-    <ClCompile Include="Storage.cpp">
+    <ClCompile Include="GameSaver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Farm.cpp">
       <Filter>Source Files\Buildings</Filter>
     </ClCompile>
   </ItemGroup>
@@ -308,10 +311,13 @@
     <ClInclude Include="House.h">
       <Filter>Header Files\Buildings</Filter>
     </ClInclude>
-    <ClInclude Include="Farmer.h">
+    <ClInclude Include="Storage.h">
       <Filter>Header Files\Buildings</Filter>
     </ClInclude>
-    <ClInclude Include="Storage.h">
+    <ClInclude Include="GameSaver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Farm.h">
       <Filter>Header Files\Buildings</Filter>
     </ClInclude>
   </ItemGroup>
