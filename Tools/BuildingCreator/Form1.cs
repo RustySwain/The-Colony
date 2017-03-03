@@ -81,7 +81,7 @@ namespace BuildingCreator
 				cell.x += origin.x;
 				cell.y += origin.y;
 				cell.z += origin.z;
-				Rectangle rect = new Rectangle(cell.x * cellSize, cell.y * cellSize, cellSize, cellSize);
+				Rectangle rect = new Rectangle(cell.x * cellSize, panel1.Height - cell.y * cellSize, cellSize, cellSize);
 				Brush brush = Brushes.Red;
 				if (gridSpaces[i].z == 0)
 					brush = Brushes.Green;
@@ -93,7 +93,7 @@ namespace BuildingCreator
 			}
 
 			// Draw origin
-			e.Graphics.FillRectangle(Brushes.Red, origin.x * cellSize, origin.y * cellSize, cellSize, cellSize);
+			e.Graphics.FillRectangle(Brushes.Red, origin.x * cellSize, panel1.Height - origin.y * cellSize, cellSize, cellSize);
 
 			// Draw grid
 			for (int i = 1; i < mapSize; i++)
@@ -131,11 +131,11 @@ namespace BuildingCreator
 		{
 			Int3 mousePos = new Int3();
 			mousePos.x = e.X;
-			mousePos.y = e.Y;
+			mousePos.y = panel1.Height - (e.Y - cellSize);
 
 			Int3 gridCoord = new Int3();
-			gridCoord.x = mousePos.x / cellSize;
-			gridCoord.y = mousePos.y / cellSize;
+			gridCoord.x = (mousePos.x / cellSize) - origin.x;
+			gridCoord.y = (mousePos.y / cellSize) - origin.y;
 
 			int existingIndex = -1;
 			for (int i = 0; i < gridSpaces.Count; i++)
@@ -153,16 +153,16 @@ namespace BuildingCreator
 					if (existingIndex == -1)
 					{
 						Int3 nu = new Int3();
-						nu.x = gridCoord.x - origin.x;
-						nu.y = gridCoord.y - origin.y;
+						nu.x = gridCoord.x;
+						nu.y = gridCoord.y;
 						nu.z = 0;
 						gridSpaces.Add(nu);
 					}
 					else
 					{
 						Int3 nu = new Int3();
-						nu.x = gridCoord.x - origin.x;
-						nu.y = gridCoord.y - origin.y;
+						nu.x = gridCoord.x;
+						nu.y = gridCoord.y;
 						nu.z = 0;
 						gridSpaces[existingIndex] = nu;
 					}
@@ -172,16 +172,16 @@ namespace BuildingCreator
 					if (existingIndex == -1)
 					{
 						Int3 nu = new Int3();
-						nu.x = gridCoord.x - origin.x;
-						nu.y = gridCoord.y - origin.y;
+						nu.x = gridCoord.x;
+						nu.y = gridCoord.y;
 						nu.z = 1;
 						gridSpaces.Add(nu);
 					}
 					else
 					{
 						Int3 nu = new Int3();
-						nu.x = gridCoord.x - origin.x;
-						nu.y = gridCoord.y - origin.y;
+						nu.x = gridCoord.x;
+						nu.y = gridCoord.y;
 						nu.z = 1;
 						gridSpaces[existingIndex] = nu;
 					}
@@ -191,16 +191,16 @@ namespace BuildingCreator
 					if (existingIndex == -1)
 					{
 						Int3 nu = new Int3();
-						nu.x = gridCoord.x - origin.x;
-						nu.y = gridCoord.y - origin.y;
+						nu.x = gridCoord.x;
+						nu.y = gridCoord.y;
 						nu.z = 2;
 						gridSpaces.Add(nu);
 					}
 					else
 					{
 						Int3 nu = new Int3();
-						nu.x = gridCoord.x - origin.x;
-						nu.y = gridCoord.y - origin.y;
+						nu.x = gridCoord.x;
+						nu.y = gridCoord.y;
 						nu.z = 2;
 						gridSpaces[existingIndex] = nu;
 					}
