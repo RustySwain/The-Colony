@@ -58,6 +58,8 @@ void Builder::Update()
 		}
 	}
 
+	// TODO: If my job site needs more resources, go get them
+
 	// If I need to travel to my job, do it
 	XMFLOAT3 myPosition = gameObject->GetComponent<Transform>()->GetWorldPosition();
 	XMFLOAT3 jobPosition = currentTask->job->GetComponent<Transform>()->GetWorldPosition();
