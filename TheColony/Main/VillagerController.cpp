@@ -8,14 +8,9 @@
 #include <random>
 #include "House.h"
 #include "Terrain.h"
+#include "Farm.h"
 
-VillagerController::VillagerController()
-{
-}
-
-VillagerController::~VillagerController()
-{
-}
+#define MAX_INVENTORY 200
 
 void VillagerController::Start()
 {
@@ -23,17 +18,8 @@ void VillagerController::Start()
 
 void VillagerController::Update()
 {
-	if(house == nullptr)
-	{
-		vector<GameObject*> houses = GameObject::FindFromTag("House");
-		if (houses.size() > 0)
-		{
-			house = houses[0];
-		}
-	}
-
-	float hours = GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->GetHours();
-	if (hours >= 0)
+	int hours = GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->GetGameTime().hours;
+	if (hours >= 6 && hours <= 18)
 	{
 		if (age > 14)
 		{
@@ -47,49 +33,18 @@ void VillagerController::Update()
 
 			if (HOME == step)
 			{
-				
+				RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), FindJob()->GetComponent<Farm>()->GetFrontDoor());
 			}
 			else if (TRAVELING == step)
 			{
-				if (moveFlag && pathToWalk.size() > 0)
+				Move();
+
+				if (pathCount == pathToWalk.size())
 				{
-					if(gameObject->GetComponent<Animator>()->CurrAnimation() != "Run")
-						gameObject->GetComponent<Animator>()->Play("Run");
-
-					XMFLOAT3 newPosition = pathToWalk[pathCount];
-					gameObject->GetComponent<Transform>()->LookAt(newPosition);
-					XMFLOAT3 currPosition = gameObject->GetComponent<Transform>()->GetWorldPosition();
-					XMVECTOR newPosVec = XMVectorSet(newPosition.x, newPosition.y, newPosition.z, 1);
-					XMVECTOR currPosVec = XMVectorSet(currPosition.x, currPosition.y, currPosition.z, 1);
-					newPosVec -= currPosVec;
-					newPosVec = XMVector3Normalize(newPosVec);
-					newPosVec *= Time::Delta() * speed;
-					newPosVec += currPosVec;
-					gameObject->GetComponent<Transform>()->SetLocalPosition(newPosVec.m128_f32[0], newPosVec.m128_f32[1], newPosVec.m128_f32[2]);
-
-					float distToTile = sqrt(pow(pathToWalk[pathCount].x - currPosition.x, 2) + pow(pathToWalk[pathCount].z - currPosition.z, 2));
-					if (distToTile < 0.1f)
-					{
-						++pathCount;
-						if(pathCount < pathToWalk.size())
-						{
-							XMFLOAT3 nextPosition = pathToWalk[pathCount];
-							gameObject->GetComponent<Transform>()->LookAt(nextPosition);
-							if (recalculatePath)
-							{
-								RequestPath(currPosition, pathToWalk[pathToWalk.size() - 1]);
-								recalculatePath = false;
-							}
-						}
-					}
-
-					if (pathCount == pathToWalk.size())
-					{
-						gameObject->GetComponent<Animator>()->Play("Idle");
-						pathCount = 0;
-						pathToWalk.clear();
-						step = HOME;
-					}
+					gameObject->GetComponent<Animator>()->Play("Idle");
+					pathCount = 0;
+					pathToWalk.clear();
+					step = HOME;
 				}
 			}
 			else if (WORKING == step)
@@ -97,17 +52,23 @@ void VillagerController::Update()
 				if (isWorking)
 				{
 					// TODO: do job
-					if ((int)inventory.size() == 200)
+					if ((int)inventory.size() == MAX_INVENTORY)
 					{
 					}
 				}
 				else
-					RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), house->GetComponent<Transform>()->GetWorldPosition());
+					RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), house->GetComponent<House>()->GetFrontDoor());
 			}
 		}
 		else
 		{
+			
 		}
+	}
+	else
+	{
+		Wander();
+		Move();
 	}
 
 	if (!moveFlag)
@@ -146,4 +107,40 @@ void VillagerController::Wander()
 GameObject * VillagerController::FindJob()
 {
 	return nullptr;
+}
+
+void VillagerController::Move()
+{
+	if (moveFlag && pathToWalk.size() > 0)
+	{
+		if (gameObject->GetComponent<Animator>()->CurrAnimation() != "Run")
+			gameObject->GetComponent<Animator>()->Play("Run");
+
+		XMFLOAT3 newPosition = pathToWalk[pathCount];
+		gameObject->GetComponent<Transform>()->LookAt(newPosition);
+		XMFLOAT3 currPosition = gameObject->GetComponent<Transform>()->GetWorldPosition();
+		XMVECTOR newPosVec = XMVectorSet(newPosition.x, newPosition.y, newPosition.z, 1);
+		XMVECTOR currPosVec = XMVectorSet(currPosition.x, currPosition.y, currPosition.z, 1);
+		newPosVec -= currPosVec;
+		newPosVec = XMVector3Normalize(newPosVec);
+		newPosVec *= Time::Delta() * speed;
+		newPosVec += currPosVec;
+		gameObject->GetComponent<Transform>()->SetLocalPosition(newPosVec.m128_f32[0], newPosVec.m128_f32[1], newPosVec.m128_f32[2]);
+
+		float distToTile = sqrt(pow(pathToWalk[pathCount].x - currPosition.x, 2) + pow(pathToWalk[pathCount].z - currPosition.z, 2));
+		if (distToTile < 0.1f)
+		{
+			++pathCount;
+			if (pathCount < pathToWalk.size())
+			{
+				XMFLOAT3 nextPosition = pathToWalk[pathCount];
+				gameObject->GetComponent<Transform>()->LookAt(nextPosition);
+				if (recalculatePath)
+				{
+					RequestPath(currPosition, pathToWalk[pathToWalk.size() - 1]);
+					recalculatePath = false;
+				}
+			}
+		}
+	}
 }

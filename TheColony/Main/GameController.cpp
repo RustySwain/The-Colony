@@ -11,6 +11,7 @@
 #include "Defines.h"
 #include "VillagerController.h"
 #include "House.h"
+#include "TextRenderer.h"
 
 bool GameController::LoadOccupiedSquares(const char* _path, vector<XMFLOAT3>& _vec)
 {
@@ -65,6 +66,14 @@ void GameController::Start()
 	buildingPredictor.AddComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/White.dds");
 	buildingPredictor.AddComponent<BuildingPredictor>();
 
+	gameTime.timeRender.Start();
+	gameTime.timeRender.AddComponent <Transform>();
+	gameTime.timeRender.AddComponent<MeshRenderer>();
+	gameTime.timeRender.AddComponent<TextRenderer>()->SetFont("../Assets/Fonts/Agency_FB/Agency_FB.fontsheet", L"../Assets/Fonts/Agency_FB/Agency_FB.dds");
+	gameTime.timeRender.GetComponent<Transform>()->ScalePost(0.0004f);
+	gameTime.timeRender.GetComponent<Transform>()->SetLocalPosition(-0.9f, -0.9f, -0.1f);
+	gameTime.timeRender.GetComponent<TextRenderer>()->SetText("Day 0 - 00:00:00");
+
 	// Create TileMap
 	GameObject* terrain = GameObject::FindFromTag("Terrain")[0];
 	unsigned int width = terrain->GetComponent<Terrain>()->GetWidth();
@@ -85,10 +94,8 @@ void GameController::Start()
 
 void GameController::Update()
 {
-	gameTime += Time::Delta();
-	hours += gameTime;
-	if (hours >= 86400)
-		hours = 0;
+	gameTime.seconds += Time::Delta() * 10.0f;
+	ManageGameTime();
 
 	for (unsigned int i = 0; i < buildings.size(); i++)
 	{
@@ -140,6 +147,7 @@ void GameController::OnDelete()
 	delete[] gridCost;
 	buildingPredictor.OnDelete();
 
+	gameTime.timeRender.OnDelete();
 	delete tileMap;
 }
 
@@ -279,5 +287,31 @@ vector<XMFLOAT3> GameController::AStar(XMFLOAT3 _start, XMFLOAT3 _goal)
 void GameController::AddHomeless(GameObject * _object)
 {
 	homeless.push(_object);
+}
+
+void GameController::ManageGameTime()
+{
+	if (gameTime.seconds >= 60)
+	{
+		gameTime.minutes += 1;
+		gameTime.seconds = 0;
+	}
+	if (gameTime.minutes == 60)
+	{
+		gameTime.hours += 1;
+		gameTime.minutes = 0;
+	}
+	if (gameTime.hours == 24)
+	{
+		gameTime.days += 1;
+		gameTime.hours = 0;
+	}
+	string hours, minutes, seconds;
+	gameTime.hours < 10 ? hours = "0" + to_string(gameTime.hours) : hours = to_string(gameTime.hours);
+	gameTime.minutes < 10 ? minutes = "0" + to_string(gameTime.minutes) : minutes = to_string(gameTime.minutes);
+	gameTime.seconds < 10 ? seconds = "0" + to_string((int)gameTime.seconds) : seconds = to_string((int)gameTime.seconds);
+	gameTime.timeRender.GetComponent<TextRenderer>()->SetText("Day " + to_string(gameTime.days) + " - " + hours + ":" + minutes + ":" + seconds);
+	gameTime.timeRender.Update();
+
 }
  

@@ -20,9 +20,17 @@ class GameController : public Component
 		vector<XMFLOAT3> occupiedSquares;
 	};
 
+	struct GameTime
+	{
+		float seconds = 0;
+		int minutes = 0;
+		int hours = 0;
+		int days = 1;
+		GameObject timeRender;
+	};
+
 	const unsigned int id = 23;
-	float gameTime = 0;
-	float hours = 0;
+	GameTime gameTime;
 	vector<Building> buildings;
 	float** gridCost = nullptr;
 	unsigned int terrainWidth, terrainHeight;
@@ -43,7 +51,7 @@ public:
 	virtual void OnDelete() override;
 
 	// Accessors
-	float GetHours() const { return hours / 3600; }
+	GameTime GetGameTime() const { return gameTime; }
 	unsigned int TotalHomeless() const { return (unsigned int)homeless.size(); }
 
 	static XMFLOAT3 GridSquareFromTerrain(XMFLOAT3 _terrainLoc);
@@ -53,4 +61,5 @@ public:
 	static void FindJob(JOB_ENUM _job);
 	vector<XMFLOAT3> AStar(XMFLOAT3 _start, XMFLOAT3 _goal);
 	void AddHomeless(GameObject * _object);
+	void ManageGameTime();
 };

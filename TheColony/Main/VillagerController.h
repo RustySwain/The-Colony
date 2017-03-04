@@ -26,8 +26,8 @@ class VillagerController : public Component
 	bool recalculatePath = false;
 
 public:
-	VillagerController();
-	~VillagerController();
+	VillagerController(){}
+	~VillagerController(){}
 
 	// Component
 	const unsigned int GetId() const override { return id; };
@@ -52,5 +52,6 @@ public:
 	void Notify();
 	void Wander();
 	GameObject * FindJob();
+	void Move();
 };
 
