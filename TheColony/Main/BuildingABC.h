@@ -6,7 +6,8 @@ class BuildingABC : public Component
 {
 	const unsigned int id = 27;
 
-	vector<ITEM_ENUM> items;
+	vector<ITEM_ENUM> inventory;
+	unsigned int maxInventory = 500;
 	XMFLOAT3 frontDoor;
 	vector<GameObject*> inhabitants;
 	unsigned int maxInhabitants = 0;
@@ -24,7 +25,7 @@ public:
 	virtual unsigned int MaxInhabitants() const { return maxInhabitants; }
 	virtual void MaxInhabitants(const unsigned int _inhabitants) { maxInhabitants = _inhabitants; }
 
-	virtual vector<ITEM_ENUM>& Items() { return items; }
-
+	virtual vector<ITEM_ENUM>& Inventory() { return inventory; }
+	virtual unsigned int GetMaxInventory() const { return maxInventory; }
 };
 
