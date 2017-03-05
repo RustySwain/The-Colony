@@ -165,6 +165,7 @@
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="Farm.cpp" />
+    <ClCompile Include="Farmer.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="GameController.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="Farm.h" />
+    <ClInclude Include="Farmer.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="GameController.h" />
     <ClInclude Include="GameObject.h" />
