@@ -8,7 +8,7 @@ class VillagerController : public Component
 	enum NOTIFICATION { UPDATE_PATH = 0, UPDATE_HOUSE };
 	enum STEP { HOME = 0, TRAVELING, WORKING, SCHOOL, WAITING };
 
-	JOB_ENUM job = No_Job;
+	JOB_ENUM job = Farmer;
 	unsigned int health = 100;
 	unsigned int hunger = 100;
 	GameObject* house = nullptr;
@@ -18,11 +18,12 @@ class VillagerController : public Component
 	unsigned int age = 0;
 	bool isMale = true;
 	bool isWorking = false;
-	STEP step = HOME;
+	STEP step = WAITING;
+	STEP lastStep;
 	vector<XMFLOAT3> pathToWalk;
 	int pathCount = 0;
 	bool moveFlag = false;
-	float speed = 1.0f;
+	float speed = 2.3f;
 	bool recalculatePath = false;
 
 public:
@@ -47,6 +48,7 @@ public:
 	unsigned int Health() const { return health; }
 	unsigned int Hunger() const { return hunger; }
 	float Speed() const { return speed; }
+	JOB_ENUM GetJobId() const { return job; }
 
 	void RequestPath(XMFLOAT3 _from, XMFLOAT3 _to);
 	void Notify();

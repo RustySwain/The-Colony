@@ -10,7 +10,7 @@
 #include "Terrain.h"
 #include "Farm.h"
 
-#define MAX_INVENTORY 200
+#define MAX_INVENTORY 50
 
 void VillagerController::Start()
 {
@@ -19,21 +19,28 @@ void VillagerController::Start()
 void VillagerController::Update()
 {
 	int hours = GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->GetGameTime().hours;
-	if (hours >= 6 && hours <= 18)
+	GameObject * jobBuilding = GameController::FindJob(gameObject);
+
+	if (GetAsyncKeyState('M') & 0x1)
+	{
+		if (house)
+			RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), house->GetComponent<House>()->GetFrontDoor());
+		else
+			Wander();
+	}
+
+	if (hours >= 0 && hours <= 18)
 	{
 		if (age > 14)
 		{
-			if (GetAsyncKeyState('M') & 0x1)
-			{
-				if (house)
-					RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), house->GetComponent<House>()->GetFrontDoor());
-				else
-					Wander();
-			}
-
 			if (HOME == step)
 			{
-				RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), FindJob()->GetComponent<Farm>()->GetFrontDoor());
+				lastStep = HOME;
+				if (job != No_Job && jobBuilding != nullptr)
+				{
+					RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), jobBuilding->GetComponent<Farm>()->GetFrontDoor());
+					jobBuilding->GetComponent<Farm>()->AddWorker(gameObject);
+				}
 			}
 			else if (TRAVELING == step)
 			{
@@ -44,16 +51,27 @@ void VillagerController::Update()
 					gameObject->GetComponent<Animator>()->Play("Idle");
 					pathCount = 0;
 					pathToWalk.clear();
-					step = HOME;
+
+					if (HOME == lastStep)
+					{
+						step = WORKING;
+						isWorking = true;
+					}
+					else
+						step = HOME;
 				}
 			}
 			else if (WORKING == step)
 			{
+				lastStep = WORKING;
 				if (isWorking)
 				{
-					// TODO: do job
 					if ((int)inventory.size() == MAX_INVENTORY)
 					{
+						for (int i = 0; i < (int)inventory.size(); ++i)
+							jobBuilding->GetComponent<Farm>()->Inventory().push_back(inventory[i]);
+
+						inventory.clear();
 					}
 				}
 				else
@@ -67,8 +85,7 @@ void VillagerController::Update()
 	}
 	else
 	{
-		Wander();
-		Move();
+		
 	}
 
 	if (!moveFlag)
@@ -102,11 +119,6 @@ void VillagerController::Wander()
 		int randZ = rand() % (GameObject::FindFromTag("Terrain")[0]->GetComponent<Terrain>()->GetHeight() - 4) + 2;
 		RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), XMFLOAT3((float)randX, 2.4f, (float)randZ));
 	}
-}
-
-GameObject * VillagerController::FindJob()
-{
-	return nullptr;
 }
 
 void VillagerController::Move()

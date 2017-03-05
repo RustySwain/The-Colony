@@ -27,10 +27,12 @@ void PlayerController::Update()
 
 	if (GetAsyncKeyState('0'))
 		buildingIndex = -1;
-	if (GetAsyncKeyState('1'))
+	if (GetAsyncKeyState('1')) // Small House
 		buildingIndex = 0;
-	if (GetAsyncKeyState('2'))
+	if (GetAsyncKeyState('2')) // Medium House
 		buildingIndex = 1;
+	if (GetAsyncKeyState('3')) // Farm Building
+		buildingIndex = 2;
 
 	if (GetAsyncKeyState(VK_LBUTTON) && buildingIndex != -1)
 	{
