@@ -58,7 +58,7 @@ public:
 	bool PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation, unsigned int _buildingIndex);
 	bool Predict(XMFLOAT3 _gridSquare, unsigned int _rotation, unsigned int _buildingIndex);
 	void ClearPrediction();
-	static void FindJob(JOB_ENUM _job);
+	static GameObject * FindJob(GameObject * _villager);
 	vector<XMFLOAT3> AStar(XMFLOAT3 _start, XMFLOAT3 _goal);
 	void AddHomeless(GameObject * _object);
 	void ManageGameTime();
