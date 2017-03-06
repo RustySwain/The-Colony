@@ -9,8 +9,6 @@ class BuildingPredictor : public Component
 	const unsigned int id = 25;
 	unsigned int vertsTaken = 0;
 
-	static DirectX::XMFLOAT3 Project(DirectX::XMFLOAT3 _worldSpace);
-
 public:
 	BuildingPredictor();
 	~BuildingPredictor();

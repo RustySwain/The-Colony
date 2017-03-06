@@ -261,7 +261,8 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation,
 	buildings[_buildingIndex].colliders.push_back(nuCollider);
 
 	// Add task to builder queue
-	Builder::AddTask(nuCollider, Builder::Task::BUILD, 2, 100);
+	int framesToBuild = (int)((buildings[_buildingIndex].occupiedSquares.size() - bufferSquares.size()) * 60);
+	Builder::AddTask(nuCollider, Builder::Task::BUILD, 2, framesToBuild);
 
 	return true;
 }

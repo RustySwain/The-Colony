@@ -73,7 +73,11 @@ void Builder::Update()
 	if (distance > reachDistance)
 	{
 		// request path to job
-		gameObject->GetComponent<VillagerController>()->RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), bufferSquare);
+		if (needNewPath)
+		{
+			gameObject->GetComponent<VillagerController>()->RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), bufferSquare);
+			needNewPath = false;
+		}
 		return;
 	}
 
@@ -84,11 +88,14 @@ void Builder::Update()
 	if (currentTask->requiredWork <= currentTask->workDone)
 	{
 		FinishTask(find(tasks.begin(), tasks.end(), currentTask));
+		needNewPath = true;
 	}
 }
 
 void Builder::OnDelete()
 {
+	if (currentTask)
+		currentTask->workers.erase(find(currentTask->workers.begin(), currentTask->workers.end(), this));
 }
 
 void Builder::AddTask(GameObject* _job, Task::TASK_TYPE _taskType, unsigned int _maxWorkers, unsigned int _requiredWork)
