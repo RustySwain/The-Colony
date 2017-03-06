@@ -11,6 +11,7 @@ class BuildingABC : public Component
 	XMFLOAT3 frontDoor;
 	vector<GameObject*> inhabitants;
 	unsigned int maxInhabitants = 0;
+	vector<XMFLOAT3> bufferSquares;
 
 public:
 	// Component
@@ -27,5 +28,7 @@ public:
 
 	virtual vector<ITEM_ENUM>& Inventory() { return inventory; }
 	virtual unsigned int GetMaxInventory() const { return maxInventory; }
-};
 
+	void SetBufferSquares(vector<XMFLOAT3> _squares) { bufferSquares = _squares; };
+	XMFLOAT3 GetRandomBufferSquare() const { return bufferSquares[rand() % bufferSquares.size()]; };
+};

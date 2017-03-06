@@ -8,7 +8,7 @@ class VillagerController : public Component
 	enum NOTIFICATION { UPDATE_PATH = 0, UPDATE_HOUSE };
 	enum STEP { HOME = 0, TRAVELING, WORKING, SCHOOL, WAITING };
 
-	JOB_ENUM job = Farmer;
+	JOB_ENUM job = FARMER;
 	unsigned int health = 100;
 	unsigned int hunger = 100;
 	GameObject* house = nullptr;
@@ -27,8 +27,8 @@ class VillagerController : public Component
 	bool recalculatePath = false;
 
 public:
-	VillagerController(){}
-	~VillagerController(){}
+	VillagerController() {}
+	~VillagerController() {}
 
 	// Component
 	const unsigned int GetId() const override { return id; };
@@ -56,4 +56,3 @@ public:
 	GameObject * FindJob();
 	void Move();
 };
-

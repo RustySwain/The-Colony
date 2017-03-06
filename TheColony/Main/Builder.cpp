@@ -1,16 +1,19 @@
 #include "Builder.h"
 #include <DirectXMath.h>
 #include "Transform.h"
+#include "VillagerController.h"
+#include "House.h"
+#include "Windows.h"
 
 vector<Builder::Task*> Builder::tasks;
 
-void Builder::FinishTask(unsigned int _index)
+void Builder::FinishTask(vector<Task*>::iterator _iter)
 {
 	// Remove all workers from the task
-	while (tasks[_index]->workers.size())
+	while ((*_iter)->workers.size())
 	{
-		tasks[_index]->workers[0]->currentTask = nullptr;
-		tasks[_index]->workers.erase(tasks[_index]->workers.begin());
+		(*_iter)->workers[0]->currentTask = nullptr;
+		(*_iter)->workers.erase((*_iter)->workers.begin());
 	}
 	// Remove the task from the queue
 	delete tasks[0];
@@ -34,6 +37,8 @@ void Builder::Update()
 	// If I don't have a job
 	if (currentTask == nullptr)
 	{
+		if (GetAsyncKeyState('Y'))
+			int s = 0;
 		// Find a job with enough room for me
 		int taskIndex = -1;
 		for (unsigned int i = 0; i < tasks.size(); i++)
@@ -49,11 +54,12 @@ void Builder::Update()
 		{
 			tasks[taskIndex]->workers.push_back(this);
 			currentTask = tasks[taskIndex];
+			bufferSquare = currentTask->job->GetComponent<House>()->GetRandomBufferSquare();
 		}
 		// Otherwise, just wander around until there's a job available
 		else
 		{
-			// Wander code
+			gameObject->GetComponent<VillagerController>()->Wander();
 			return;
 		}
 	}
@@ -62,12 +68,12 @@ void Builder::Update()
 
 	// If I need to travel to my job, do it
 	XMFLOAT3 myPosition = gameObject->GetComponent<Transform>()->GetWorldPosition();
-	XMFLOAT3 jobPosition = currentTask->job->GetComponent<Transform>()->GetWorldPosition();
-	XMFLOAT3 toJob(jobPosition.x - myPosition.x, jobPosition.y - myPosition.y, jobPosition.z - myPosition.z);
+	XMFLOAT3 toJob(bufferSquare.x - myPosition.x, bufferSquare.y - myPosition.y, bufferSquare.z - myPosition.z);
 	float distance = sqrt(toJob.x * toJob.x + toJob.z * toJob.z);
 	if (distance > reachDistance)
 	{
 		// request path to job
+		gameObject->GetComponent<VillagerController>()->RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), bufferSquare);
 		return;
 	}
 
@@ -77,7 +83,7 @@ void Builder::Update()
 	// If the job is finished, remove it from the queue
 	if (currentTask->requiredWork <= currentTask->workDone)
 	{
-		FinishTask((unsigned int)(find(tasks.begin(), tasks.end(), currentTask) - tasks.begin()));
+		FinishTask(find(tasks.begin(), tasks.end(), currentTask));
 	}
 }
 
@@ -85,11 +91,18 @@ void Builder::OnDelete()
 {
 }
 
-void Builder::AddTask(GameObject* _job, Task::TASK_TYPE _taskType, unsigned int _maxWorkers)
+void Builder::AddTask(GameObject* _job, Task::TASK_TYPE _taskType, unsigned int _maxWorkers, unsigned int _requiredWork)
 {
 	Task* task = new Task();
 	task->type = _taskType;
 	task->job = _job;
 	task->maxWorkers = _maxWorkers;
+	task->requiredWork = _requiredWork;
 	tasks.push_back(task);
+}
+
+void Builder::ShutDown()
+{
+	while (tasks.size())
+		FinishTask(tasks.begin());
 }

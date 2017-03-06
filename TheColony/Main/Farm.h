@@ -3,7 +3,7 @@
 
 class Farm : public BuildingABC
 {
-	JOB_ENUM job = Farmer;
+	JOB_ENUM job = FARMER;
 	ITEM_ENUM crop;
 	unsigned int maxWorkers = 5;
 	vector<GameObject*> currWorkers;

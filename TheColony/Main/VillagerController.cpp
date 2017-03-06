@@ -36,7 +36,7 @@ void VillagerController::Update()
 			if (HOME == step)
 			{
 				lastStep = HOME;
-				if (job != No_Job && jobBuilding != nullptr)
+				if (job != NO_JOB && jobBuilding != nullptr)
 				{
 					RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), jobBuilding->GetComponent<Farm>()->GetFrontDoor());
 					jobBuilding->GetComponent<Farm>()->AddWorker(gameObject);
@@ -80,12 +80,10 @@ void VillagerController::Update()
 		}
 		else
 		{
-			
 		}
 	}
 	else
 	{
-		
 	}
 
 	if (!moveFlag)
@@ -107,13 +105,13 @@ void VillagerController::RequestPath(XMFLOAT3 _from, XMFLOAT3 _to)
 
 void VillagerController::Notify()
 {
-	if(TRAVELING == step)
+	if (TRAVELING == step)
 		recalculatePath = true;
 }
 
 void VillagerController::Wander()
 {
-	if(pathToWalk.size() == 0)
+	if (pathToWalk.size() == 0)
 	{
 		int randX = rand() % (GameObject::FindFromTag("Terrain")[0]->GetComponent<Terrain>()->GetWidth() - 4) + 2;
 		int randZ = rand() % (GameObject::FindFromTag("Terrain")[0]->GetComponent<Terrain>()->GetHeight() - 4) + 2;
@@ -123,6 +121,7 @@ void VillagerController::Wander()
 
 void VillagerController::Move()
 {
+	if (Time::Delta() > 1) return;
 	if (moveFlag && pathToWalk.size() > 0)
 	{
 		if (gameObject->GetComponent<Animator>()->CurrAnimation() != "Run")
