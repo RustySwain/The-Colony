@@ -62,4 +62,5 @@ public:
 	vector<XMFLOAT3> AStar(XMFLOAT3 _start, XMFLOAT3 _goal);
 	void AddHomeless(GameObject * _object);
 	void ManageGameTime();
+	void ChangeTileCost(XMFLOAT3 _tile, float _cost);
 };

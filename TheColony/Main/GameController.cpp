@@ -70,7 +70,7 @@ void GameController::Start()
 	buildings[2].instances->Start();
 	buildings[2].instances->AddComponent<Transform>();
 	buildings[2].instances->AddComponent<MeshRenderer>()->LoadFromObj("../Assets/Buildings/FarmPlaceholder.obj");
-	buildings[2].instances->GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/bark.dds");
+	buildings[2].instances->GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/black-soil.dds");
 	buildings[2].collisionMesh = new Mesh();
 	buildings[2].collisionMesh->LoadFromObj("../Assets/Buildings/FarmCollision.obj");
 	LoadOccupiedSquares("../Assets/Buildings/Farm.building", buildings[2].occupiedSquares);
@@ -203,7 +203,7 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation,
 		if (buildings[_buildingIndex].occupiedSquares[i].z == 0)
 		{
 			Tile * tile = tileMap->getTile(x + (int)terrPos.x, y + (int)terrPos.z);
-			pathSearch.ChangeTileCost(tile, 0);
+			pathSearch.ChangeTileCost(tile, 50);
 		}
 
 		// Set front door
@@ -378,4 +378,10 @@ void GameController::ManageGameTime()
 	gameTime.seconds < 10 ? seconds = "0" + to_string((int)gameTime.seconds) : seconds = to_string((int)gameTime.seconds);
 	gameTime.timeRender.GetComponent<TextRenderer>()->SetText("Day " + to_string(gameTime.days) + " - " + hours + ":" + minutes + ":" + seconds);
 	gameTime.timeRender.Update();
+}
+
+void GameController::ChangeTileCost(XMFLOAT3 _tile, float _cost)
+{
+	Tile * tile = tileMap->getTile(_tile.x, _tile.z);
+	pathSearch.ChangeTileCost(tile, _cost);
 }
