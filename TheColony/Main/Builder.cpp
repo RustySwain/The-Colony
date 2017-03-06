@@ -15,6 +15,10 @@ void Builder::FinishTask(vector<Task*>::iterator _iter)
 		(*_iter)->workers[0]->currentTask = nullptr;
 		(*_iter)->workers.erase((*_iter)->workers.begin());
 	}
+
+	if ((*_iter)->type == Task::BUILD)
+	{
+	}
 	// Remove the task from the queue
 	delete tasks[0];
 	tasks.erase(tasks.begin());

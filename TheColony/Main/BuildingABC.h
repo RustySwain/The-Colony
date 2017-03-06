@@ -30,5 +30,6 @@ public:
 	virtual unsigned int GetMaxInventory() const { return maxInventory; }
 
 	void SetBufferSquares(vector<XMFLOAT3> _squares) { bufferSquares = _squares; };
+	vector<XMFLOAT3> GetBufferSquares() const { return bufferSquares; };
 	XMFLOAT3 GetRandomBufferSquare() const { return bufferSquares[rand() % bufferSquares.size()]; };
 };
