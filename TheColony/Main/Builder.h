@@ -21,6 +21,7 @@ private:
 	Task* currentTask = nullptr;
 	float reachDistance = 1.0f;
 	DirectX::XMFLOAT3 bufferSquare;
+	bool needNewPath = true;
 
 	static void FinishTask(vector<Task*>::iterator _iter);
 

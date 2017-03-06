@@ -5,16 +5,6 @@
 #include "Camera.h"
 #include "Terrain.h"
 
-XMFLOAT3 BuildingPredictor::Project(XMFLOAT3 _worldSpace)
-{
-	XMMATRIX posMat = XMMatrixTranslation(_worldSpace.x, _worldSpace.y, _worldSpace.z);
-	posMat = posMat * Camera::mainCam->GetViewMatrix();
-	posMat = posMat * Camera::mainCam->GetProjectionMatrix();
-	XMVECTOR posVec = posMat.r[3];
-	posVec /= posVec.m128_f32[3];
-	return XMFLOAT3(posVec.m128_f32[0], posVec.m128_f32[1], posVec.m128_f32[2]);
-}
-
 BuildingPredictor::BuildingPredictor()
 {
 }
@@ -57,25 +47,25 @@ void BuildingPredictor::AddColor(XMFLOAT3 _terrainPos, XMFLOAT4 _color)
 	// bottom left
 	XMFLOAT4 v1Pos4 = terrainVerts[(unsigned int)_terrainPos.x * width + (unsigned int)_terrainPos.z].position;
 	XMFLOAT3 v1Pos3(v1Pos4.x, v1Pos4.y, v1Pos4.z);
-	v1Pos3 = Project(v1Pos3);
+	v1Pos3 = Camera::mainCam->WorldToScreenSpace(v1Pos3);
 	v1Pos4 = XMFLOAT4(v1Pos3.x, v1Pos3.y, 0.001f, 1);
 
 	// top left
 	XMFLOAT4 v2Pos4 = terrainVerts[((unsigned int)_terrainPos.x + 1) * width + (unsigned int)_terrainPos.z].position;
 	XMFLOAT3 v2Pos3(v2Pos4.x, v2Pos4.y, v2Pos4.z);
-	v2Pos3 = Project(v2Pos3);
+	v2Pos3 = Camera::mainCam->WorldToScreenSpace(v2Pos3);
 	v2Pos4 = XMFLOAT4(v2Pos3.x, v2Pos3.y, 0.001f, 1);
 
 	// bottom right
 	XMFLOAT4 v3Pos4 = terrainVerts[((unsigned int)_terrainPos.x + 0) * width + (unsigned int)_terrainPos.z + 1].position;
 	XMFLOAT3 v3Pos3(v3Pos4.x, v3Pos4.y, v3Pos4.z);
-	v3Pos3 = Project(v3Pos3);
+	v3Pos3 = Camera::mainCam->WorldToScreenSpace(v3Pos3);
 	v3Pos4 = XMFLOAT4(v3Pos3.x, v3Pos3.y, 0.001f, 1);
 
 	// top right
 	XMFLOAT4 v4Pos4 = terrainVerts[((unsigned int)_terrainPos.x + 1) * width + (unsigned int)_terrainPos.z + 1].position;
 	XMFLOAT3 v4Pos3(v4Pos4.x, v4Pos4.y, v4Pos4.z);
-	v4Pos3 = Project(v4Pos3);
+	v4Pos3 = Camera::mainCam->WorldToScreenSpace(v4Pos3);
 	v4Pos4 = XMFLOAT4(v4Pos3.x, v4Pos3.y, 0.001f, 1);
 
 	verts[vertsTaken].color = _color;
