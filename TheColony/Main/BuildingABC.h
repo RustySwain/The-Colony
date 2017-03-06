@@ -11,6 +11,7 @@ class BuildingABC : public Component
 	XMFLOAT3 frontDoor;
 	vector<GameObject*> inhabitants;
 	unsigned int maxInhabitants = 0;
+	bool walkable = false;
 
 public:
 	// Component
