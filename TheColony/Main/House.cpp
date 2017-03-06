@@ -10,4 +10,5 @@ void House::Update()
 
 void House::OnDelete()
 {
+	CleanUp();
 }

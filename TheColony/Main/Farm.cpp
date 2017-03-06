@@ -12,9 +12,9 @@ void Farm::Start()
 	corn.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Crops/corn_d.dds");
 	corn.GetComponent<MeshRenderer>()->LoadSpecularMap(L"../Assets/Crops/corn_s.dds");
 
-	for(int x = 1; x <= 11; ++x)
+	for (int x = 1; x <= 11; ++x)
 	{
-		for(int z = 1; z <= 11; ++z)
+		for (int z = 1; z <= 11; ++z)
 		{
 			Crop temp;
 			temp.position[0] = (x * 0.5f) - 3;
@@ -23,7 +23,7 @@ void Farm::Start()
 		}
 	}
 
-	for(int i = 0; i < (int)crops.size(); ++i)
+	for (int i = 0; i < (int)crops.size(); ++i)
 	{
 		XMMATRIX tempMat = corn.GetComponent<Transform>()->GetWorldMatrix();
 		tempMat = XMMatrixTranslation(crops[i].position[0], 0, crops[i].position[1]);
@@ -33,7 +33,7 @@ void Farm::Start()
 
 void Farm::Update()
 {
-	if(!updateFlag)
+	if (!updateFlag)
 	{
 		corn.GetComponent<MeshRenderer>()->RemoveInstance(-1);
 		updateFlag = true;
@@ -43,12 +43,13 @@ void Farm::Update()
 
 void Farm::OnDelete()
 {
+	CleanUp();
 	corn.OnDelete();
 }
 
 bool Farm::AddWorker(GameObject * _worker)
 {
-	if((unsigned int)currWorkers.size() < maxWorkers)
+	if ((unsigned int)currWorkers.size() < maxWorkers)
 	{
 		currWorkers.push_back(_worker);
 		return true;

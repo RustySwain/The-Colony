@@ -7,7 +7,7 @@
 
 vector<Builder::Task*> Builder::tasks;
 
-void Builder::FinishTask(vector<Task*>::iterator _iter)
+void Builder::FinishTask(vector<Task*>::iterator _iter, bool _squares = true)
 {
 	// Remove all workers from the task
 	while ((*_iter)->workers.size())
@@ -16,12 +16,20 @@ void Builder::FinishTask(vector<Task*>::iterator _iter)
 		(*_iter)->workers.erase((*_iter)->workers.begin());
 	}
 
-	if ((*_iter)->type == Task::BUILD)
+	// If it's a build task, set all gridSquares to 0 cost
+	if (_squares)
 	{
+		if ((*_iter)->type == Task::BUILD)
+		{
+			for (unsigned int i = 0; i < (*_iter)->job->GetComponent<House>()->GetOccupiedSquares().size(); i++)
+			{
+				GameObject::FindFromTag("GameController")[0]->GetComponent<GameController>()->ChangeTileCost((*_iter)->job->GetComponent<House>()->GetOccupiedSquares()[i], 0);
+			}
+		}
 	}
 	// Remove the task from the queue
-	delete tasks[0];
-	tasks.erase(tasks.begin());
+	delete tasks[_iter - tasks.begin()];
+	tasks.erase(_iter);
 }
 
 Builder::Builder()
@@ -41,11 +49,9 @@ void Builder::Update()
 	// If I don't have a job
 	if (currentTask == nullptr)
 	{
-		if (GetAsyncKeyState('Y'))
-			int s = 0;
 		// Find a job with enough room for me
 		int taskIndex = -1;
-		for (unsigned int i = 0; i < tasks.size(); i++)
+		for (int i = tasks.size() - 1; i >= 0; i--)
 		{
 			if (tasks[i]->workers.size() < tasks[i]->maxWorkers)
 			{
@@ -56,8 +62,8 @@ void Builder::Update()
 		// If I found a job, take the job
 		if (taskIndex != -1)
 		{
-			tasks[taskIndex]->workers.push_back(this);
 			currentTask = tasks[taskIndex];
+			currentTask->workers.push_back(this);
 			bufferSquare = currentTask->job->GetComponent<House>()->GetRandomBufferSquare();
 		}
 		// Otherwise, just wander around until there's a job available
@@ -110,6 +116,18 @@ void Builder::AddTask(GameObject* _job, Task::TASK_TYPE _taskType, unsigned int 
 	task->maxWorkers = _maxWorkers;
 	task->requiredWork = _requiredWork;
 	tasks.push_back(task);
+}
+
+void Builder::RemoveFromTasks(GameObject* _go)
+{
+	for (unsigned int i = 0; i < tasks.size(); i++)
+	{
+		if (tasks[i]->job == _go)
+		{
+			FinishTask(tasks.begin() + i, false);
+			return;
+		}
+	}
 }
 
 void Builder::ShutDown()

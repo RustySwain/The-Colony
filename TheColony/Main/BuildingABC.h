@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "GameController.h"
+#include "Builder.h"
 
 class BuildingABC : public Component
 {
@@ -13,6 +14,10 @@ class BuildingABC : public Component
 	unsigned int maxInhabitants = 0;
 	bool walkable = false;
 	vector<XMFLOAT3> bufferSquares;
+	vector<XMFLOAT3> occupiedSquares;
+
+protected:
+	void CleanUp() const { Builder::RemoveFromTasks(gameObject); };
 
 public:
 	// Component
@@ -33,4 +38,7 @@ public:
 	void SetBufferSquares(vector<XMFLOAT3> _squares) { bufferSquares = _squares; };
 	vector<XMFLOAT3> GetBufferSquares() const { return bufferSquares; };
 	XMFLOAT3 GetRandomBufferSquare() const { return bufferSquares[rand() % bufferSquares.size()]; };
+
+	void SetOccupiedSquares(vector<XMFLOAT3> _squares) { occupiedSquares = _squares; };
+	vector<XMFLOAT3> GetOccupiedSquares() const { return occupiedSquares; };
 };

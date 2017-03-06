@@ -23,7 +23,7 @@ private:
 	DirectX::XMFLOAT3 bufferSquare;
 	bool needNewPath = true;
 
-	static void FinishTask(vector<Task*>::iterator _iter);
+	static void FinishTask(vector<Task*>::iterator _iter, bool _squares);
 
 public:
 	Builder();
@@ -35,5 +35,6 @@ public:
 	void OnDelete() override;
 
 	static void AddTask(GameObject* _job, Task::TASK_TYPE _taskType, unsigned int _maxWorkers, unsigned int _requiredWork);
+	static void RemoveFromTasks(GameObject* _go);
 	static void ShutDown();
 };

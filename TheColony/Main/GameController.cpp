@@ -189,6 +189,7 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation,
 	}
 
 	vector<XMFLOAT3> bufferSquares;
+	vector<XMFLOAT3> allSquares;
 	for (unsigned int i = 0; i < buildings[_buildingIndex].occupiedSquares.size(); i++)
 	{
 		XMMATRIX tmp = XMMatrixTranslation(buildings[_buildingIndex].occupiedSquares[i].x, buildings[_buildingIndex].occupiedSquares[i].y, 0) * XMMatrixRotationZ(_rotation * 90.0f * DEG2RAD);
@@ -196,6 +197,8 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation,
 		int y = (int)round(tmp.r[3].m128_f32[1]);
 		if (buildings[_buildingIndex].occupiedSquares[i].z == 1)
 			bufferSquares.push_back(XMFLOAT3(x + terrPos.x, 0, y + terrPos.z));
+		else
+			allSquares.push_back(XMFLOAT3(x + terrPos.x, 0, y + terrPos.z));
 		if ((unsigned int)(x + (int)terrPos.x) >= terrainWidth - 1 || (unsigned int)(y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
 		gridCost[y + (int)terrPos.z][x + (int)terrPos.x] = 0;
 
@@ -258,6 +261,7 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation,
 		nuCollider->GetComponent<Farm>()->SetFrontDoor(frontDoor);
 	}
 	nuCollider->GetComponent<House>()->SetBufferSquares(bufferSquares);
+	nuCollider->GetComponent<House>()->SetOccupiedSquares(allSquares);
 	buildings[_buildingIndex].colliders.push_back(nuCollider);
 
 	// Add task to builder queue
