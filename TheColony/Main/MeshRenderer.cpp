@@ -301,28 +301,6 @@ void MeshRenderer::RenderShadow() const
 	context->IASetVertexBuffers(0, 2, vertBuffers, stride, offset);
 	context->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	context->VSSetConstantBuffers(0, 1, &constantBuffer);
-	// set textures for the pixel shader
-	ID3D11ShaderResourceView* textures[] = { diffuseMap, normalMap, specularMap, emissiveMap };
-	context->PSSetShaderResources(0, 4, textures);
-	context->PSSetSamplers(0, 1, &sampler);
-	/*if (type == MESH)
-	{
-		context->PSSetShader(Application::GetInstance()->GetPSMesh(), 0, 0);
-		context->VSSetShader(Application::GetInstance()->GetVSMesh(), 0, 0);
-	}
-	else if (type == SKYBOX)
-	{
-		context->PSSetShader(Application::GetInstance()->GetPSSkybox(), 0, 0);
-		context->VSSetShader(Application::GetInstance()->GetVSMesh(), 0, 0);
-	}
-	else if (type == UI)
-	{
-		context->PSSetShader(Application::GetInstance()->GetPSUI(), 0, 0);
-		context->VSSetShader(Application::GetInstance()->GetVSUI(), 0, 0);
-	}
-
-	if (gameObject->GetComponent<Animator>())
-		gameObject->GetComponent<Animator>()->SetVSBuffer();*/
 }
 
 UINT MeshRenderer::GetIndexCount() const

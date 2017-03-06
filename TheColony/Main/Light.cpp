@@ -32,13 +32,13 @@ void Light::Update()
 	lightBuffType.lightPos = XMFLOAT4(wPos.x, wPos.y, wPos.z, 1);
 	lightBuffType.lightPos.w = (float)type;
 
-	//TEST
-	if (type == DIRECTIONAL)
+
+	if (type != 0)
 	{
+		SetLookAt(0, 0, 1);
 		GenerateProjectionMatrix(100, 0.01f);
 		GenerateViewMatrix();
 	}
-	//END TEST
 }
 
 void Light::OnDelete()
@@ -64,7 +64,7 @@ void Light::SetLookAt(float x, float y, float z)
 	_lookAt.w = 1;
 }
 
-void Light::GenerateViewMatrix() 
+void Light::GenerateViewMatrix()
 {
 	XMFLOAT4 up;
 
@@ -76,6 +76,7 @@ void Light::GenerateViewMatrix()
 	XMVECTOR pos, look, _up;
 	XMFLOAT3 transform = gameObject->GetComponent<Transform>()->GetWorldPosition();
 	pos = XMVectorSet(transform.x, transform.y, transform.z, 1.0f);
+
 	look = XMVectorSet(_lookAt.x, _lookAt.y, _lookAt.z, 1.0f);
 	_up = XMVectorSet(up.x, up.y, up.z, 0.0f);
 
@@ -83,7 +84,7 @@ void Light::GenerateViewMatrix()
 	lightMatrices.lightView = _viewMatrix;
 }
 
-void Light::GenerateProjectionMatrix(float screenFar, float screenNear) 
+void Light::GenerateProjectionMatrix(float screenFar, float screenNear)
 {
 	float fieldOfView, screenAspect;
 
@@ -93,8 +94,13 @@ void Light::GenerateProjectionMatrix(float screenFar, float screenNear)
 
 	// Create the projection matrix for the light.
 	//_projectionMatrix = XMMatrixPerspectiveFovRH(fieldOfView, screenAspect, screenNear, screenFar);
-	_projectionMatrix = XMMatrixOrthographicRH(100, 100, 1.0f, 50.0f);
-	//_projectionMatrix = XMMatrixOrthographicOffCenterRH(0, 100, 100, 0, 1.0f, 50.0f);
+	_projectionMatrix = XMMatrixOrthographicRH(50, 50, 0.01f, 30);
+	lightMatrices.lightProj = _projectionMatrix;
+}
+
+void Light::GenerateOrthoMatrix(float screenFar, float screenNear)
+{
+	_projectionMatrix = XMMatrixOrthographicRH(50, 50, 0.01f, 30);
 	lightMatrices.lightProj = _projectionMatrix;
 }
 

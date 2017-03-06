@@ -21,14 +21,14 @@ public:
 
 	void Initialize(ID3D11Device *_dev);
 	void Shutdown();
-	void Render(ID3D11DeviceContext *_devCon, const UINT indexCount, XMMATRIX &worldMatrix, XMMATRIX &viewMatrix, XMMATRIX &projectionMatrix);
+	void Render(ID3D11DeviceContext *_devCon, const UINT indexCount, UINT instanceCount, XMMATRIX &worldMatrix, XMMATRIX &viewMatrix, XMMATRIX &projectionMatrix);
 
 
 private:
 	void InitializeShader(ID3D11Device *_dev);
 	void ShutdownShader();
 	void SetShaderParams(ID3D11DeviceContext *_devCon, XMMATRIX &worldMatrix, XMMATRIX &viewMatrix, XMMATRIX &projectionMatrix);
-	void RenderShader(ID3D11DeviceContext *_devCon, int indexCount);
+	void RenderShader(ID3D11DeviceContext *_devCon, int indexCount, UINT instanceCount);
 
 private:
 	ID3D11VertexShader *_vertexShader;

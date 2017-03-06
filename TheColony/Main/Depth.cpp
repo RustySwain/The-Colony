@@ -25,11 +25,11 @@ void Depth::Shutdown()
 	ShutdownShader();
 }
 
-void Depth::Render(ID3D11DeviceContext * _devCon, const UINT indexCount, XMMATRIX &worldMatrix, XMMATRIX &viewMatrix, XMMATRIX &projectionMatrix)
+void Depth::Render(ID3D11DeviceContext * _devCon, const UINT indexCount, UINT instanceCount, XMMATRIX &worldMatrix, XMMATRIX &viewMatrix, XMMATRIX &projectionMatrix)
 {
 	SetShaderParams(_devCon, worldMatrix, viewMatrix, projectionMatrix);
 
-	RenderShader(_devCon, indexCount);
+	RenderShader(_devCon, indexCount, instanceCount);
 }
 
 void Depth::InitializeShader(ID3D11Device * _dev)
@@ -84,14 +84,14 @@ void Depth::SetShaderParams(ID3D11DeviceContext *_devCon, XMMATRIX &worldMatrix,
 	_devCon->VSSetConstantBuffers(bufferNumber, 1, &_matrixBuffer);
 }
 
-void Depth::RenderShader(ID3D11DeviceContext * _devCon, int indexCount)
+void Depth::RenderShader(ID3D11DeviceContext * _devCon, int indexCount, UINT instanceCount)
 {
 	// Set the vertex input layout.
 	_devCon->IASetInputLayout(_layout);
 
 	_devCon->VSSetShader(_vertexShader, nullptr, 0);
-	_devCon->PSSetShader(_pixelShader, nullptr, 0);
+	_devCon->PSSetShader(nullptr, nullptr, 0);
 
-	_devCon->DrawIndexed(indexCount, 0, 0);
+	_devCon->DrawIndexedInstanced(indexCount, instanceCount, 0, 0, 0);
 }
 

@@ -165,7 +165,7 @@ void GameScene::Init()
 	dirLight.Start();
 	dirLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, 1, 1, 1));
 	dirLight.AddComponent<Transform>();
-	dirLight.GetComponent<Transform>()->RotateXPre(50);
+	dirLight.GetComponent<Transform>()->RotateXPre(30);
 	dirLight.GetComponent<Transform>()->RotateZPre(-15);
 	dirLight.GetComponent<Transform>()->SetLocalPosition(4, 3, -2);
 	dirLight.GetComponent<Light>()->type = Light::DIRECTIONAL;
@@ -175,7 +175,7 @@ void GameScene::Init()
 	pointLight.Start();
 	pointLight.AddComponent<Light>()->SetColor(XMFLOAT4(1, 1, 1, 1));
 	pointLight.AddComponent<Transform>();
-	pointLight.GetComponent<Transform>()->SetLocalPosition(0, 0, 1);
+	pointLight.GetComponent<Transform>()->SetLocalPosition(0, 5, 1);
 	pointLight.GetComponent<Light>()->SetExtra(XMFLOAT4(3, 0, 0, 1));
 	pointLight.GetComponent<Light>()->type = Light::POINT;
 
@@ -184,7 +184,7 @@ void GameScene::Init()
 	bunny.SetName("Bunny");
 	bunny.SetTag("Villager");
 	bunny.Start();
-	bunny.AddComponent<Transform>()->SetLocalPosition(15, 2.5f, 3);
+	bunny.AddComponent<Transform>()->SetLocalPosition(15, 2.2f, 3);
 	bunny.GetComponent<Transform>()->ScalePre(0.4f);
 	bunny.AddComponent<MeshRenderer>()->LoadFromBinary("../Assets/Bunny/Bunny.mesh");
 	bunny.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Bunny/White.dds");

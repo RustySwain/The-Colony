@@ -42,6 +42,7 @@ public:
 	void SetLookAt(float x, float y, float z);
 	void GenerateViewMatrix();
 	void GenerateProjectionMatrix(float screenFar, float screenNear);
+	void GenerateOrthoMatrix(float screenFar, float screenNear);
 
 	LightBufferType GetLightBuffType() const;
 	LightMatrices GetLightMatrices() const;

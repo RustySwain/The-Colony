@@ -65,6 +65,7 @@ class Application
 	void CreateRasterState();
 	void CreateCameraAndLightBuffer();
 	void CreateDepthAndTextureClass();
+	void UpdateLightResources();
 	void CreateBuffer(D3D11_BUFFER_DESC* _bData, D3D11_SUBRESOURCE_DATA* _subData, ID3D11Buffer** _buffer) const;
 
 

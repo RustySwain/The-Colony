@@ -1,12 +1,12 @@
 #define MAX_LIGHTS 100
 
-Texture2D diffuse;
-Texture2D normals;
-Texture2D specular;
-Texture2D emissive;
-texture2D depthMapTexture;
-SamplerState sam;
-SamplerComparisonState SampleTypeWrap;
+Texture2D diffuse : register(t0);
+Texture2D normals : register(t1);
+Texture2D specular : register(t2);
+Texture2D emissive : register(t3);
+texture2D depthMapTexture : register(t4);
+SamplerState sam : register(s0);
+SamplerComparisonState SampleTypeWrap : register(s1);
 
 struct GenericLight
 {
@@ -90,6 +90,8 @@ float4 main(Input _in) : SV_TARGET
 	float depthValue1;
 	float lightDepthValue;
 	float lightIntensity;
+	float4 lightD;
+	float4 diffuseCol = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	// Set the bias value for fixing the floating point precision issues.
 	bias = 0.01f;
@@ -111,7 +113,7 @@ float4 main(Input _in) : SV_TARGET
 
 	float specularRatio = specular.Sample(sam, _in.uv.xy).x;
 
-	float4 lightColor = float4(0, 0, 0, 0);
+	float4 lightColor = float4(0.15f, 0.15f, 0.15f, 1.0f);
 
 	bool end = false;
 	for (int i = 0; !end && i < MAX_LIGHTS; i++)
@@ -130,35 +132,37 @@ float4 main(Input _in) : SV_TARGET
 		}
 		case 2: // directional
 		{
-			//// Determine if the projected coordinates are in the 0 to 1 range.  If so then this pixel is in the view of the light.
-			//if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
-			//{
-			//	// Calculate the depth of the light.
-			//	lightDepthValue = _in.lightViewPosition.z / _in.lightViewPosition.w;
+			// Determine if the projected coordinates are in the 0 to 1 range.  If so then this pixel is in the view of the light.
+			if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
+			{
+				// Calculate the depth of the light.
+				lightDepthValue = _in.lightViewPosition.z / _in.lightViewPosition.w;
 
-			//	float2 offsets[9] = {
-			//		float2(-1.0f, 1.0f), float2(0.0f, 1.0f), float2(1.0f, 1.0f),
-			//		float2(-1.0f, 0.0f), float2(0.0f, 0.0f), float2(1.0f, 0.0f),
-			//		float2(-1.0f, -1.0f), float2(0.0f, -1.0f), float2(1.0f, -1.0f)
-			//	};
+				float2 offsets[9] =
+				{
+					float2(-1.0f, 1.0f), float2(0.0f, 1.0f), float2(1.0f, 1.0f),
+					float2(-1.0f, 0.0f), float2(0.0f, 0.0f), float2(1.0f, 0.0f),
+					float2(-1.0f, -1.0f), float2(0.0f, -1.0f), float2(1.0f, -1.0f)
+				};
 
-			//	[unroll]
-			//	for (int i = 0; i < 9; ++i) {
-			//		offsets[i].x *= (1.0f / 1024);
-			//		offsets[i].y *= (1.0f / 1024);
-			//		depthValue += depthMapTexture.SampleCmpLevelZero(SampleTypeWrap, projectTexCoord + offsets[i], lightDepthValue - bias);
-			//	}
+				[unroll]
+				for (int j = 0; j < 9; ++j) 
+				{
+					offsets[j].x *= (1.0f / 1024);
+					offsets[j].y *= (1.0f / 1024);
+					depthValue += depthMapTexture.SampleCmpLevelZero(SampleTypeWrap, projectTexCoord + offsets[j], lightDepthValue - bias);
+				}
 
-			//	depthValue /= 9.0f;
+				depthValue /= 9.0f;
 
-			//	if (lightDepthValue < depthValue)
-			//	{
-					lightColor += directionalLight(lights[i].direction, _in.normal, lights[i].color);
+				if (lightDepthValue < depthValue)
+				{
+					lightColor += directionalLight(lights[i].direction, _in.normal, lights[1].color);
 					lightColor += specularRatio * applySpecular(camPos, 1024, _in.worldPos, float4(normalize(lights[i].direction.xyz), 1), _in.normal, lights[i].color, lights[i].color.w);
-					//}
-				//}
-				break;
+				}
 			}
+			break;
+		}
 			case 3: // point
 			{
 				float attenuation = calcAttenuation(lights[i].position, _in.worldPos, lights[i].extra.x);
@@ -175,6 +179,36 @@ float4 main(Input _in) : SV_TARGET
 			}
 			}
 		}
+
+	//// Determine if the projected coordinates are in the 0 to 1 range.  If so then this pixel is in the view of the light.
+	//if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
+	//{
+	//	// Calculate the depth of the light.
+	//	lightDepthValue = _in.lightViewPosition.z / _in.lightViewPosition.w;
+
+	//	float2 offsets[9] =
+	//	{
+	//		float2(-1.0f, 1.0f), float2(0.0f, 1.0f), float2(1.0f, 1.0f),
+	//		float2(-1.0f, 0.0f), float2(0.0f, 0.0f), float2(1.0f, 0.0f),
+	//		float2(-1.0f, -1.0f), float2(0.0f, -1.0f), float2(1.0f, -1.0f)
+	//	};
+
+	//	[unroll]
+	//	for (int i = 0; i < 9; ++i)
+	//	{
+	//		offsets[i].x *= (1.0f / 1024);
+	//		offsets[i].y *= (1.0f / 1024);
+	//		depthValue += depthMapTexture.SampleCmpLevelZero(SampleTypeWrap, projectTexCoord + offsets[i], lightDepthValue - bias);
+	//	}
+
+	//	depthValue /= 9.0f;
+
+	//	if (lightDepthValue < depthValue)
+	//	{
+	//		lightColor += directionalLight(lights[0].direction, _in.normal, lights[0].color);
+	//		lightColor += specularRatio * applySpecular(camPos, 1024, _in.worldPos, float4(normalize(lights[0].direction.xyz), 1), _in.normal, lights[0].color, lights[0].color.w);
+	//	}
+	//}
 
 		float4 returnColor = lightColor * textureColor;
 		float4 emiss = emissive.Sample(sam, _in.uv.xy);

@@ -67,10 +67,11 @@ float4 addJointInfluence(Input _in)
 
 Output main(Input _in)
 {
-	float4 worldPosition;
-
 	Output ret;
+
+	float4 worldPosition;
 	float4 pos;
+	float4 lPos;
 	if (_in.flags[0] == 1)
 	{
 		pos = float4(addJointInfluence(_in).xyz, 1.0f);
@@ -79,6 +80,9 @@ Output main(Input _in)
 	{
 		pos = float4(_in.pos.xyz, 1.0f);
 	}
+
+	lPos = pos;
+
 	pos = mul(worldMat, pos);
 	pos = mul(_in.instance, pos);
 	ret.worldPos = pos;
@@ -92,12 +96,14 @@ Output main(Input _in)
 
 	//Shadow Stuff
 	//Putting vertex in light space
-	ret.lightViewPosition = mul(worldMat, float4(_in.pos.xyz, 1.0f));
+	ret.lightViewPosition = mul(worldMat, lPos/*float4(_in.pos.xyz, 1.0f)*/);
+	ret.lightViewPosition = mul(_in.instance, lPos/*float4(_in.pos.xyz, 1.0f)*/);
 	ret.lightViewPosition = mul(lightViewMatrix, ret.lightViewPosition);
 	ret.lightViewPosition = mul(lightProjectionMatrix, ret.lightViewPosition);
 
 	// Calculate the position of the vertex in the world.
-	worldPosition = mul(worldMat, _in.pos);
+	worldPosition = mul(worldMat, lPos /*float4(_in.pos.xyz, 1.0f)*/);
+	worldPosition = mul(_in.instance, lPos/*float4(_in.pos.xyz, 1.0f)*/);
 
 	// Determine the light position based on the position of the light and the position of the vertex in the world.
 	ret.lightPos = lightPosition - worldPosition;
