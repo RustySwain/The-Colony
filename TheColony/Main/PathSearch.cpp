@@ -36,6 +36,7 @@ void PathSearch::initialize(TileMap * _tileMap)
 				pair.first = currTile;
 				pair.second = new SearchNode();
 				pair.second->tile = pair.first;
+				pair.second->cost = 1;
 
 				Tile* adj[8];
 				adj[0] = _tileMap->getTile(r - 1, c); // up
@@ -112,12 +113,12 @@ vector<XMFLOAT3> PathSearch::AStar(XMFLOAT3 _start, XMFLOAT3 _goal)
 			return completePath;
 		}
 
-		for (size_t i = 0; i < currNode->edges.size(); ++i)
+		if (currNode->cost > 0)
 		{
-			if (currNode->edges[i]->cost > 0)
+			for (size_t i = 0; i < currNode->edges.size(); ++i)
 			{
 				SearchNode *successor = currNode->edges[i]->endpoint;
-				float tempGivenCost = currNode->givenCost + currNode->edges[i]->cost;
+				float tempGivenCost = currNode->givenCost + currNode->edges[i]->cost + currNode->cost;
 
 				if (successor->visited == false)
 				{
@@ -138,6 +139,7 @@ vector<XMFLOAT3> PathSearch::AStar(XMFLOAT3 _start, XMFLOAT3 _goal)
 				}
 			}
 		}
+
 	}
 
 	return completePath;
@@ -145,11 +147,11 @@ vector<XMFLOAT3> PathSearch::AStar(XMFLOAT3 _start, XMFLOAT3 _goal)
 
 void PathSearch::ChangeTileCost(Tile * _tile, float _cost)
 {
-	nodes[_tile]->hCost = _cost;
-	for (int i = 0; i < (int)nodes[_tile]->edges.size(); ++i)
-	{
-		nodes[_tile]->edges[i]->cost = 0;
-	}
+	nodes[_tile]->cost = _cost;
+	//for (int i = 0; i < (int)nodes[_tile]->edges.size(); ++i)
+	//{
+	//	nodes[_tile]->edges[i]->cost = 1;
+	//}
 }
 
 float PathSearch::Estimate(Tile * _lhs, Tile * _rhs) const

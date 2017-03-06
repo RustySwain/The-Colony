@@ -12,9 +12,9 @@ void Farm::Start()
 	corn.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Crops/corn_d.dds");
 	corn.GetComponent<MeshRenderer>()->LoadSpecularMap(L"../Assets/Crops/corn_s.dds");
 
-	for(int x = 1; x <= 11; ++x)
+	for(int x = 1; x <= 11; x += 2)
 	{
-		for(int z = 1; z <= 11; ++z)
+		for(int z = 1; z <= 11; z += 2)
 		{
 			Crop temp;
 			temp.position[0] = (x * 0.5f) - 3;
