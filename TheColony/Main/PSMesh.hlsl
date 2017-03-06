@@ -133,5 +133,5 @@ float4 main(Input _in) : SV_TARGET
 
 	float4 returnColor = lightColor * textureColor;
 	float4 emiss = emissive.Sample(sam, _in.uv.xy);
-	return float4(returnColor.xyz, alpha) * _in.color + emiss;
+	return saturate(float4(returnColor.xyz, alpha) * _in.color + emiss);
 }
