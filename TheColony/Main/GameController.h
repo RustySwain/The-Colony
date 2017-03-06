@@ -7,8 +7,8 @@
 
 using namespace DirectX;
 
-enum JOB_ENUM { No_Job = 0, Farmer, Builder, Forester, Miner, Metalworker, Teacher, Physician };
-enum ITEM_ENUM { Wood = 0, Stone, Iron, Coal, Cabbage, Corn, Potato, Berries };
+enum JOB_ENUM { NO_JOB = 0, FARMER, BUILDER, FORESTER, MINER, METALWORKER, TEACHER, PHYSICIAN };
+enum ITEM_ENUM { WOOD = 0, STONE, IRON, COAL, CABBAGE, CORN, POTATO, BERRIES };
 
 class GameController : public Component
 {
@@ -62,4 +62,5 @@ public:
 	vector<XMFLOAT3> AStar(XMFLOAT3 _start, XMFLOAT3 _goal);
 	void AddHomeless(GameObject * _object);
 	void ManageGameTime();
+	void ChangeTileCost(XMFLOAT3 _tile, float _cost);
 };

@@ -18,6 +18,7 @@
 #include "GameController.h"
 #include "VillagerController.h"
 #include "TerrainFollowing.h"
+#include "Builder.h"
 
 GameScene::GameScene()
 {
@@ -196,6 +197,7 @@ void GameScene::Init()
 	bunny.AddComponent<VillagerController>();
 	bunny.GetComponent<VillagerController>()->SetAge(15);
 	bunny.GetComponent<VillagerController>()->Speed(2.3f);
+	bunny.AddComponent<Builder>();
 
 	helicopter.SetId(11);
 	helicopter.SetName("Helicopter");

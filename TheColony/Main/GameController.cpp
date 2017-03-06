@@ -13,6 +13,7 @@
 #include "House.h"
 #include "TextRenderer.h"
 #include "Farm.h"
+#include "Builder.h"
 
 bool GameController::LoadOccupiedSquares(const char* _path, vector<XMFLOAT3>& _vec)
 {
@@ -69,7 +70,7 @@ void GameController::Start()
 	buildings[2].instances->Start();
 	buildings[2].instances->AddComponent<Transform>();
 	buildings[2].instances->AddComponent<MeshRenderer>()->LoadFromObj("../Assets/Buildings/FarmPlaceholder.obj");
-	buildings[2].instances->GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/bark.dds");
+	buildings[2].instances->GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/black-soil.dds");
 	buildings[2].collisionMesh = new Mesh();
 	buildings[2].collisionMesh->LoadFromObj("../Assets/Buildings/FarmCollision.obj");
 	LoadOccupiedSquares("../Assets/Buildings/Farm.building", buildings[2].occupiedSquares);
@@ -162,6 +163,8 @@ void GameController::OnDelete()
 
 	gameTime.timeRender.OnDelete();
 	delete tileMap;
+
+	Builder::ShutDown();
 }
 
 XMFLOAT3 GameController::GridSquareFromTerrain(XMFLOAT3 _terrainLoc)
@@ -185,11 +188,14 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation,
 		if (gridCost[y + (int)terrPos.z][x + (int)terrPos.x] != 1) return false;
 	}
 
+	vector<XMFLOAT3> bufferSquares;
 	for (unsigned int i = 0; i < buildings[_buildingIndex].occupiedSquares.size(); i++)
 	{
 		XMMATRIX tmp = XMMatrixTranslation(buildings[_buildingIndex].occupiedSquares[i].x, buildings[_buildingIndex].occupiedSquares[i].y, 0) * XMMatrixRotationZ(_rotation * 90.0f * DEG2RAD);
 		int x = (int)round(tmp.r[3].m128_f32[0]);
 		int y = (int)round(tmp.r[3].m128_f32[1]);
+		if (buildings[_buildingIndex].occupiedSquares[i].z == 1)
+			bufferSquares.push_back(XMFLOAT3(x + terrPos.x, 0, y + terrPos.z));
 		if ((unsigned int)(x + (int)terrPos.x) >= terrainWidth - 1 || (unsigned int)(y + (int)terrPos.z) >= terrainHeight - 1 || (y + (int)terrPos.z) < 0 || (x + (int)terrPos.x) < 0) return false;
 		gridCost[y + (int)terrPos.z][x + (int)terrPos.x] = 0;
 
@@ -197,7 +203,7 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation,
 		if (buildings[_buildingIndex].occupiedSquares[i].z == 0)
 		{
 			Tile * tile = tileMap->getTile(x + (int)terrPos.x, y + (int)terrPos.z);
-			pathSearch.ChangeTileCost(tile, 0);
+			pathSearch.ChangeTileCost(tile, 50);
 		}
 
 		// Set front door
@@ -235,9 +241,9 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation,
 			nuCollider->GetComponent<House>()->MaxInhabitants(10);
 
 		unsigned int maxInhab = nuCollider->GetComponent<House>()->MaxInhabitants() - (unsigned int)nuCollider->GetComponent<House>()->GetInhabitants().size();
-		for(unsigned int i = 0; i < maxInhab; ++i)
+		for (unsigned int i = 0; i < maxInhab; ++i)
 		{
-			if(homeless.size() > 0)
+			if (homeless.size() > 0)
 			{
 				homeless.front()->GetComponent<VillagerController>()->SetHouse(nuCollider);
 				nuCollider->GetComponent<House>()->AddInhabitant(homeless.front());
@@ -246,12 +252,16 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation,
 			else break;
 		}
 	}
-	else if(_buildingIndex == 2)
+	else if (_buildingIndex == 2)
 	{
 		nuCollider->AddComponent<Farm>();
 		nuCollider->GetComponent<Farm>()->SetFrontDoor(frontDoor);
 	}
+	nuCollider->GetComponent<House>()->SetBufferSquares(bufferSquares);
 	buildings[_buildingIndex].colliders.push_back(nuCollider);
+
+	// Add task to builder queue
+	Builder::AddTask(nuCollider, Builder::Task::BUILD, 2, 100);
 
 	return true;
 }
@@ -298,10 +308,10 @@ GameObject * GameController::FindJob(GameObject * _villager)
 	string job;
 	switch (job_enum)
 	{
-	case Farmer:
+	case FARMER:
 		job = "Farm";
 		break;
-	case Forester:
+	case FORESTER:
 		job = "Tree";
 		break;
 	default:
@@ -312,9 +322,9 @@ GameObject * GameController::FindJob(GameObject * _villager)
 	vector<GameObject*> buildings = GameObject::FindFromTag(job);
 	float closestDist = FLT_MAX;
 	int closestIndex = -1;
-	for(int i = 0; i < (int)buildings.size(); ++i)
+	for (int i = 0; i < (int)buildings.size(); ++i)
 	{
-		if(buildings[0]->GetComponent<Farm>()->GetCurrWorkers().size() < buildings[0]->GetComponent<Farm>()->GetMaxWorkers())
+		if (buildings[0]->GetComponent<Farm>()->GetCurrWorkers().size() < buildings[0]->GetComponent<Farm>()->GetMaxWorkers())
 		{
 			XMFLOAT3 buildingPos = buildings[i]->GetComponent<Transform>()->GetWorldPosition();
 			float dist = sqrt(pow(buildingPos.x - villagerPos.x, 2) + pow(buildingPos.z - villagerPos.z, 2));
@@ -367,6 +377,10 @@ void GameController::ManageGameTime()
 	gameTime.seconds < 10 ? seconds = "0" + to_string((int)gameTime.seconds) : seconds = to_string((int)gameTime.seconds);
 	gameTime.timeRender.GetComponent<TextRenderer>()->SetText("Day " + to_string(gameTime.days) + " - " + hours + ":" + minutes + ":" + seconds);
 	gameTime.timeRender.Update();
-
 }
- 
+
+void GameController::ChangeTileCost(XMFLOAT3 _tile, float _cost)
+{
+	Tile * tile = tileMap->getTile(_tile.x, _tile.z);
+	pathSearch.ChangeTileCost(tile, _cost);
+}

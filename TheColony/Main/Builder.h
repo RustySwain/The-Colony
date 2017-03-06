@@ -1,5 +1,6 @@
 #pragma once
 #include "JobABC.h"
+#include <DirectXMath.h>
 
 class Builder : public JobABC
 {
@@ -19,8 +20,9 @@ private:
 	static vector<Task*> tasks;
 	Task* currentTask = nullptr;
 	float reachDistance = 1.0f;
+	DirectX::XMFLOAT3 bufferSquare;
 
-	static void FinishTask(unsigned int _index);
+	static void FinishTask(vector<Task*>::iterator _iter);
 
 public:
 	Builder();
@@ -31,5 +33,6 @@ public:
 	void Update() override;
 	void OnDelete() override;
 
-	static void AddTask(GameObject* _job, Task::TASK_TYPE _taskType, unsigned int _maxWorkers);
+	static void AddTask(GameObject* _job, Task::TASK_TYPE _taskType, unsigned int _maxWorkers, unsigned int _requiredWork);
+	static void ShutDown();
 };

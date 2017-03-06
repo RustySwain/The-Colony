@@ -15,7 +15,7 @@ class Farm : public BuildingABC
 		float position[2];
 	};
 
-	JOB_ENUM job = Farmer;
+	JOB_ENUM job = FARMER;
 	vector<Crop> crops;
 	unsigned int maxWorkers = 5;
 	vector<GameObject*> currWorkers;
