@@ -23,9 +23,9 @@ void VillagerController::Update()
 
 	if (GetAsyncKeyState('M') & 0x1)
 	{
-		if (house)
-			RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), house->GetComponent<House>()->GetFrontDoor());
-		else
+		//if (house)
+			//RequestPath(gameObject->GetComponent<Transform>()->GetWorldPosition(), house->GetComponent<House>()->GetFrontDoor());
+		//else
 			Wander();
 	}
 
@@ -57,8 +57,6 @@ void VillagerController::Update()
 						step = WORKING;
 						isWorking = true;
 					}
-					else
-						step = HOME;
 				}
 			}
 			else if (WORKING == step)

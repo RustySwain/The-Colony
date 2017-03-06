@@ -12,13 +12,13 @@ void Farm::Start()
 	corn.GetComponent<MeshRenderer>()->LoadDiffuseMap(L"../Assets/Crops/corn_d.dds");
 	corn.GetComponent<MeshRenderer>()->LoadSpecularMap(L"../Assets/Crops/corn_s.dds");
 
-	for (int x = 1; x <= 11; ++x)
+	for (int x = 1; x <= 11; x += 2)
 	{
-		for (int z = 1; z <= 11; ++z)
+		for (int z = 1; z <= 11; z += 2)
 		{
 			Crop temp;
-			temp.position[0] = (x * 0.5f) - 3;
-			temp.position[1] = (z * 0.5f) - 3;
+			temp.position[0] = (x * 0.5f) - 2.5f;
+			temp.position[1] = (z * 0.5f) - 3.5f;
 			crops.push_back(temp);
 		}
 	}
@@ -35,8 +35,9 @@ void Farm::Update()
 {
 	if (!updateFlag)
 	{
-		corn.GetComponent<MeshRenderer>()->RemoveInstance(-1);
-		updateFlag = true;
+		bool succ = corn.GetComponent<MeshRenderer>()->RemoveInstance(-1);
+		if (succ)
+			updateFlag = true;
 	}
 	corn.Update();
 }

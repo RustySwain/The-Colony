@@ -18,6 +18,7 @@ class PathSearch
 		vector<Edge*> edges;
 		bool visited = false;
 		float hCost;
+		float cost;
 		float givenCost;
 		float finalCost;
 	};

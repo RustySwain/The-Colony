@@ -108,7 +108,7 @@ void GameController::Start()
 
 void GameController::Update()
 {
-	gameTime.seconds += Time::Delta() * 10.0f;
+	gameTime.seconds += Time::Delta();
 	ManageGameTime();
 
 	for (unsigned int i = 0; i < buildings.size(); i++)
@@ -206,7 +206,7 @@ bool GameController::PlaceBuilding(XMFLOAT3 _gridSquare, unsigned int _rotation,
 		if (buildings[_buildingIndex].occupiedSquares[i].z == 0)
 		{
 			Tile * tile = tileMap->getTile(x + (int)terrPos.x, y + (int)terrPos.z);
-			pathSearch.ChangeTileCost(tile, 50);
+			pathSearch.ChangeTileCost(tile, 10);
 		}
 
 		// Set front door
@@ -386,6 +386,6 @@ void GameController::ManageGameTime()
 
 void GameController::ChangeTileCost(XMFLOAT3 _tile, float _cost)
 {
-	Tile * tile = tileMap->getTile(_tile.x, _tile.z);
+	Tile * tile = tileMap->getTile((int)_tile.x, (int)_tile.z);
 	pathSearch.ChangeTileCost(tile, _cost);
 }
